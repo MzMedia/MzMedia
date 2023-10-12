@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.mz</groupId>
+        <artifactId>mz-modules</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>mz-demo</artifactId>
+
+    <description>
+        demo模块
+    </description>
+
+    <dependencies>
+
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-doc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-sms</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-mail</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-idempotent</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-mybatis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-log</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-excel</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-ratelimiter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-translation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-sensitive</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-encrypt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-tenant</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-websocket</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

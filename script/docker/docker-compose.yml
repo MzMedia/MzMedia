@@ -1,0 +1,188 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.0.33
+    container_name: mysql
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+      # root 密码
+      MYSQL_ROOT_PASSWORD: MzMedia
+      # 初始化数据库(后续的初始化sql会在这个库执行)
+      MYSQL_DATABASE: MzMedia
+    ports:
+      - "3306:3306"
+    volumes:
+      - /opt/MzMedia/mysql/mysql:/var/lib/mysql
+      - /opt/MzMedia/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+      - /opt/MzMedia/mysql/initdb:/docker-entrypoint-initdb.d
+    command:
+      # 将mysql8.0默认密码策略 修改为 原先 策略 (mysql8.0对其默认策略做了更改 会导致密码无法匹配)
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+    privileged: true
+    network_mode: "host"
+
+  nginx-web:
+    image: nginx:1.23.4
+    container_name: nginx-web
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # 证书映射
+      - /opt/MzMedia/nginx/cert:/etc/nginx/cert
+      # 配置文件映射
+      - /opt/MzMedia/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      # 页面目录
+      - /opt/MzMedia/nginx/html:/usr/share/nginx/html
+      # 日志目录
+      - /opt/MzMedia/nginx/log:/var/log/nginx
+    privileged: true
+    network_mode: "host"
+
+  redis:
+    image: redis:7.0.0
+    container_name: redis
+    ports:
+      - "6379:6379"
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    volumes:
+      # 配置文件
+      - /opt/MzMedia/redis/conf:/redis/config:rw
+      # 数据文件
+      - /opt/MzMedia/redis/data/:/redis/data/:rw
+    privileged: true
+    network_mode: "host"
+    command: "redis-server /redis/config/redis.conf"
+
+
+  tdengine:
+    image: 'tdengine/tdengine:2.6.0.12'
+    container_name: tdengine
+    hostname: fastbee
+    ports:
+      - 6030-6049:6030-6049
+      - 6030-6049:6030-6049/udp
+    volumes:
+      - "/opt/MzMedia/tdengine/log:/var/log/taos"
+      - "/opt/MzMedia/tdengine/data:/var/lib/taos"
+      - "/etc/localtime:/etc/localtime"
+    environment:
+      TZ: Asia/Shanghai
+
+  emqx:
+    image: emqx:5.1
+    container_name: emqx
+    ports:
+      - 1883:1883
+      - 8083:8083
+      - 8084:8084
+      - 18083:18083
+    privileged: true
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /opt/MzMedia/emqx/etc/emqx.conf:/opt/emqx/etc/emqx.conf
+      - /opt/MzMedia/emqx/etc/acl.conf:/opt/emqx/etc/acl.conf
+      - /opt/MzMedia/emqx/etc/log:/opt/emqx/log
+    environment:
+      SET_CONTAINER_TIMEZONE: "true"
+      CONTAINER_TIMEZONE: Asia/Shanghai
+
+  node-red:
+    image: nodered/node-red:latest
+    container_name: nodered
+    ports:
+      - 1888:1880
+    privileged: true
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /opt/MzMedia/nodered/data:/data
+    environment:
+      - TZ=Asia/Shanghai
+
+  minio:
+    image: minio/minio:RELEASE.2023-04-13T03-08-07Z
+    container_name: minio
+    ports:
+      # api 端口
+      - "9000:9000"
+      # 控制台端口
+      - "9001:9001"
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+      # 管理后台用户名
+      MINIO_ROOT_USER: ruoyi
+      # 管理后台密码，最小8个字符
+      MINIO_ROOT_PASSWORD: ruoyi123
+      # https需要指定域名
+      #MINIO_SERVER_URL: "https://xxx.com:9000"
+      #MINIO_BROWSER_REDIRECT_URL: "https://xxx.com:9001"
+      # 开启压缩 on 开启 off 关闭
+      MINIO_COMPRESS: "off"
+      # 扩展名 .pdf,.doc 为空 所有类型均压缩
+      MINIO_COMPRESS_EXTENSIONS: ""
+      # mime 类型 application/pdf 为空 所有类型均压缩
+      MINIO_COMPRESS_MIME_TYPES: ""
+    volumes:
+      # 映射当前目录下的data目录至容器内/data目录
+      - /opt/MzMedia/minio/data:/data
+      # 映射配置目录
+      - /opt/MzMedia/minio/config:/root/.minio/
+    command: server --address ':9000' --console-address ':9001' /data  # 指定容器中的目录 /data
+    privileged: true
+    network_mode: "host"
+
+#  ruoyi-server1:
+#    image: ruoyi/ruoyi-server:5.1.0
+#    container_name: ruoyi-server1
+#    environment:
+#      # 时区上海
+#      TZ: Asia/Shanghai
+#      SERVER_PORT: 8080
+#    volumes:
+#      # 配置文件
+#      - /opt/MzMedia/server1/logs/:/ruoyi/server/logs/
+#      # skywalking 探针
+##      - /opt/MzMedia/skywalking/agent/:/ruoyi/skywalking/agent
+#    privileged: true
+#    network_mode: "host"
+#
+#  ruoyi-monitor-admin:
+#    image: ruoyi/ruoyi-monitor-admin:5.1.0
+#    container_name: ruoyi-monitor-admin
+#    environment:
+#      # 时区上海
+#      TZ: Asia/Shanghai
+#    volumes:
+#      # 配置文件
+#      - /opt/MzMedia/monitor/logs/:/ruoyi/monitor/logs
+#    privileged: true
+#    network_mode: "host"
+#
+#  ruoyi-powerjob-server:
+#    image: ruoyi/ruoyi-powerjob-server:5.1.0
+#    container_name: ruoyi-powerjob-server
+#    environment:
+#      # 时区上海
+#      TZ: Asia/Shanghai
+#    ports:
+#      - "7700:7700"
+#      - "10086:10086"
+#      - "10010:10010"
+#    volumes:
+#      - /opt/MzMedia/powerjob/logs/:/ruoyi/powerjob/logs
+#    privileged: true
+#    network_mode: "host"
+
+

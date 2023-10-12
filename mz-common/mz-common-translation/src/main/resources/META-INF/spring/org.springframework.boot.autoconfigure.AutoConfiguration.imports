@@ -1,0 +1,5 @@
+com.mz.common.translation.config.TranslationConfig
+com.mz.common.translation.core.impl.DeptNameTranslationImpl
+com.mz.common.translation.core.impl.DictTypeTranslationImpl
+com.mz.common.translation.core.impl.OssUrlTranslationImpl
+com.mz.common.translation.core.impl.UserNameTranslationImpl

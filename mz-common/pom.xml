@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>MzMedia</artifactId>
+        <groupId>com.mz</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>mz-common-bom</module>
+        <module>mz-common-social</module>
+        <module>mz-common-core</module>
+        <module>mz-common-doc</module>
+        <module>mz-common-excel</module>
+        <module>mz-common-idempotent</module>
+        <module>mz-common-job</module>
+        <module>mz-common-log</module>
+        <module>mz-common-mail</module>
+        <module>mz-common-mybatis</module>
+        <module>mz-common-oss</module>
+        <module>mz-common-ratelimiter</module>
+        <module>mz-common-redis</module>
+        <module>mz-common-satoken</module>
+        <module>mz-common-security</module>
+        <module>mz-common-sms</module>
+        <module>mz-common-web</module>
+        <module>mz-common-translation</module>
+        <module>mz-common-sensitive</module>
+        <module>mz-common-json</module>
+        <module>mz-common-encrypt</module>
+        <module>mz-common-tenant</module>
+        <module>mz-common-websocket</module>
+    </modules>
+
+    <artifactId>mz-common</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        common 通用模块
+    </description>
+
+</project>

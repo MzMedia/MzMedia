@@ -1,0 +1,3145 @@
+## EMQX Configuration Example
+
+## 
+
+## @path listeners
+listeners {
+  ## @path listeners.tcp
+  ## @type map_struct()
+    #  tcp.name  =  
+    ## @path listeners.tcp.$name
+    #   {
+      ## @path listeners.tcp.$name.enabled
+      ## @type boolean()
+      ## @default true
+      #  enabled  =  true
+
+      ## @path listeners.tcp.$name.bind
+      ## @type union() emqx_schema:ip_port() | integer()
+      ## @default 1883
+      #  bind  =  1883
+
+      ## @path listeners.tcp.$name.acceptors
+      ## @type pos_integer()
+      ## @default 16
+      #  acceptors  =  16
+
+      ## @path listeners.tcp.$name.max_connections
+      ## @type union() infinity | pos_integer()
+      ## @default infinity
+      #  max_connections  =  infinity
+
+      ## @path listeners.tcp.$name.mountpoint
+      ## @type binary()
+      ## @default 
+      #  mountpoint  =  
+
+      ## @path listeners.tcp.$name.zone
+      ## @type atom()
+      ## @default default
+      #  zone  =  default
+
+      ## @path listeners.tcp.$name.limiter
+      #  limiter {
+        ## @path listeners.tcp.$name.limiter.bytes
+        #  bytes {
+          ## @path listeners.tcp.$name.limiter.bytes.rate
+          ## @type emqx_limiter_schema:rate()
+          ## @default infinity
+          #  rate  =  infinity
+        #   }
+
+        ## @path listeners.tcp.$name.limiter.messages
+        ## @link listeners.tcp.$name.limiter.bytes
+        #  messages {
+          ## @path listeners.tcp.$name.limiter.messages.rate
+          ## @type emqx_limiter_schema:rate()
+          ## @default infinity
+          #  rate  =  infinity
+        #   }
+
+        ## @path listeners.tcp.$name.limiter.client
+        #  client {
+          ## @path listeners.tcp.$name.limiter.client.bytes
+          #  bytes {
+            ## @path listeners.tcp.$name.limiter.client.bytes.rate
+            ## @type emqx_limiter_schema:rate()
+            ## @default infinity
+            #  rate  =  infinity
+          #   }
+
+          ## @path listeners.tcp.$name.limiter.client.messages
+          ## @link listeners.tcp.$name.limiter.client.bytes
+          #  messages {
+            ## @path listeners.tcp.$name.limiter.client.messages.rate
+            ## @type emqx_limiter_schema:rate()
+            ## @default infinity
+            #  rate  =  infinity
+          #   }
+        #   }
+      #   }
+
+      ## @path listeners.tcp.$name.enable_authn
+      ## @type enum: true | false | quick_deny_anonymous
+      ## @default true
+      #  enable_authn  =  true
+
+      ## @path listeners.tcp.$name.access_rules
+      ## @type array()
+      ## @default ["allow all"]
+      #  access_rules  =  ["allow all"]
+
+      ## @path listeners.tcp.$name.proxy_protocol
+      ## @type boolean()
+      ## @default false
+      #  proxy_protocol  =  false
+
+      ## @path listeners.tcp.$name.proxy_protocol_timeout
+      ## @type emqx_schema:duration()
+      ## @default 3s
+      #  proxy_protocol_timeout  =  3s
+
+      ## @path listeners.tcp.$name.tcp_options
+      #  tcp_options {
+        ## @path listeners.tcp.$name.tcp_options.active_n
+        ## @type integer()
+        ## @default 100
+        #  active_n  =  100
+
+        ## @path listeners.tcp.$name.tcp_options.backlog
+        ## @type pos_integer()
+        ## @default 1024
+        #  backlog  =  1024
+
+        ## @path listeners.tcp.$name.tcp_options.send_timeout
+        ## @type emqx_schema:duration()
+        ## @default 15s
+        #  send_timeout  =  15s
+
+        ## @path listeners.tcp.$name.tcp_options.send_timeout_close
+        ## @type boolean()
+        ## @default true
+        #  send_timeout_close  =  true
+
+        ## @path listeners.tcp.$name.tcp_options.recbuf
+        ## @type emqx_schema:bytesize()
+        #  recbuf  =  2KB
+
+        ## @path listeners.tcp.$name.tcp_options.sndbuf
+        ## @type emqx_schema:bytesize()
+        #  sndbuf  =  4KB
+
+        ## @path listeners.tcp.$name.tcp_options.buffer
+        ## @type emqx_schema:bytesize()
+        ## @default 4KB
+        #  buffer  =  4KB
+
+        ## @path listeners.tcp.$name.tcp_options.high_watermark
+        ## @type emqx_schema:bytesize()
+        ## @default 1MB
+        #  high_watermark  =  1MB
+
+        ## @path listeners.tcp.$name.tcp_options.nodelay
+        ## @type boolean()
+        ## @default true
+        #  nodelay  =  true
+
+        ## @path listeners.tcp.$name.tcp_options.reuseaddr
+        ## @type boolean()
+        ## @default true
+        #  reuseaddr  =  true
+      #   }
+    #   }
+
+
+  ## @path listeners.ssl
+  ## @type map_struct()
+    #  ssl.name  =  
+    ## @path listeners.ssl.$name
+    #   {
+      ## @path listeners.ssl.$name.enabled
+      ## @type boolean()
+      ## @default true
+      #  enabled  =  true
+
+      ## @path listeners.ssl.$name.bind
+      ## @type union() emqx_schema:ip_port() | integer()
+      ## @default 8883
+      #  bind  =  8883
+
+      ## @path listeners.ssl.$name.acceptors
+      ## @type pos_integer()
+      ## @default 16
+      #  acceptors  =  16
+
+      ## @path listeners.ssl.$name.max_connections
+      ## @type union() infinity | pos_integer()
+      ## @default infinity
+      #  max_connections  =  infinity
+
+      ## @path listeners.ssl.$name.mountpoint
+      ## @type binary()
+      ## @default 
+      #  mountpoint  =  
+
+      ## @path listeners.ssl.$name.zone
+      ## @type atom()
+      ## @default default
+      #  zone  =  default
+
+      ## @path listeners.ssl.$name.limiter
+      ## @link listeners.tcp.$name.limiter
+      #  limiter {
+        ## @path listeners.ssl.$name.limiter.bytes
+        ## @link listeners.tcp.$name.limiter.bytes
+        #  bytes {
+          ## @path listeners.ssl.$name.limiter.bytes.rate
+          ## @type emqx_limiter_schema:rate()
+          ## @default infinity
+          #  rate  =  infinity
+        #   }
+
+        ## @path listeners.ssl.$name.limiter.messages
+        ## @link listeners.tcp.$name.limiter.bytes
+        #  messages {
+          ## @path listeners.ssl.$name.limiter.messages.rate
+          ## @type emqx_limiter_schema:rate()
+          ## @default infinity
+          #  rate  =  infinity
+        #   }
+
+        ## @path listeners.ssl.$name.limiter.client
+        ## @link listeners.tcp.$name.limiter.client
+        #  client {
+          ## @path listeners.ssl.$name.limiter.client.bytes
+          ## @link listeners.tcp.$name.limiter.client.bytes
+          #  bytes {
+            ## @path listeners.ssl.$name.limiter.client.bytes.rate
+            ## @type emqx_limiter_schema:rate()
+            ## @default infinity
+            #  rate  =  infinity
+          #   }
+
+          ## @path listeners.ssl.$name.limiter.client.messages
+          ## @link listeners.tcp.$name.limiter.client.bytes
+          #  messages {
+            ## @path listeners.ssl.$name.limiter.client.messages.rate
+            ## @type emqx_limiter_schema:rate()
+            ## @default infinity
+            #  rate  =  infinity
+          #   }
+        #   }
+      #   }
+
+      ## @path listeners.ssl.$name.enable_authn
+      ## @type enum: true | false | quick_deny_anonymous
+      ## @default true
+      #  enable_authn  =  true
+
+      ## @path listeners.ssl.$name.access_rules
+      ## @type array()
+      ## @default ["allow all"]
+      #  access_rules  =  ["allow all"]
+
+      ## @path listeners.ssl.$name.proxy_protocol
+      ## @type boolean()
+      ## @default false
+      #  proxy_protocol  =  false
+
+      ## @path listeners.ssl.$name.proxy_protocol_timeout
+      ## @type emqx_schema:duration()
+      ## @default 3s
+      #  proxy_protocol_timeout  =  3s
+
+      ## @path listeners.ssl.$name.tcp_options
+      ## @link listeners.tcp.$name.tcp_options
+      #  tcp_options {
+        ## @path listeners.ssl.$name.tcp_options.active_n
+        ## @type integer()
+        ## @default 100
+        #  active_n  =  100
+
+        ## @path listeners.ssl.$name.tcp_options.backlog
+        ## @type pos_integer()
+        ## @default 1024
+        #  backlog  =  1024
+
+        ## @path listeners.ssl.$name.tcp_options.send_timeout
+        ## @type emqx_schema:duration()
+        ## @default 15s
+        #  send_timeout  =  15s
+
+        ## @path listeners.ssl.$name.tcp_options.send_timeout_close
+        ## @type boolean()
+        ## @default true
+        #  send_timeout_close  =  true
+
+        ## @path listeners.ssl.$name.tcp_options.recbuf
+        ## @type emqx_schema:bytesize()
+        #  recbuf  =  2KB
+
+        ## @path listeners.ssl.$name.tcp_options.sndbuf
+        ## @type emqx_schema:bytesize()
+        #  sndbuf  =  4KB
+
+        ## @path listeners.ssl.$name.tcp_options.buffer
+        ## @type emqx_schema:bytesize()
+        ## @default 4KB
+        #  buffer  =  4KB
+
+        ## @path listeners.ssl.$name.tcp_options.high_watermark
+        ## @type emqx_schema:bytesize()
+        ## @default 1MB
+        #  high_watermark  =  1MB
+
+        ## @path listeners.ssl.$name.tcp_options.nodelay
+        ## @type boolean()
+        ## @default true
+        #  nodelay  =  true
+
+        ## @path listeners.ssl.$name.tcp_options.reuseaddr
+        ## @type boolean()
+        ## @default true
+        #  reuseaddr  =  true
+      #   }
+
+      ## @path listeners.ssl.$name.ssl_options
+      #  ssl_options {
+        ## @path listeners.ssl.$name.ssl_options.cacertfile
+        ## @type binary()
+        #  cacertfile  =  
+
+        ## @path listeners.ssl.$name.ssl_options.certfile
+        ## @type binary()
+        #  certfile  =  
+
+        ## @path listeners.ssl.$name.ssl_options.keyfile
+        ## @type binary()
+        #  keyfile  =  
+
+        ## @path listeners.ssl.$name.ssl_options.verify
+        ## @type enum: verify_peer | verify_none
+        ## @default verify_none
+        #  verify  =  verify_none
+
+        ## @path listeners.ssl.$name.ssl_options.reuse_sessions
+        ## @type boolean()
+        ## @default true
+        #  reuse_sessions  =  true
+
+        ## @path listeners.ssl.$name.ssl_options.depth
+        ## @type integer()
+        ## @default 10
+        #  depth  =  10
+
+        ## @path listeners.ssl.$name.ssl_options.password
+        ## @type string()
+        #  password  =  
+
+        ## @path listeners.ssl.$name.ssl_options.versions
+        ## @type array()
+        ## @default [tlsv1.3, tlsv1.2, tlsv1.1, tlsv1]
+        #  versions  =  [tlsv1.3, tlsv1.2, tlsv1.1, tlsv1]
+
+        ## @path listeners.ssl.$name.ssl_options.ciphers
+        ## @type array()
+        ## @default []
+        #  ciphers  =  []
+
+        ## @path listeners.ssl.$name.ssl_options.secure_renegotiate
+        ## @type boolean()
+        ## @default true
+        #  secure_renegotiate  =  true
+
+        ## @path listeners.ssl.$name.ssl_options.hibernate_after
+        ## @type emqx_schema:duration()
+        ## @default 5s
+        #  hibernate_after  =  5s
+
+        ## @path listeners.ssl.$name.ssl_options.dhfile
+        ## @type string()
+        #  dhfile  =  
+
+        ## @path listeners.ssl.$name.ssl_options.fail_if_no_peer_cert
+        ## @type boolean()
+        ## @default false
+        #  fail_if_no_peer_cert  =  false
+
+        ## @path listeners.ssl.$name.ssl_options.honor_cipher_order
+        ## @type boolean()
+        ## @default true
+        #  honor_cipher_order  =  true
+
+        ## @path listeners.ssl.$name.ssl_options.client_renegotiation
+        ## @type boolean()
+        ## @default true
+        #  client_renegotiation  =  true
+
+        ## @path listeners.ssl.$name.ssl_options.handshake_timeout
+        ## @type emqx_schema:duration()
+        ## @default 15s
+        #  handshake_timeout  =  15s
+
+        ## @path listeners.ssl.$name.ssl_options.gc_after_handshake
+        ## @type boolean()
+        ## @default false
+        #  gc_after_handshake  =  false
+
+        ## @path listeners.ssl.$name.ssl_options.ocsp
+        #  ocsp {
+          ## @path listeners.ssl.$name.ssl_options.ocsp.enable_ocsp_stapling
+          ## @type boolean()
+          ## @default false
+          #  enable_ocsp_stapling  =  false
+
+          ## @path listeners.ssl.$name.ssl_options.ocsp.responder_url
+          ## @type emqx_schema:url()
+          #  responder_url  =  
+
+          ## @path listeners.ssl.$name.ssl_options.ocsp.issuer_pem
+          ## @type binary()
+          #  issuer_pem  =  
+
+          ## @path listeners.ssl.$name.ssl_options.ocsp.refresh_interval
+          ## @type emqx_schema:duration()
+          ## @default 5m
+          #  refresh_interval  =  5m
+
+          ## @path listeners.ssl.$name.ssl_options.ocsp.refresh_http_timeout
+          ## @type emqx_schema:duration()
+          ## @default 15s
+          #  refresh_http_timeout  =  15s
+        #   }
+
+        ## @path listeners.ssl.$name.ssl_options.enable_crl_check
+        ## @type boolean()
+        ## @default false
+        #  enable_crl_check  =  false
+      #   }
+    #   }
+
+
+  ## @path listeners.ws
+  ## @type map_struct()
+    #  ws.name  =  
+    ## @path listeners.ws.$name
+    #   {
+      ## @path listeners.ws.$name.enabled
+      ## @type boolean()
+      ## @default true
+      #  enabled  =  true
+
+      ## @path listeners.ws.$name.bind
+      ## @type union() emqx_schema:ip_port() | integer()
+      ## @default 8083
+      #  bind  =  8083
+
+      ## @path listeners.ws.$name.acceptors
+      ## @type pos_integer()
+      ## @default 16
+      #  acceptors  =  16
+
+      ## @path listeners.ws.$name.max_connections
+      ## @type union() infinity | pos_integer()
+      ## @default infinity
+      #  max_connections  =  infinity
+
+      ## @path listeners.ws.$name.mountpoint
+      ## @type binary()
+      ## @default 
+      #  mountpoint  =  
+
+      ## @path listeners.ws.$name.zone
+      ## @type atom()
+      ## @default default
+      #  zone  =  default
+
+      ## @path listeners.ws.$name.limiter
+      ## @link listeners.tcp.$name.limiter
+      #  limiter {
+        ## @path listeners.ws.$name.limiter.bytes
+        ## @link listeners.tcp.$name.limiter.bytes
+        #  bytes {
+          ## @path listeners.ws.$name.limiter.bytes.rate
+          ## @type emqx_limiter_schema:rate()
+          ## @default infinity
+          #  rate  =  infinity
+        #   }
+
+        ## @path listeners.ws.$name.limiter.messages
+        ## @link listeners.tcp.$name.limiter.bytes
+        #  messages {
+          ## @path listeners.ws.$name.limiter.messages.rate
+          ## @type emqx_limiter_schema:rate()
+          ## @default infinity
+          #  rate  =  infinity
+        #   }
+
+        ## @path listeners.ws.$name.limiter.client
+        ## @link listeners.tcp.$name.limiter.client
+        #  client {
+          ## @path listeners.ws.$name.limiter.client.bytes
+          ## @link listeners.tcp.$name.limiter.client.bytes
+          #  bytes {
+            ## @path listeners.ws.$name.limiter.client.bytes.rate
+            ## @type emqx_limiter_schema:rate()
+            ## @default infinity
+            #  rate  =  infinity
+          #   }
+
+          ## @path listeners.ws.$name.limiter.client.messages
+          ## @link listeners.tcp.$name.limiter.client.bytes
+          #  messages {
+            ## @path listeners.ws.$name.limiter.client.messages.rate
+            ## @type emqx_limiter_schema:rate()
+            ## @default infinity
+            #  rate  =  infinity
+          #   }
+        #   }
+      #   }
+
+      ## @path listeners.ws.$name.enable_authn
+      ## @type enum: true | false | quick_deny_anonymous
+      ## @default true
+      #  enable_authn  =  true
+
+      ## @path listeners.ws.$name.access_rules
+      ## @type array()
+      ## @default ["allow all"]
+      #  access_rules  =  ["allow all"]
+
+      ## @path listeners.ws.$name.proxy_protocol
+      ## @type boolean()
+      ## @default false
+      #  proxy_protocol  =  false
+
+      ## @path listeners.ws.$name.proxy_protocol_timeout
+      ## @type emqx_schema:duration()
+      ## @default 3s
+      #  proxy_protocol_timeout  =  3s
+
+      ## @path listeners.ws.$name.tcp_options
+      ## @link listeners.tcp.$name.tcp_options
+      #  tcp_options {
+        ## @path listeners.ws.$name.tcp_options.active_n
+        ## @type integer()
+        ## @default 100
+        #  active_n  =  100
+
+        ## @path listeners.ws.$name.tcp_options.backlog
+        ## @type pos_integer()
+        ## @default 1024
+        #  backlog  =  1024
+
+        ## @path listeners.ws.$name.tcp_options.send_timeout
+        ## @type emqx_schema:duration()
+        ## @default 15s
+        #  send_timeout  =  15s
+
+        ## @path listeners.ws.$name.tcp_options.send_timeout_close
+        ## @type boolean()
+        ## @default true
+        #  send_timeout_close  =  true
+
+        ## @path listeners.ws.$name.tcp_options.recbuf
+        ## @type emqx_schema:bytesize()
+        #  recbuf  =  2KB
+
+        ## @path listeners.ws.$name.tcp_options.sndbuf
+        ## @type emqx_schema:bytesize()
+        #  sndbuf  =  4KB
+
+        ## @path listeners.ws.$name.tcp_options.buffer
+        ## @type emqx_schema:bytesize()
+        ## @default 4KB
+        #  buffer  =  4KB
+
+        ## @path listeners.ws.$name.tcp_options.high_watermark
+        ## @type emqx_schema:bytesize()
+        ## @default 1MB
+        #  high_watermark  =  1MB
+
+        ## @path listeners.ws.$name.tcp_options.nodelay
+        ## @type boolean()
+        ## @default true
+        #  nodelay  =  true
+
+        ## @path listeners.ws.$name.tcp_options.reuseaddr
+        ## @type boolean()
+        ## @default true
+        #  reuseaddr  =  true
+      #   }
+
+      ## @path listeners.ws.$name.websocket
+      #  websocket {
+        ## @path listeners.ws.$name.websocket.mqtt_path
+        ## @type string()
+        ## @default "/mqtt"
+        #  mqtt_path  =  "/mqtt"
+
+        ## @path listeners.ws.$name.websocket.mqtt_piggyback
+        ## @type enum: single | multiple
+        ## @default multiple
+        #  mqtt_piggyback  =  multiple
+
+        ## @path listeners.ws.$name.websocket.compress
+        ## @type boolean()
+        ## @default false
+        #  compress  =  false
+
+        ## @path listeners.ws.$name.websocket.idle_timeout
+        ## @type emqx_schema:duration()
+        ## @default 7200s
+        #  idle_timeout  =  7200s
+
+        ## @path listeners.ws.$name.websocket.max_frame_size
+        ## @type union() infinity | integer()
+        ## @default infinity
+        #  max_frame_size  =  infinity
+
+        ## @path listeners.ws.$name.websocket.fail_if_no_subprotocol
+        ## @type boolean()
+        ## @default true
+        #  fail_if_no_subprotocol  =  true
+
+        ## @path listeners.ws.$name.websocket.supported_subprotocols
+        ## @type emqx_schema:comma_separated_list()
+        ## @default "mqtt, mqtt-v3, mqtt-v3.1.1, mqtt-v5"
+        #  supported_subprotocols  =  "mqtt, mqtt-v3, mqtt-v3.1.1, mqtt-v5"
+
+        ## @path listeners.ws.$name.websocket.check_origin_enable
+        ## @type boolean()
+        ## @default false
+        #  check_origin_enable  =  false
+
+        ## @path listeners.ws.$name.websocket.allow_origin_absence
+        ## @type boolean()
+        ## @default true
+        #  allow_origin_absence  =  true
+
+        ## @path listeners.ws.$name.websocket.check_origins
+        ## @type emqx_schema:comma_separated_binary()
+        ## @default "http://localhost:18083, http://127.0.0.1:18083"
+        #  check_origins  =  "http://localhost:18083, http://127.0.0.1:18083"
+
+        ## @path listeners.ws.$name.websocket.proxy_address_header
+        ## @type string()
+        ## @default "x-forwarded-for"
+        #  proxy_address_header  =  "x-forwarded-for"
+
+        ## @path listeners.ws.$name.websocket.proxy_port_header
+        ## @type string()
+        ## @default "x-forwarded-port"
+        #  proxy_port_header  =  "x-forwarded-port"
+
+        ## @path listeners.ws.$name.websocket.deflate_opts
+        #  deflate_opts {
+          ## @path listeners.ws.$name.websocket.deflate_opts.level
+          ## @type enum: none | default | best_compression | best_speed
+          #  level  =  
+
+          ## @path listeners.ws.$name.websocket.deflate_opts.mem_level
+          ## @type 1..9
+          ## @default 8
+          #  mem_level  =  8
+
+          ## @path listeners.ws.$name.websocket.deflate_opts.strategy
+          ## @type enum: default | filtered | huffman_only | rle
+          ## @default default
+          #  strategy  =  default
+
+          ## @path listeners.ws.$name.websocket.deflate_opts.server_context_takeover
+          ## @type enum: takeover | no_takeover
+          ## @default takeover
+          #  server_context_takeover  =  takeover
+
+          ## @path listeners.ws.$name.websocket.deflate_opts.client_context_takeover
+          ## @type enum: takeover | no_takeover
+          ## @default takeover
+          #  client_context_takeover  =  takeover
+
+          ## @path listeners.ws.$name.websocket.deflate_opts.server_max_window_bits
+          ## @type 8..15
+          ## @default 15
+          #  server_max_window_bits  =  15
+
+          ## @path listeners.ws.$name.websocket.deflate_opts.client_max_window_bits
+          ## @type 8..15
+          ## @default 15
+          #  client_max_window_bits  =  15
+        #   }
+      #   }
+    #   }
+
+
+  ## @path listeners.wss
+  ## @type map_struct()
+    #  wss.name  =  
+    ## @path listeners.wss.$name
+    #   {
+      ## @path listeners.wss.$name.enabled
+      ## @type boolean()
+      ## @default true
+      #  enabled  =  true
+
+      ## @path listeners.wss.$name.bind
+      ## @type union() emqx_schema:ip_port() | integer()
+      ## @default 8084
+      #  bind  =  8084
+
+      ## @path listeners.wss.$name.acceptors
+      ## @type pos_integer()
+      ## @default 16
+      #  acceptors  =  16
+
+      ## @path listeners.wss.$name.max_connections
+      ## @type union() infinity | pos_integer()
+      ## @default infinity
+      #  max_connections  =  infinity
+
+      ## @path listeners.wss.$name.mountpoint
+      ## @type binary()
+      ## @default 
+      #  mountpoint  =  
+
+      ## @path listeners.wss.$name.zone
+      ## @type atom()
+      ## @default default
+      #  zone  =  default
+
+      ## @path listeners.wss.$name.limiter
+      ## @link listeners.tcp.$name.limiter
+      #  limiter {
+        ## @path listeners.wss.$name.limiter.bytes
+        ## @link listeners.tcp.$name.limiter.bytes
+        #  bytes {
+          ## @path listeners.wss.$name.limiter.bytes.rate
+          ## @type emqx_limiter_schema:rate()
+          ## @default infinity
+          #  rate  =  infinity
+        #   }
+
+        ## @path listeners.wss.$name.limiter.messages
+        ## @link listeners.tcp.$name.limiter.bytes
+        #  messages {
+          ## @path listeners.wss.$name.limiter.messages.rate
+          ## @type emqx_limiter_schema:rate()
+          ## @default infinity
+          #  rate  =  infinity
+        #   }
+
+        ## @path listeners.wss.$name.limiter.client
+        ## @link listeners.tcp.$name.limiter.client
+        #  client {
+          ## @path listeners.wss.$name.limiter.client.bytes
+          ## @link listeners.tcp.$name.limiter.client.bytes
+          #  bytes {
+            ## @path listeners.wss.$name.limiter.client.bytes.rate
+            ## @type emqx_limiter_schema:rate()
+            ## @default infinity
+            #  rate  =  infinity
+          #   }
+
+          ## @path listeners.wss.$name.limiter.client.messages
+          ## @link listeners.tcp.$name.limiter.client.bytes
+          #  messages {
+            ## @path listeners.wss.$name.limiter.client.messages.rate
+            ## @type emqx_limiter_schema:rate()
+            ## @default infinity
+            #  rate  =  infinity
+          #   }
+        #   }
+      #   }
+
+      ## @path listeners.wss.$name.enable_authn
+      ## @type enum: true | false | quick_deny_anonymous
+      ## @default true
+      #  enable_authn  =  true
+
+      ## @path listeners.wss.$name.access_rules
+      ## @type array()
+      ## @default ["allow all"]
+      #  access_rules  =  ["allow all"]
+
+      ## @path listeners.wss.$name.proxy_protocol
+      ## @type boolean()
+      ## @default false
+      #  proxy_protocol  =  false
+
+      ## @path listeners.wss.$name.proxy_protocol_timeout
+      ## @type emqx_schema:duration()
+      ## @default 3s
+      #  proxy_protocol_timeout  =  3s
+
+      ## @path listeners.wss.$name.tcp_options
+      ## @link listeners.tcp.$name.tcp_options
+      #  tcp_options {
+        ## @path listeners.wss.$name.tcp_options.active_n
+        ## @type integer()
+        ## @default 100
+        #  active_n  =  100
+
+        ## @path listeners.wss.$name.tcp_options.backlog
+        ## @type pos_integer()
+        ## @default 1024
+        #  backlog  =  1024
+
+        ## @path listeners.wss.$name.tcp_options.send_timeout
+        ## @type emqx_schema:duration()
+        ## @default 15s
+        #  send_timeout  =  15s
+
+        ## @path listeners.wss.$name.tcp_options.send_timeout_close
+        ## @type boolean()
+        ## @default true
+        #  send_timeout_close  =  true
+
+        ## @path listeners.wss.$name.tcp_options.recbuf
+        ## @type emqx_schema:bytesize()
+        #  recbuf  =  2KB
+
+        ## @path listeners.wss.$name.tcp_options.sndbuf
+        ## @type emqx_schema:bytesize()
+        #  sndbuf  =  4KB
+
+        ## @path listeners.wss.$name.tcp_options.buffer
+        ## @type emqx_schema:bytesize()
+        ## @default 4KB
+        #  buffer  =  4KB
+
+        ## @path listeners.wss.$name.tcp_options.high_watermark
+        ## @type emqx_schema:bytesize()
+        ## @default 1MB
+        #  high_watermark  =  1MB
+
+        ## @path listeners.wss.$name.tcp_options.nodelay
+        ## @type boolean()
+        ## @default true
+        #  nodelay  =  true
+
+        ## @path listeners.wss.$name.tcp_options.reuseaddr
+        ## @type boolean()
+        ## @default true
+        #  reuseaddr  =  true
+      #   }
+
+      ## @path listeners.wss.$name.ssl_options
+      #  ssl_options {
+        ## @path listeners.wss.$name.ssl_options.cacertfile
+        ## @type binary()
+        #  cacertfile  =  
+
+        ## @path listeners.wss.$name.ssl_options.certfile
+        ## @type binary()
+        #  certfile  =  
+
+        ## @path listeners.wss.$name.ssl_options.keyfile
+        ## @type binary()
+        #  keyfile  =  
+
+        ## @path listeners.wss.$name.ssl_options.verify
+        ## @type enum: verify_peer | verify_none
+        ## @default verify_none
+        #  verify  =  verify_none
+
+        ## @path listeners.wss.$name.ssl_options.reuse_sessions
+        ## @type boolean()
+        ## @default true
+        #  reuse_sessions  =  true
+
+        ## @path listeners.wss.$name.ssl_options.depth
+        ## @type integer()
+        ## @default 10
+        #  depth  =  10
+
+        ## @path listeners.wss.$name.ssl_options.password
+        ## @type string()
+        #  password  =  
+
+        ## @path listeners.wss.$name.ssl_options.versions
+        ## @type array()
+        ## @default [tlsv1.3, tlsv1.2, tlsv1.1, tlsv1]
+        #  versions  =  [tlsv1.3, tlsv1.2, tlsv1.1, tlsv1]
+
+        ## @path listeners.wss.$name.ssl_options.ciphers
+        ## @type array()
+        ## @default []
+        #  ciphers  =  []
+
+        ## @path listeners.wss.$name.ssl_options.secure_renegotiate
+        ## @type boolean()
+        ## @default true
+        #  secure_renegotiate  =  true
+
+        ## @path listeners.wss.$name.ssl_options.hibernate_after
+        ## @type emqx_schema:duration()
+        ## @default 5s
+        #  hibernate_after  =  5s
+
+        ## @path listeners.wss.$name.ssl_options.dhfile
+        ## @type string()
+        #  dhfile  =  
+
+        ## @path listeners.wss.$name.ssl_options.fail_if_no_peer_cert
+        ## @type boolean()
+        ## @default false
+        #  fail_if_no_peer_cert  =  false
+
+        ## @path listeners.wss.$name.ssl_options.honor_cipher_order
+        ## @type boolean()
+        ## @default true
+        #  honor_cipher_order  =  true
+
+        ## @path listeners.wss.$name.ssl_options.client_renegotiation
+        ## @type boolean()
+        ## @default true
+        #  client_renegotiation  =  true
+
+        ## @path listeners.wss.$name.ssl_options.handshake_timeout
+        ## @type emqx_schema:duration()
+        ## @default 15s
+        #  handshake_timeout  =  15s
+      #   }
+
+      ## @path listeners.wss.$name.websocket
+      ## @link listeners.ws.$name.websocket
+      #  websocket {
+        ## @path listeners.wss.$name.websocket.mqtt_path
+        ## @type string()
+        ## @default "/mqtt"
+        #  mqtt_path  =  "/mqtt"
+
+        ## @path listeners.wss.$name.websocket.mqtt_piggyback
+        ## @type enum: single | multiple
+        ## @default multiple
+        #  mqtt_piggyback  =  multiple
+
+        ## @path listeners.wss.$name.websocket.compress
+        ## @type boolean()
+        ## @default false
+        #  compress  =  false
+
+        ## @path listeners.wss.$name.websocket.idle_timeout
+        ## @type emqx_schema:duration()
+        ## @default 7200s
+        #  idle_timeout  =  7200s
+
+        ## @path listeners.wss.$name.websocket.max_frame_size
+        ## @type union() infinity | integer()
+        ## @default infinity
+        #  max_frame_size  =  infinity
+
+        ## @path listeners.wss.$name.websocket.fail_if_no_subprotocol
+        ## @type boolean()
+        ## @default true
+        #  fail_if_no_subprotocol  =  true
+
+        ## @path listeners.wss.$name.websocket.supported_subprotocols
+        ## @type emqx_schema:comma_separated_list()
+        ## @default "mqtt, mqtt-v3, mqtt-v3.1.1, mqtt-v5"
+        #  supported_subprotocols  =  "mqtt, mqtt-v3, mqtt-v3.1.1, mqtt-v5"
+
+        ## @path listeners.wss.$name.websocket.check_origin_enable
+        ## @type boolean()
+        ## @default false
+        #  check_origin_enable  =  false
+
+        ## @path listeners.wss.$name.websocket.allow_origin_absence
+        ## @type boolean()
+        ## @default true
+        #  allow_origin_absence  =  true
+
+        ## @path listeners.wss.$name.websocket.check_origins
+        ## @type emqx_schema:comma_separated_binary()
+        ## @default "http://localhost:18083, http://127.0.0.1:18083"
+        #  check_origins  =  "http://localhost:18083, http://127.0.0.1:18083"
+
+        ## @path listeners.wss.$name.websocket.proxy_address_header
+        ## @type string()
+        ## @default "x-forwarded-for"
+        #  proxy_address_header  =  "x-forwarded-for"
+
+        ## @path listeners.wss.$name.websocket.proxy_port_header
+        ## @type string()
+        ## @default "x-forwarded-port"
+        #  proxy_port_header  =  "x-forwarded-port"
+
+        ## @path listeners.wss.$name.websocket.deflate_opts
+        ## @link listeners.ws.$name.websocket.deflate_opts
+        #  deflate_opts {
+          ## @path listeners.wss.$name.websocket.deflate_opts.level
+          ## @type enum: none | default | best_compression | best_speed
+          #  level  =  
+
+          ## @path listeners.wss.$name.websocket.deflate_opts.mem_level
+          ## @type 1..9
+          ## @default 8
+          #  mem_level  =  8
+
+          ## @path listeners.wss.$name.websocket.deflate_opts.strategy
+          ## @type enum: default | filtered | huffman_only | rle
+          ## @default default
+          #  strategy  =  default
+
+          ## @path listeners.wss.$name.websocket.deflate_opts.server_context_takeover
+          ## @type enum: takeover | no_takeover
+          ## @default takeover
+          #  server_context_takeover  =  takeover
+
+          ## @path listeners.wss.$name.websocket.deflate_opts.client_context_takeover
+          ## @type enum: takeover | no_takeover
+          ## @default takeover
+          #  client_context_takeover  =  takeover
+
+          ## @path listeners.wss.$name.websocket.deflate_opts.server_max_window_bits
+          ## @type 8..15
+          ## @default 15
+          #  server_max_window_bits  =  15
+
+          ## @path listeners.wss.$name.websocket.deflate_opts.client_max_window_bits
+          ## @type 8..15
+          ## @default 15
+          #  client_max_window_bits  =  15
+        #   }
+      #   }
+    #   }
+
+
+  ## @path listeners.quic
+  ## @type map_struct()
+    #  quic.name  =  
+    ## @path listeners.quic.$name
+    #   {
+      ## @path listeners.quic.$name.certfile
+      ## @type string()
+      #  certfile  =  
+
+      ## @path listeners.quic.$name.keyfile
+      ## @type string()
+      #  keyfile  =  
+
+      ## @path listeners.quic.$name.ciphers
+      ## @type array()
+      ## @default ["TLS_AES_256_GCM_SHA384", "TLS_AES_128_GCM_SHA256", "TLS_CHACHA20_POLY1305_SHA256"]
+      #  ciphers  =  ["TLS_AES_256_GCM_SHA384", "TLS_AES_128_GCM_SHA256", "TLS_CHACHA20_POLY1305_SHA256"]
+
+      ## @path listeners.quic.$name.idle_timeout
+      ## @type emqx_schema:duration_ms()
+      ## @default 0
+      #  idle_timeout  =  0
+
+      ## @path listeners.quic.$name.handshake_idle_timeout
+      ## @type emqx_schema:duration_ms()
+      ## @default 10s
+      #  handshake_idle_timeout  =  10s
+
+      ## @path listeners.quic.$name.keep_alive_interval
+      ## @type emqx_schema:duration_ms()
+      ## @default 0
+      #  keep_alive_interval  =  0
+
+      ## @path listeners.quic.$name.ssl_options
+      #  ssl_options {
+        ## @path listeners.quic.$name.ssl_options.cacertfile
+        ## @type binary()
+        #  cacertfile  =  
+
+        ## @path listeners.quic.$name.ssl_options.certfile
+        ## @type binary()
+        #  certfile  =  
+
+        ## @path listeners.quic.$name.ssl_options.keyfile
+        ## @type binary()
+        #  keyfile  =  
+
+        ## @path listeners.quic.$name.ssl_options.verify
+        ## @type enum: verify_peer | verify_none
+        ## @default verify_none
+        #  verify  =  verify_none
+
+        ## @path listeners.quic.$name.ssl_options.reuse_sessions
+        ## @type boolean()
+        #  reuse_sessions  =  
+
+        ## @path listeners.quic.$name.ssl_options.depth
+        ## @type integer()
+        #  depth  =  
+
+        ## @path listeners.quic.$name.ssl_options.password
+        ## @type string()
+        #  password  =  
+
+        ## @path listeners.quic.$name.ssl_options.versions
+        ## @type array()
+        #  versions  =  []
+
+        ## @path listeners.quic.$name.ssl_options.ciphers
+        ## @type array()
+        #  ciphers  =  []
+
+        ## @path listeners.quic.$name.ssl_options.secure_renegotiate
+        ## @type boolean()
+        #  secure_renegotiate  =  
+
+        ## @path listeners.quic.$name.ssl_options.hibernate_after
+        ## @type emqx_schema:duration()
+        #  hibernate_after  =  
+
+        ## @path listeners.quic.$name.ssl_options.dhfile
+        ## @type string()
+        #  dhfile  =  
+
+        ## @path listeners.quic.$name.ssl_options.fail_if_no_peer_cert
+        ## @type boolean()
+        #  fail_if_no_peer_cert  =  
+
+        ## @path listeners.quic.$name.ssl_options.honor_cipher_order
+        ## @type boolean()
+        #  honor_cipher_order  =  
+
+        ## @path listeners.quic.$name.ssl_options.client_renegotiation
+        ## @type boolean()
+        #  client_renegotiation  =  
+
+        ## @path listeners.quic.$name.ssl_options.handshake_timeout
+        ## @type emqx_schema:duration()
+        #  handshake_timeout  =  
+
+        ## @path listeners.quic.$name.ssl_options.gc_after_handshake
+        ## @type boolean()
+        #  gc_after_handshake  =  
+
+        ## @path listeners.quic.$name.ssl_options.enable_crl_check
+        ## @type boolean()
+        #  enable_crl_check  =  
+      #   }
+
+      ## @path listeners.quic.$name.enabled
+      ## @type boolean()
+      ## @default true
+      #  enabled  =  true
+
+      ## @path listeners.quic.$name.bind
+      ## @type union() emqx_schema:ip_port() | integer()
+      ## @default 14567
+      #  bind  =  14567
+
+      ## @path listeners.quic.$name.acceptors
+      ## @type pos_integer()
+      ## @default 16
+      #  acceptors  =  16
+
+      ## @path listeners.quic.$name.max_connections
+      ## @type union() infinity | pos_integer()
+      ## @default infinity
+      #  max_connections  =  infinity
+
+      ## @path listeners.quic.$name.mountpoint
+      ## @type binary()
+      ## @default 
+      #  mountpoint  =  
+
+      ## @path listeners.quic.$name.zone
+      ## @type atom()
+      ## @default default
+      #  zone  =  default
+
+      ## @path listeners.quic.$name.limiter
+      ## @link listeners.tcp.$name.limiter
+      #  limiter {
+        ## @path listeners.quic.$name.limiter.bytes
+        ## @link listeners.tcp.$name.limiter.bytes
+        #  bytes {
+          ## @path listeners.quic.$name.limiter.bytes.rate
+          ## @type emqx_limiter_schema:rate()
+          ## @default infinity
+          #  rate  =  infinity
+        #   }
+
+        ## @path listeners.quic.$name.limiter.messages
+        ## @link listeners.tcp.$name.limiter.bytes
+        #  messages {
+          ## @path listeners.quic.$name.limiter.messages.rate
+          ## @type emqx_limiter_schema:rate()
+          ## @default infinity
+          #  rate  =  infinity
+        #   }
+
+        ## @path listeners.quic.$name.limiter.client
+        ## @link listeners.tcp.$name.limiter.client
+        #  client {
+          ## @path listeners.quic.$name.limiter.client.bytes
+          ## @link listeners.tcp.$name.limiter.client.bytes
+          #  bytes {
+            ## @path listeners.quic.$name.limiter.client.bytes.rate
+            ## @type emqx_limiter_schema:rate()
+            ## @default infinity
+            #  rate  =  infinity
+          #   }
+
+          ## @path listeners.quic.$name.limiter.client.messages
+          ## @link listeners.tcp.$name.limiter.client.bytes
+          #  messages {
+            ## @path listeners.quic.$name.limiter.client.messages.rate
+            ## @type emqx_limiter_schema:rate()
+            ## @default infinity
+            #  rate  =  infinity
+          #   }
+        #   }
+      #   }
+
+      ## @path listeners.quic.$name.enable_authn
+      ## @type enum: true | false | quick_deny_anonymous
+      ## @default true
+      #  enable_authn  =  true
+    #   }
+
+ }
+## @path mqtt
+mqtt {
+  ## @path mqtt.idle_timeout
+  ## @type union() infinity | emqx_schema:duration()
+  ## @default 15s
+  idle_timeout  =  15s
+
+  ## @path mqtt.max_packet_size
+  ## @type emqx_schema:bytesize()
+  ## @default 1MB
+  max_packet_size  =  1MB
+
+  ## @path mqtt.max_clientid_len
+  ## @type 23..65535
+  ## @default 65535
+  max_clientid_len  =  65535
+
+  ## @path mqtt.max_topic_levels
+  ## @type 1..65535
+  ## @default 128
+  max_topic_levels  =  128
+
+  ## @path mqtt.max_qos_allowed
+  ## @type qos()
+  ## @default 2
+  max_qos_allowed  =  2
+
+  ## @path mqtt.max_topic_alias
+  ## @type 0..65535
+  ## @default 65535
+  max_topic_alias  =  65535
+
+  ## @path mqtt.retain_available
+  ## @type boolean()
+  ## @default true
+  retain_available  =  true
+
+  ## @path mqtt.wildcard_subscription
+  ## @type boolean()
+  ## @default true
+  wildcard_subscription  =  true
+
+  ## @path mqtt.shared_subscription
+  ## @type boolean()
+  ## @default true
+  shared_subscription  =  true
+
+  ## @path mqtt.exclusive_subscription
+  ## @type boolean()
+  ## @default false
+  exclusive_subscription  =  false
+
+  ## @path mqtt.ignore_loop_deliver
+  ## @type boolean()
+  ## @default false
+  ignore_loop_deliver  =  false
+
+  ## @path mqtt.strict_mode
+  ## @type boolean()
+  ## @default false
+  strict_mode  =  false
+
+  ## @path mqtt.response_information
+  ## @type string()
+  ## @default 
+  response_information  =  
+
+  ## @path mqtt.server_keepalive
+  ## @type union() integer() | disabled
+  ## @default disabled
+  server_keepalive  =  disabled
+
+  ## @path mqtt.keepalive_backoff
+  ## @type number()
+  ## @default 0.75
+  keepalive_backoff  =  0.75
+
+  ## @path mqtt.max_subscriptions
+  ## @type union() 1..inf | infinity
+  ## @default infinity
+  max_subscriptions  =  infinity
+
+  ## @path mqtt.upgrade_qos
+  ## @type boolean()
+  ## @default false
+  upgrade_qos  =  false
+
+  ## @path mqtt.max_inflight
+  ## @type 1..65535
+  ## @default 32
+  max_inflight  =  32
+
+  ## @path mqtt.retry_interval
+  ## @type emqx_schema:duration()
+  ## @default 30s
+  retry_interval  =  30s
+
+  ## @path mqtt.max_awaiting_rel
+  ## @type union() integer() | infinity
+  ## @default 100
+  max_awaiting_rel  =  100
+
+  ## @path mqtt.await_rel_timeout
+  ## @type emqx_schema:duration()
+  ## @default 300s
+  await_rel_timeout  =  300s
+
+  ## @path mqtt.session_expiry_interval
+  ## @type emqx_schema:duration()
+  ## @default 2h
+  session_expiry_interval  =  2h
+
+  ## @path mqtt.max_mqueue_len
+  ## @type union() non_neg_integer() | infinity
+  ## @default 1000
+  max_mqueue_len  =  1000
+
+  ## @path mqtt.mqueue_priorities
+  ## @type union() map() | disabled
+  ## @default disabled
+  mqueue_priorities  =  disabled
+
+  ## @path mqtt.mqueue_default_priority
+  ## @type enum: highest | lowest
+  ## @default lowest
+  mqueue_default_priority  =  lowest
+
+  ## @path mqtt.mqueue_store_qos0
+  ## @type boolean()
+  ## @default true
+  mqueue_store_qos0  =  true
+
+  ## @path mqtt.use_username_as_clientid
+  ## @type boolean()
+  ## @default false
+  use_username_as_clientid  =  false
+
+  ## @path mqtt.peer_cert_as_username
+  ## @type enum: disabled | cn | dn | crt | pem | md5
+  ## @default disabled
+  peer_cert_as_username  =  disabled
+
+  ## @path mqtt.peer_cert_as_clientid
+  ## @type enum: disabled | cn | dn | crt | pem | md5
+  ## @default disabled
+  peer_cert_as_clientid  =  disabled
+ }
+## @path zones
+## @type map_struct()
+  #  zones.name  =  
+  ## @path zones.$name
+  #   {
+    ## @path zones.$name.mqtt
+    #  mqtt {
+      ## @path zones.$name.mqtt.idle_timeout
+      ## @type union() infinity | emqx_schema:duration()
+      #  idle_timeout  =  
+
+      ## @path zones.$name.mqtt.max_packet_size
+      ## @type emqx_schema:bytesize()
+      #  max_packet_size  =  
+
+      ## @path zones.$name.mqtt.max_clientid_len
+      ## @type 23..65535
+      #  max_clientid_len  =  
+
+      ## @path zones.$name.mqtt.max_topic_levels
+      ## @type 1..65535
+      #  max_topic_levels  =  
+
+      ## @path zones.$name.mqtt.max_qos_allowed
+      ## @type qos()
+      #  max_qos_allowed  =  
+
+      ## @path zones.$name.mqtt.max_topic_alias
+      ## @type 0..65535
+      #  max_topic_alias  =  
+
+      ## @path zones.$name.mqtt.retain_available
+      ## @type boolean()
+      #  retain_available  =  
+
+      ## @path zones.$name.mqtt.wildcard_subscription
+      ## @type boolean()
+      #  wildcard_subscription  =  
+
+      ## @path zones.$name.mqtt.shared_subscription
+      ## @type boolean()
+      #  shared_subscription  =  
+
+      ## @path zones.$name.mqtt.exclusive_subscription
+      ## @type boolean()
+      #  exclusive_subscription  =  
+
+      ## @path zones.$name.mqtt.ignore_loop_deliver
+      ## @type boolean()
+      #  ignore_loop_deliver  =  
+
+      ## @path zones.$name.mqtt.strict_mode
+      ## @type boolean()
+      #  strict_mode  =  
+
+      ## @path zones.$name.mqtt.response_information
+      ## @type string()
+      #  response_information  =  
+
+      ## @path zones.$name.mqtt.server_keepalive
+      ## @type union() integer() | disabled
+      #  server_keepalive  =  
+
+      ## @path zones.$name.mqtt.keepalive_backoff
+      ## @type number()
+      #  keepalive_backoff  =  
+
+      ## @path zones.$name.mqtt.max_subscriptions
+      ## @type union() 1..inf | infinity
+      #  max_subscriptions  =  
+
+      ## @path zones.$name.mqtt.upgrade_qos
+      ## @type boolean()
+      #  upgrade_qos  =  
+
+      ## @path zones.$name.mqtt.max_inflight
+      ## @type 1..65535
+      #  max_inflight  =  
+
+      ## @path zones.$name.mqtt.retry_interval
+      ## @type emqx_schema:duration()
+      #  retry_interval  =  
+
+      ## @path zones.$name.mqtt.max_awaiting_rel
+      ## @type union() integer() | infinity
+      #  max_awaiting_rel  =  
+
+      ## @path zones.$name.mqtt.await_rel_timeout
+      ## @type emqx_schema:duration()
+      #  await_rel_timeout  =  
+
+      ## @path zones.$name.mqtt.session_expiry_interval
+      ## @type emqx_schema:duration()
+      #  session_expiry_interval  =  
+
+      ## @path zones.$name.mqtt.max_mqueue_len
+      ## @type union() non_neg_integer() | infinity
+      #  max_mqueue_len  =  
+
+      ## @path zones.$name.mqtt.mqueue_priorities
+      ## @type union() map() | disabled
+      #  mqueue_priorities  =  
+
+      ## @path zones.$name.mqtt.mqueue_default_priority
+      ## @type enum: highest | lowest
+      #  mqueue_default_priority  =  
+
+      ## @path zones.$name.mqtt.mqueue_store_qos0
+      ## @type boolean()
+      #  mqueue_store_qos0  =  
+
+      ## @path zones.$name.mqtt.use_username_as_clientid
+      ## @type boolean()
+      #  use_username_as_clientid  =  
+
+      ## @path zones.$name.mqtt.peer_cert_as_username
+      ## @type enum: disabled | cn | dn | crt | pem | md5
+      #  peer_cert_as_username  =  
+
+      ## @path zones.$name.mqtt.peer_cert_as_clientid
+      ## @type enum: disabled | cn | dn | crt | pem | md5
+      #  peer_cert_as_clientid  =  
+    #   }
+
+    ## @path zones.$name.force_shutdown
+    #  force_shutdown {
+      ## @path zones.$name.force_shutdown.enable
+      ## @type boolean()
+      #  enable  =  
+
+      ## @path zones.$name.force_shutdown.max_message_queue_len
+      ## @type 0..inf
+      #  max_message_queue_len  =  
+
+      ## @path zones.$name.force_shutdown.max_heap_size
+      ## @type emqx_schema:wordsize()
+      #  max_heap_size  =  
+    #   }
+
+    ## @path zones.$name.force_gc
+    #  force_gc {
+      ## @path zones.$name.force_gc.enable
+      ## @type boolean()
+      #  enable  =  
+
+      ## @path zones.$name.force_gc.count
+      ## @type 0..inf
+      #  count  =  
+
+      ## @path zones.$name.force_gc.bytes
+      ## @type emqx_schema:bytesize()
+      #  bytes  =  
+    #   }
+  #   }
+
+## @path authentication
+## @type array()
+authentication  =  []
+## @path authorization
+authorization {
+  ## @path authorization.no_match
+  ## @type enum: allow | deny
+  ## @default allow
+  no_match  =  allow
+
+  ## @path authorization.deny_action
+  ## @type enum: ignore | disconnect
+  ## @default ignore
+  deny_action  =  ignore
+
+  ## @path authorization.cache
+  cache {
+    ## @path authorization.cache.enable
+    ## @type boolean()
+    ## @default true
+    enable  =  true
+
+    ## @path authorization.cache.max_size
+    ## @type 1..1048576
+    ## @default 32
+    max_size  =  32
+
+    ## @path authorization.cache.ttl
+    ## @type emqx_schema:duration()
+    ## @default 1m
+    ttl  =  1m
+   }
+
+  ## @path authorization.sources
+  ## @type array()
+  ## @default []
+  sources  =  []
+ }
+## @path node
+node {
+  ## @path node.name
+  ## @type string()
+  ## @default "emqx@127.0.0.1"
+  name  =  "emqx@127.0.0.1"
+
+  ## @path node.cookie
+  ## @type string()
+  #  cookie  =  
+
+  ## @path node.process_limit
+  ## @type 1024..134217727
+  ## @default 2097152
+  process_limit  =  2097152
+
+  ## @path node.max_ports
+  ## @type 1024..134217727
+  ## @default 1048576
+  max_ports  =  1048576
+
+  ## @path node.dist_buffer_size
+  ## @type 1..2097151
+  ## @default 8192
+  dist_buffer_size  =  8192
+
+  ## @path node.global_gc_interval
+  ## @type union() disabled | emqx_schema:duration()
+  ## @default 15m
+  global_gc_interval  =  15m
+
+  ## @path node.role
+  ## @type enum: core | replicant
+  ## @default core
+  role  =  core
+ }
+## @path cluster
+cluster {
+  ## @path cluster.name
+  ## @type atom()
+  ## @default emqxcl
+  name  =  emqxcl
+
+  ## @path cluster.discovery_strategy
+  ## @type enum: manual | static | mcast | dns | etcd | k8s
+  ## @default manual
+  discovery_strategy  =  manual
+
+  ## @path cluster.core_nodes
+  ## @type union() emqx_schema:comma_separated_atoms() | [atom()]
+  ## @default []
+  core_nodes  =  []
+
+  ## @path cluster.autoclean
+  ## @type emqx_schema:duration()
+  ## @default 5m
+  autoclean  =  5m
+
+  ## @path cluster.autoheal
+  ## @type boolean()
+  ## @default true
+  autoheal  =  true
+
+  ## @path cluster.proto_dist
+  ## @type enum: inet_tcp | inet6_tcp | inet_tls
+  ## @default inet_tcp
+  proto_dist  =  inet_tcp
+
+  ## @path cluster.static
+  static {
+    ## @path cluster.static.seeds
+    ## @type union() emqx_schema:comma_separated_atoms() | [atom()]
+    ## @default []
+    ## @link cluster.core_nodes
+    seeds  =  []
+   }
+
+  ## @path cluster.mcast
+  mcast {
+    ## @path cluster.mcast.addr
+    ## @type string()
+    ## @default "239.192.0.1"
+    addr  =  "239.192.0.1"
+
+    ## @path cluster.mcast.ports
+    ## @type array()
+    ## @default "ᄑᄒ"
+    ports  =  "ᄑᄒ"
+
+    ## @path cluster.mcast.iface
+    ## @type string()
+    ## @default "0.0.0.0"
+    iface  =  "0.0.0.0"
+
+    ## @path cluster.mcast.ttl
+    ## @type 0..255
+    ## @default 255
+    ttl  =  255
+
+    ## @path cluster.mcast.loop
+    ## @type boolean()
+    ## @default true
+    loop  =  true
+
+    ## @path cluster.mcast.sndbuf
+    ## @type emqx_schema:bytesize()
+    ## @default 16KB
+    sndbuf  =  16KB
+
+    ## @path cluster.mcast.recbuf
+    ## @type emqx_schema:bytesize()
+    ## @default 16KB
+    recbuf  =  16KB
+
+    ## @path cluster.mcast.buffer
+    ## @type emqx_schema:bytesize()
+    ## @default 32KB
+    buffer  =  32KB
+   }
+
+  ## @path cluster.dns
+  dns {
+    ## @path cluster.dns.name
+    ## @type string()
+    ## @default localhost
+    name  =  localhost
+
+    ## @path cluster.dns.record_type
+    ## @type enum: a | srv
+    ## @default a
+    record_type  =  a
+   }
+
+  ## @path cluster.etcd
+  etcd {
+    ## @path cluster.etcd.server
+    ## @type emqx_schema:comma_separated_list()
+    #  server  =  
+
+    ## @path cluster.etcd.prefix
+    ## @type string()
+    ## @default emqxcl
+    prefix  =  emqxcl
+
+    ## @path cluster.etcd.node_ttl
+    ## @type emqx_schema:duration()
+    ## @default 1m
+    node_ttl  =  1m
+
+    ## @path cluster.etcd.ssl_options
+    ssl_options {
+      ## @path cluster.etcd.ssl_options.cacertfile
+      ## @type binary()
+      #  cacertfile  =  
+
+      ## @path cluster.etcd.ssl_options.certfile
+      ## @type binary()
+      #  certfile  =  
+
+      ## @path cluster.etcd.ssl_options.keyfile
+      ## @type binary()
+      #  keyfile  =  
+
+      ## @path cluster.etcd.ssl_options.verify
+      ## @type enum: verify_peer | verify_none
+      ## @default verify_none
+      verify  =  verify_none
+
+      ## @path cluster.etcd.ssl_options.reuse_sessions
+      ## @type boolean()
+      ## @default true
+      reuse_sessions  =  true
+
+      ## @path cluster.etcd.ssl_options.depth
+      ## @type integer()
+      ## @default 10
+      depth  =  10
+
+      ## @path cluster.etcd.ssl_options.password
+      ## @type string()
+      #  password  =  
+
+      ## @path cluster.etcd.ssl_options.versions
+      ## @type array()
+      ## @default [tlsv1.3, tlsv1.2, tlsv1.1, tlsv1]
+      versions  =  [tlsv1.3, tlsv1.2, tlsv1.1, tlsv1]
+
+      ## @path cluster.etcd.ssl_options.ciphers
+      ## @type array()
+      ## @default []
+      ciphers  =  []
+
+      ## @path cluster.etcd.ssl_options.secure_renegotiate
+      ## @type boolean()
+      ## @default true
+      secure_renegotiate  =  true
+
+      ## @path cluster.etcd.ssl_options.hibernate_after
+      ## @type emqx_schema:duration()
+      ## @default 5s
+      hibernate_after  =  5s
+
+      ## @path cluster.etcd.ssl_options.enable
+      ## @type boolean()
+      ## @default false
+      enable  =  false
+
+      ## @path cluster.etcd.ssl_options.server_name_indication
+      ## @type union() disable | string()
+      server_name_indication  =  disable
+     }
+   }
+
+  ## @path cluster.k8s
+  k8s {
+    ## @path cluster.k8s.apiserver
+    ## @type string()
+    ## @default "http://10.110.111.204:8080"
+    apiserver  =  "http://10.110.111.204:8080"
+
+    ## @path cluster.k8s.service_name
+    ## @type string()
+    ## @default emqx
+    service_name  =  emqx
+
+    ## @path cluster.k8s.address_type
+    ## @type enum: ip | dns | hostname
+    ## @default ip
+    address_type  =  ip
+
+    ## @path cluster.k8s.namespace
+    ## @type string()
+    ## @default default
+    namespace  =  default
+
+    ## @path cluster.k8s.suffix
+    ## @type string()
+    ## @default "pod.local"
+    suffix  =  "pod.local"
+   }
+ }
+## @path log
+log {
+  ## @path log.console_handler
+  console_handler {
+    ## @path log.console_handler.enable
+    ## @type boolean()
+    ## @default false
+    enable  =  false
+
+    ## @path log.console_handler.level
+    ## @type emqx_conf_schema:log_level()
+    ## @default warning
+    level  =  warning
+
+    ## @path log.console_handler.time_offset
+    ## @type string()
+    ## @default system
+    time_offset  =  system
+
+    ## @path log.console_handler.chars_limit
+    ## @type union() unlimited | 100..inf
+    ## @default unlimited
+    chars_limit  =  unlimited
+
+    ## @path log.console_handler.formatter
+    ## @type enum: text | json
+    ## @default text
+    formatter  =  text
+
+    ## @path log.console_handler.single_line
+    ## @type boolean()
+    ## @default true
+    single_line  =  true
+
+    ## @path log.console_handler.sync_mode_qlen
+    ## @type non_neg_integer()
+    ## @default 100
+    sync_mode_qlen  =  100
+
+    ## @path log.console_handler.drop_mode_qlen
+    ## @type pos_integer()
+    ## @default 3000
+    drop_mode_qlen  =  3000
+
+    ## @path log.console_handler.flush_qlen
+    ## @type pos_integer()
+    ## @default 8000
+    flush_qlen  =  8000
+
+    ## @path log.console_handler.overload_kill
+    overload_kill {
+      ## @path log.console_handler.overload_kill.enable
+      ## @type boolean()
+      ## @default true
+      enable  =  true
+
+      ## @path log.console_handler.overload_kill.mem_size
+      ## @type emqx_schema:bytesize()
+      ## @default 30MB
+      mem_size  =  30MB
+
+      ## @path log.console_handler.overload_kill.qlen
+      ## @type pos_integer()
+      ## @default 20000
+      qlen  =  20000
+
+      ## @path log.console_handler.overload_kill.restart_after
+      ## @type union() emqx_schema:duration_ms() | infinity
+      ## @default 5s
+      restart_after  =  5s
+     }
+
+    ## @path log.console_handler.burst_limit
+    burst_limit {
+      ## @path log.console_handler.burst_limit.enable
+      ## @type boolean()
+      ## @default true
+      enable  =  true
+
+      ## @path log.console_handler.burst_limit.max_count
+      ## @type pos_integer()
+      ## @default 10000
+      max_count  =  10000
+
+      ## @path log.console_handler.burst_limit.window_time
+      ## @type emqx_schema:duration()
+      ## @default 1s
+      window_time  =  1s
+     }
+
+    ## @path log.console_handler.supervisor_reports
+    ## @type enum: error | progress
+    ## @default error
+    supervisor_reports  =  error
+
+    ## @path log.console_handler.max_depth
+    ## @type union() unlimited | non_neg_integer()
+    ## @default 100
+    max_depth  =  100
+   }
+
+  ## @path log.file_handlers
+  ## @type map_struct()
+    #  file_handlers.name  =  
+    ## @path log.file_handlers.$name
+    #   {
+      ## @path log.file_handlers.$name.file
+      ## @type emqx_conf_schema:file()
+      #  file  =  
+
+      ## @path log.file_handlers.$name.rotation
+      #  rotation {
+        ## @path log.file_handlers.$name.rotation.enable
+        ## @type boolean()
+        ## @default true
+        #  enable  =  true
+
+        ## @path log.file_handlers.$name.rotation.count
+        ## @type 1..2048
+        ## @default 10
+        #  count  =  10
+      #   }
+
+      ## @path log.file_handlers.$name.max_size
+      ## @type union() infinity | emqx_schema:bytesize()
+      ## @default 50MB
+      #  max_size  =  50MB
+
+      ## @path log.file_handlers.$name.enable
+      ## @type boolean()
+      ## @default true
+      #  enable  =  true
+
+      ## @path log.file_handlers.$name.level
+      ## @type emqx_conf_schema:log_level()
+      ## @default warning
+      #  level  =  warning
+
+      ## @path log.file_handlers.$name.time_offset
+      ## @type string()
+      ## @default system
+      #  time_offset  =  system
+
+      ## @path log.file_handlers.$name.chars_limit
+      ## @type union() unlimited | 100..inf
+      ## @default unlimited
+      #  chars_limit  =  unlimited
+
+      ## @path log.file_handlers.$name.formatter
+      ## @type enum: text | json
+      ## @default text
+      #  formatter  =  text
+
+      ## @path log.file_handlers.$name.single_line
+      ## @type boolean()
+      ## @default true
+      #  single_line  =  true
+
+      ## @path log.file_handlers.$name.sync_mode_qlen
+      ## @type non_neg_integer()
+      ## @default 100
+      #  sync_mode_qlen  =  100
+
+      ## @path log.file_handlers.$name.drop_mode_qlen
+      ## @type pos_integer()
+      ## @default 3000
+      #  drop_mode_qlen  =  3000
+
+      ## @path log.file_handlers.$name.flush_qlen
+      ## @type pos_integer()
+      ## @default 8000
+      #  flush_qlen  =  8000
+
+      ## @path log.file_handlers.$name.overload_kill
+      ## @link log.console_handler.overload_kill
+      #  overload_kill {
+        ## @path log.file_handlers.$name.overload_kill.enable
+        ## @type boolean()
+        ## @default true
+        #  enable  =  true
+
+        ## @path log.file_handlers.$name.overload_kill.mem_size
+        ## @type emqx_schema:bytesize()
+        ## @default 30MB
+        #  mem_size  =  30MB
+
+        ## @path log.file_handlers.$name.overload_kill.qlen
+        ## @type pos_integer()
+        ## @default 20000
+        #  qlen  =  20000
+
+        ## @path log.file_handlers.$name.overload_kill.restart_after
+        ## @type union() emqx_schema:duration_ms() | infinity
+        ## @default 5s
+        #  restart_after  =  5s
+      #   }
+
+      ## @path log.file_handlers.$name.burst_limit
+      ## @link log.console_handler.burst_limit
+      #  burst_limit {
+        ## @path log.file_handlers.$name.burst_limit.enable
+        ## @type boolean()
+        ## @default true
+        #  enable  =  true
+
+        ## @path log.file_handlers.$name.burst_limit.max_count
+        ## @type pos_integer()
+        ## @default 10000
+        #  max_count  =  10000
+
+        ## @path log.file_handlers.$name.burst_limit.window_time
+        ## @type emqx_schema:duration()
+        ## @default 1s
+        #  window_time  =  1s
+      #   }
+
+      ## @path log.file_handlers.$name.supervisor_reports
+      ## @type enum: error | progress
+      ## @default error
+      #  supervisor_reports  =  error
+
+      ## @path log.file_handlers.$name.max_depth
+      ## @type union() unlimited | non_neg_integer()
+      ## @default 100
+      #  max_depth  =  100
+    #   }
+
+ }
+## @path rpc
+rpc {
+  ## @path rpc.mode
+  ## @type enum: sync | async
+  ## @default async
+  mode  =  async
+
+  ## @path rpc.driver
+  ## @type enum: tcp | ssl
+  ## @default tcp
+  driver  =  tcp
+
+  ## @path rpc.async_batch_size
+  ## @type integer()
+  ## @default 256
+  async_batch_size  =  256
+
+  ## @path rpc.port_discovery
+  ## @type enum: manual | stateless
+  ## @default stateless
+  port_discovery  =  stateless
+
+  ## @path rpc.tcp_server_port
+  ## @type integer()
+  ## @default 5369
+  tcp_server_port  =  5369
+
+  ## @path rpc.ssl_server_port
+  ## @type integer()
+  ## @default 5369
+  ssl_server_port  =  5369
+
+  ## @path rpc.tcp_client_num
+  ## @type 1..256
+  ## @default 10
+  tcp_client_num  =  10
+
+  ## @path rpc.connect_timeout
+  ## @type emqx_schema:duration()
+  ## @default 5s
+  connect_timeout  =  5s
+
+  ## @path rpc.certfile
+  ## @type emqx_conf_schema:file()
+  #  certfile  =  
+
+  ## @path rpc.keyfile
+  ## @type emqx_conf_schema:file()
+  #  keyfile  =  
+
+  ## @path rpc.cacertfile
+  ## @type emqx_conf_schema:file()
+  #  cacertfile  =  
+
+  ## @path rpc.send_timeout
+  ## @type emqx_schema:duration()
+  ## @default 5s
+  send_timeout  =  5s
+
+  ## @path rpc.authentication_timeout
+  ## @type emqx_schema:duration()
+  ## @default 5s
+  authentication_timeout  =  5s
+
+  ## @path rpc.call_receive_timeout
+  ## @type emqx_schema:duration()
+  ## @default 15s
+  call_receive_timeout  =  15s
+
+  ## @path rpc.socket_keepalive_idle
+  ## @type emqx_schema:duration_s()
+  ## @default 15m
+  socket_keepalive_idle  =  15m
+
+  ## @path rpc.socket_keepalive_interval
+  ## @type emqx_schema:duration_s()
+  ## @default 75s
+  socket_keepalive_interval  =  75s
+
+  ## @path rpc.socket_keepalive_count
+  ## @type integer()
+  ## @default 9
+  socket_keepalive_count  =  9
+
+  ## @path rpc.socket_sndbuf
+  ## @type emqx_schema:bytesize()
+  ## @default 1MB
+  socket_sndbuf  =  1MB
+
+  ## @path rpc.socket_recbuf
+  ## @type emqx_schema:bytesize()
+  ## @default 1MB
+  socket_recbuf  =  1MB
+
+  ## @path rpc.socket_buffer
+  ## @type emqx_schema:bytesize()
+  ## @default 1MB
+  socket_buffer  =  1MB
+
+  ## @path rpc.insecure_fallback
+  ## @type boolean()
+  ## @default true
+  insecure_fallback  =  true
+ }
+## @path broker
+broker {
+  ## @path broker.enable_session_registry
+  ## @type boolean()
+  ## @default true
+  enable_session_registry  =  true
+
+  ## @path broker.session_locking_strategy
+  ## @type enum: local | leader | quorum | all
+  ## @default quorum
+  session_locking_strategy  =  quorum
+
+  ## @path broker.shared_subscription_strategy
+  ## @type enum: random | round_robin | round_robin_per_group | sticky | local | hash_topic | hash_clientid
+  ## @default round_robin
+  shared_subscription_strategy  =  round_robin
+
+  ## @path broker.route_batch_clean
+  ## @type boolean()
+  ## @default true
+  route_batch_clean  =  true
+ }
+## @path sys_topics
+sys_topics {
+  ## @path sys_topics.sys_msg_interval
+  ## @type union() disabled | emqx_schema:duration()
+  ## @default 1m
+  sys_msg_interval  =  1m
+
+  ## @path sys_topics.sys_heartbeat_interval
+  ## @type union() disabled | emqx_schema:duration()
+  ## @default 30s
+  sys_heartbeat_interval  =  30s
+
+  ## @path sys_topics.sys_event_messages
+  sys_event_messages {
+    ## @path sys_topics.sys_event_messages.client_connected
+    ## @type boolean()
+    ## @default true
+    client_connected  =  true
+
+    ## @path sys_topics.sys_event_messages.client_disconnected
+    ## @type boolean()
+    ## @default true
+    client_disconnected  =  true
+
+    ## @path sys_topics.sys_event_messages.client_subscribed
+    ## @type boolean()
+    ## @default false
+    client_subscribed  =  false
+
+    ## @path sys_topics.sys_event_messages.client_unsubscribed
+    ## @type boolean()
+    ## @default false
+    client_unsubscribed  =  false
+   }
+ }
+## @path force_shutdown
+force_shutdown {
+  ## @path force_shutdown.enable
+  ## @type boolean()
+  ## @default true
+  enable  =  true
+
+  ## @path force_shutdown.max_message_queue_len
+  ## @type 0..inf
+  ## @default 1000
+  max_message_queue_len  =  1000
+
+  ## @path force_shutdown.max_heap_size
+  ## @type emqx_schema:wordsize()
+  ## @default 32MB
+  max_heap_size  =  32MB
+ }
+## @path force_gc
+force_gc {
+  ## @path force_gc.enable
+  ## @type boolean()
+  ## @default true
+  enable  =  true
+
+  ## @path force_gc.count
+  ## @type 0..inf
+  ## @default 16000
+  count  =  16000
+
+  ## @path force_gc.bytes
+  ## @type emqx_schema:bytesize()
+  ## @default 16MB
+  bytes  =  16MB
+ }
+## @path sysmon
+sysmon {
+  ## @path sysmon.vm
+  vm {
+    ## @path sysmon.vm.process_check_interval
+    ## @type emqx_schema:duration()
+    ## @default 30s
+    process_check_interval  =  30s
+
+    ## @path sysmon.vm.process_high_watermark
+    ## @type emqx_schema:percent()
+    ## @default "80%"
+    process_high_watermark  =  "80%"
+
+    ## @path sysmon.vm.process_low_watermark
+    ## @type emqx_schema:percent()
+    ## @default "60%"
+    process_low_watermark  =  "60%"
+
+    ## @path sysmon.vm.long_gc
+    ## @type union() disabled | emqx_schema:duration()
+    ## @default disabled
+    long_gc  =  disabled
+
+    ## @path sysmon.vm.long_schedule
+    ## @type union() disabled | emqx_schema:duration()
+    ## @default 240ms
+    long_schedule  =  240ms
+
+    ## @path sysmon.vm.large_heap
+    ## @type union() disabled | emqx_schema:bytesize()
+    ## @default 32MB
+    large_heap  =  32MB
+
+    ## @path sysmon.vm.busy_dist_port
+    ## @type boolean()
+    ## @default true
+    busy_dist_port  =  true
+
+    ## @path sysmon.vm.busy_port
+    ## @type boolean()
+    ## @default true
+    busy_port  =  true
+   }
+
+  ## @path sysmon.os
+  os {
+    ## @path sysmon.os.cpu_check_interval
+    ## @type emqx_schema:duration()
+    ## @default 60s
+    cpu_check_interval  =  60s
+
+    ## @path sysmon.os.cpu_high_watermark
+    ## @type emqx_schema:percent()
+    ## @default "80%"
+    cpu_high_watermark  =  "80%"
+
+    ## @path sysmon.os.cpu_low_watermark
+    ## @type emqx_schema:percent()
+    ## @default "60%"
+    cpu_low_watermark  =  "60%"
+
+    ## @path sysmon.os.mem_check_interval
+    ## @type union() disabled | emqx_schema:duration()
+    ## @default 60s
+    mem_check_interval  =  60s
+
+    ## @path sysmon.os.sysmem_high_watermark
+    ## @type emqx_schema:percent()
+    ## @default "70%"
+    sysmem_high_watermark  =  "70%"
+
+    ## @path sysmon.os.procmem_high_watermark
+    ## @type emqx_schema:percent()
+    ## @default "5%"
+    procmem_high_watermark  =  "5%"
+   }
+ }
+## @path alarm
+alarm {
+  ## @path alarm.actions
+  ## @type array()
+  ## @default [log, publish]
+  actions  =  [log, publish]
+
+  ## @path alarm.size_limit
+  ## @type 1..3000
+  ## @default 1000
+  size_limit  =  1000
+
+  ## @path alarm.validity_period
+  ## @type emqx_schema:duration()
+  ## @default 24h
+  validity_period  =  24h
+ }
+## @path bridges
+bridges {
+  ## @path bridges.webhook
+  ## @type map_struct()
+    #  webhook.name  =  
+    ## @path bridges.webhook.$name
+    #   {
+      ## @path bridges.webhook.$name.enable
+      ## @type boolean()
+      ## @default true
+      #  enable  =  true
+
+      ## @path bridges.webhook.$name.resource_opts
+      #  resource_opts {
+        ## @path bridges.webhook.$name.resource_opts.worker_pool_size
+        ## @type non_neg_integer()
+        ## @default 16
+        #  worker_pool_size  =  16
+
+        ## @path bridges.webhook.$name.resource_opts.health_check_interval
+        ## @type emqx_schema:duration_ms()
+        ## @default 15s
+        #  health_check_interval  =  15s
+
+        ## @path bridges.webhook.$name.resource_opts.start_after_created
+        ## @type boolean()
+        ## @default true
+        #  start_after_created  =  true
+
+        ## @path bridges.webhook.$name.resource_opts.start_timeout
+        ## @type emqx_schema:duration_ms()
+        ## @default 5s
+        #  start_timeout  =  5s
+
+        ## @path bridges.webhook.$name.resource_opts.auto_restart_interval
+        ## @type union() infinity | emqx_schema:duration_ms()
+        ## @default 60s
+        #  auto_restart_interval  =  60s
+
+        ## @path bridges.webhook.$name.resource_opts.query_mode
+        ## @type enum: sync | async
+        ## @default async
+        #  query_mode  =  async
+
+        ## @path bridges.webhook.$name.resource_opts.request_timeout
+        ## @type union() infinity | emqx_schema:duration_ms()
+        ## @default 15s
+        #  request_timeout  =  15s
+
+        ## @path bridges.webhook.$name.resource_opts.inflight_window
+        ## @type pos_integer()
+        ## @default 100
+        #  inflight_window  =  100
+
+        ## @path bridges.webhook.$name.resource_opts.enable_queue
+        ## @type boolean()
+        #  enable_queue  =  
+
+        ## @path bridges.webhook.$name.resource_opts.max_buffer_bytes
+        ## @type emqx_schema:bytesize()
+        ## @default 256MB
+        #  max_buffer_bytes  =  256MB
+      #   }
+
+      ## @path bridges.webhook.$name.connect_timeout
+      ## @type emqx_schema:duration_ms()
+      ## @default 15s
+      #  connect_timeout  =  15s
+
+      ## @path bridges.webhook.$name.retry_interval
+      ## @type emqx_schema:duration()
+      #  retry_interval  =  
+
+      ## @path bridges.webhook.$name.pool_type
+      ## @type emqx_connector_http:pool_type()
+      ## @default random
+      #  pool_type  =  random
+
+      ## @path bridges.webhook.$name.pool_size
+      ## @type pos_integer()
+      ## @default 8
+      #  pool_size  =  8
+
+      ## @path bridges.webhook.$name.enable_pipelining
+      ## @type pos_integer()
+      ## @default 100
+      #  enable_pipelining  =  100
+
+      ## @path bridges.webhook.$name.request
+      #  request {
+        ## @path bridges.webhook.$name.request.method
+        ## @type binary()
+        #  method  =  
+
+        ## @path bridges.webhook.$name.request.path
+        ## @type binary()
+        #  path  =  
+
+        ## @path bridges.webhook.$name.request.body
+        ## @type binary()
+        #  body  =  
+
+        ## @path bridges.webhook.$name.request.headers
+        ## @type map()
+        #  headers  =  
+
+        ## @path bridges.webhook.$name.request.max_retries
+        ## @type non_neg_integer()
+        #  max_retries  =  
+
+        ## @path bridges.webhook.$name.request.request_timeout
+        ## @type emqx_schema:duration_ms()
+        #  request_timeout  =  
+      #   }
+
+      ## @path bridges.webhook.$name.ssl
+      ## @link cluster.etcd.ssl_options
+      #  ssl {
+        ## @path bridges.webhook.$name.ssl.cacertfile
+        ## @type binary()
+        #  cacertfile  =  
+
+        ## @path bridges.webhook.$name.ssl.certfile
+        ## @type binary()
+        #  certfile  =  
+
+        ## @path bridges.webhook.$name.ssl.keyfile
+        ## @type binary()
+        #  keyfile  =  
+
+        ## @path bridges.webhook.$name.ssl.verify
+        ## @type enum: verify_peer | verify_none
+        ## @default verify_none
+        #  verify  =  verify_none
+
+        ## @path bridges.webhook.$name.ssl.reuse_sessions
+        ## @type boolean()
+        ## @default true
+        #  reuse_sessions  =  true
+
+        ## @path bridges.webhook.$name.ssl.depth
+        ## @type integer()
+        ## @default 10
+        #  depth  =  10
+
+        ## @path bridges.webhook.$name.ssl.password
+        ## @type string()
+        #  password  =  
+
+        ## @path bridges.webhook.$name.ssl.versions
+        ## @type array()
+        ## @default [tlsv1.3, tlsv1.2, tlsv1.1, tlsv1]
+        #  versions  =  [tlsv1.3, tlsv1.2, tlsv1.1, tlsv1]
+
+        ## @path bridges.webhook.$name.ssl.ciphers
+        ## @type array()
+        ## @default []
+        #  ciphers  =  []
+
+        ## @path bridges.webhook.$name.ssl.secure_renegotiate
+        ## @type boolean()
+        ## @default true
+        #  secure_renegotiate  =  true
+
+        ## @path bridges.webhook.$name.ssl.hibernate_after
+        ## @type emqx_schema:duration()
+        ## @default 5s
+        #  hibernate_after  =  5s
+
+        ## @path bridges.webhook.$name.ssl.enable
+        ## @type boolean()
+        ## @default false
+        #  enable  =  false
+
+        ## @path bridges.webhook.$name.ssl.server_name_indication
+        ## @type union() disable | string()
+        #  server_name_indication  =  disable
+      #   }
+
+      ## @path bridges.webhook.$name.url
+      ## @type binary()
+      #  url  =  
+
+      ## @path bridges.webhook.$name.direction
+      ## @type singleton
+      #  direction  =  egress
+
+      ## @path bridges.webhook.$name.local_topic
+      ## @type binary()
+      #  local_topic  =  
+
+      ## @path bridges.webhook.$name.method
+      ## @type enum: post | put | get | delete
+      ## @default post
+      #  method  =  post
+
+      ## @path bridges.webhook.$name.headers
+      ## @type map()
+      ## @default 
+        #  {  accept = "application/json"  "cache-control" = "no-cache"  connection = "keep-alive"  "content-type" = "application/json"  "keep-alive" = "timeout=5"}
+
+      #  headers  =  
+        #  {  accept = "application/json"  "cache-control" = "no-cache"  connection = "keep-alive"  "content-type" = "application/json"  "keep-alive" = "timeout=5"}
+
+
+      ## @path bridges.webhook.$name.body
+      ## @type binary()
+      #  body  =  
+
+      ## @path bridges.webhook.$name.max_retries
+      ## @type non_neg_integer()
+      ## @default 2
+      #  max_retries  =  2
+
+      ## @path bridges.webhook.$name.request_timeout
+      ## @type emqx_schema:duration_ms()
+      ## @default 15s
+      #  request_timeout  =  15s
+    #   }
+
+
+  ## @path bridges.mqtt
+  ## @type map_struct()
+    #  mqtt.name  =  
+    ## @path bridges.mqtt.$name
+    #   {
+      ## @path bridges.mqtt.$name.enable
+      ## @type boolean()
+      ## @default true
+      #  enable  =  true
+
+      ## @path bridges.mqtt.$name.resource_opts
+      #  resource_opts {
+        ## @path bridges.mqtt.$name.resource_opts.worker_pool_size
+        ## @type non_neg_integer()
+        ## @default 16
+        #  worker_pool_size  =  16
+
+        ## @path bridges.mqtt.$name.resource_opts.health_check_interval
+        ## @type emqx_schema:duration_ms()
+        ## @default 15s
+        #  health_check_interval  =  15s
+
+        ## @path bridges.mqtt.$name.resource_opts.start_after_created
+        ## @type boolean()
+        ## @default true
+        #  start_after_created  =  true
+
+        ## @path bridges.mqtt.$name.resource_opts.start_timeout
+        ## @type emqx_schema:duration_ms()
+        ## @default 5s
+        #  start_timeout  =  5s
+
+        ## @path bridges.mqtt.$name.resource_opts.auto_restart_interval
+        ## @type union() infinity | emqx_schema:duration_ms()
+        ## @default 60s
+        #  auto_restart_interval  =  60s
+
+        ## @path bridges.mqtt.$name.resource_opts.query_mode
+        ## @type enum: sync | async
+        ## @default async
+        #  query_mode  =  async
+
+        ## @path bridges.mqtt.$name.resource_opts.request_timeout
+        ## @type union() infinity | emqx_schema:duration_ms()
+        ## @default 15s
+        #  request_timeout  =  15s
+
+        ## @path bridges.mqtt.$name.resource_opts.inflight_window
+        ## @type pos_integer()
+        ## @default 100
+        #  inflight_window  =  100
+
+        ## @path bridges.mqtt.$name.resource_opts.enable_queue
+        ## @type boolean()
+        #  enable_queue  =  
+
+        ## @path bridges.mqtt.$name.resource_opts.max_buffer_bytes
+        ## @type emqx_schema:bytesize()
+        ## @default 256MB
+        #  max_buffer_bytes  =  256MB
+      #   }
+
+      ## @path bridges.mqtt.$name.mode
+      ## @type enum: cluster_shareload
+      ## @default cluster_shareload
+      #  mode  =  cluster_shareload
+
+      ## @path bridges.mqtt.$name.server
+      ## @type string()
+      #  server  =  
+
+      ## @path bridges.mqtt.$name.clientid_prefix
+      ## @type binary()
+      #  clientid_prefix  =  
+
+      ## @path bridges.mqtt.$name.reconnect_interval
+      ## @type string()
+      #  reconnect_interval  =  
+
+      ## @path bridges.mqtt.$name.proto_ver
+      ## @type enum: v3 | v4 | v5
+      ## @default v4
+      #  proto_ver  =  v4
+
+      ## @path bridges.mqtt.$name.bridge_mode
+      ## @type boolean()
+      ## @default false
+      #  bridge_mode  =  false
+
+      ## @path bridges.mqtt.$name.username
+      ## @type binary()
+      #  username  =  
+
+      ## @path bridges.mqtt.$name.password
+      ## @type binary()
+      #  password  =  
+
+      ## @path bridges.mqtt.$name.clean_start
+      ## @type boolean()
+      ## @default true
+      #  clean_start  =  true
+
+      ## @path bridges.mqtt.$name.keepalive
+      ## @type string()
+      ## @default 300s
+      #  keepalive  =  300s
+
+      ## @path bridges.mqtt.$name.retry_interval
+      ## @type string()
+      ## @default 15s
+      #  retry_interval  =  15s
+
+      ## @path bridges.mqtt.$name.max_inflight
+      ## @type non_neg_integer()
+      ## @default 32
+      #  max_inflight  =  32
+
+      ## @path bridges.mqtt.$name.ssl
+      ## @link cluster.etcd.ssl_options
+      #  ssl {
+        ## @path bridges.mqtt.$name.ssl.cacertfile
+        ## @type binary()
+        #  cacertfile  =  
+
+        ## @path bridges.mqtt.$name.ssl.certfile
+        ## @type binary()
+        #  certfile  =  
+
+        ## @path bridges.mqtt.$name.ssl.keyfile
+        ## @type binary()
+        #  keyfile  =  
+
+        ## @path bridges.mqtt.$name.ssl.verify
+        ## @type enum: verify_peer | verify_none
+        ## @default verify_none
+        #  verify  =  verify_none
+
+        ## @path bridges.mqtt.$name.ssl.reuse_sessions
+        ## @type boolean()
+        ## @default true
+        #  reuse_sessions  =  true
+
+        ## @path bridges.mqtt.$name.ssl.depth
+        ## @type integer()
+        ## @default 10
+        #  depth  =  10
+
+        ## @path bridges.mqtt.$name.ssl.password
+        ## @type string()
+        #  password  =  
+
+        ## @path bridges.mqtt.$name.ssl.versions
+        ## @type array()
+        ## @default [tlsv1.3, tlsv1.2, tlsv1.1, tlsv1]
+        #  versions  =  [tlsv1.3, tlsv1.2, tlsv1.1, tlsv1]
+
+        ## @path bridges.mqtt.$name.ssl.ciphers
+        ## @type array()
+        ## @default []
+        #  ciphers  =  []
+
+        ## @path bridges.mqtt.$name.ssl.secure_renegotiate
+        ## @type boolean()
+        ## @default true
+        #  secure_renegotiate  =  true
+
+        ## @path bridges.mqtt.$name.ssl.hibernate_after
+        ## @type emqx_schema:duration()
+        ## @default 5s
+        #  hibernate_after  =  5s
+
+        ## @path bridges.mqtt.$name.ssl.enable
+        ## @type boolean()
+        ## @default false
+        #  enable  =  false
+
+        ## @path bridges.mqtt.$name.ssl.server_name_indication
+        ## @type union() disable | string()
+        #  server_name_indication  =  disable
+      #   }
+
+      ## @path bridges.mqtt.$name.ingress
+      #  ingress {
+        ## @path bridges.mqtt.$name.ingress.remote
+        #  remote {
+          ## @path bridges.mqtt.$name.ingress.remote.topic
+          ## @type binary()
+          #  topic  =  
+
+          ## @path bridges.mqtt.$name.ingress.remote.qos
+          ## @type qos()
+          ## @default 1
+          #  qos  =  1
+        #   }
+
+        ## @path bridges.mqtt.$name.ingress.local
+        #  local {
+          ## @path bridges.mqtt.$name.ingress.local.topic
+          ## @type binary()
+          #  topic  =  
+
+          ## @path bridges.mqtt.$name.ingress.local.qos
+          ## @type union() qos() | binary()
+          ## @default "${qos}"
+          #  qos  =  "${qos}"
+
+          ## @path bridges.mqtt.$name.ingress.local.retain
+          ## @type union() boolean() | binary()
+          ## @default "${retain}"
+          #  retain  =  "${retain}"
+
+          ## @path bridges.mqtt.$name.ingress.local.payload
+          ## @type binary()
+          #  payload  =  
+        #   }
+      #   }
+
+      ## @path bridges.mqtt.$name.egress
+      #  egress {
+        ## @path bridges.mqtt.$name.egress.local
+        #  local {
+          ## @path bridges.mqtt.$name.egress.local.topic
+          ## @type binary()
+          #  topic  =  
+        #   }
+
+        ## @path bridges.mqtt.$name.egress.remote
+        #  remote {
+          ## @path bridges.mqtt.$name.egress.remote.topic
+          ## @type binary()
+          #  topic  =  
+
+          ## @path bridges.mqtt.$name.egress.remote.qos
+          ## @type union() qos() | binary()
+          ## @default 1
+          #  qos  =  1
+
+          ## @path bridges.mqtt.$name.egress.remote.retain
+          ## @type union() boolean() | binary()
+          ## @default false
+          #  retain  =  false
+
+          ## @path bridges.mqtt.$name.egress.remote.payload
+          ## @type binary()
+          #  payload  =  
+        #   }
+      #   }
+    #   }
+
+ }
+## @path retainer
+retainer {
+  ## @path retainer.enable
+  ## @type boolean()
+  ## @default true
+  enable  =  true
+
+  ## @path retainer.msg_expiry_interval
+  ## @type emqx_schema:duration_ms()
+  ## @default 0s
+  msg_expiry_interval  =  0s
+
+  ## @path retainer.msg_clear_interval
+  ## @type emqx_schema:duration_ms()
+  ## @default 0s
+  msg_clear_interval  =  0s
+
+  ## @path retainer.max_payload_size
+  ## @type emqx_schema:bytesize()
+  ## @default 1MB
+  max_payload_size  =  1MB
+
+  ## @path retainer.stop_publish_clear_msg
+  ## @type boolean()
+  ## @default false
+  stop_publish_clear_msg  =  false
+
+  ## @path retainer.backend
+  backend {
+    ## @path retainer.backend.type
+    ## @type singleton
+    ## @default built_in_database
+    type  =  built_in_database
+
+    ## @path retainer.backend.storage_type
+    ## @type enum: ram | disc
+    ## @default ram
+    storage_type  =  ram
+
+    ## @path retainer.backend.max_retained_messages
+    ## @type non_neg_integer()
+    ## @default 0
+    max_retained_messages  =  0
+
+    ## @path retainer.backend.index_specs
+    ## @type [[integer()]]
+    ## @default 
+      #  [  [1, 2, 3],  [1, 3],  [2, 3],  [3]]
+
+    index_specs  =  
+      [  [2, 4],  [1, 3]]
+
+   }
+ }
+## @path delayed
+delayed {
+  ## @path delayed.enable
+  ## @type boolean()
+  ## @default true
+  enable  =  true
+
+  ## @path delayed.max_delayed_messages
+  ## @type integer()
+  ## @default 0
+  max_delayed_messages  =  0
+ }
+## @path telemetry
+telemetry {
+  ## @path telemetry.enable
+  ## @type boolean()
+  ## @default true
+  enable  =  true
+ }
+## @path plugins
+plugins {
+  ## @path plugins.states
+  ## @type array()
+  ## @default []
+  states  =  []
+
+  ## @path plugins.install_dir
+  ## @type string()
+  ## @default plugins
+  install_dir  =  plugins
+
+  ## @path plugins.check_interval
+  ## @type emqx_schema:duration()
+  #  check_interval  =  
+ }
+## @path dashboard
+dashboard {
+  ## @path dashboard.listeners
+  listeners {
+    ## @path dashboard.listeners.http
+    http {
+      ## @path dashboard.listeners.http.enable
+      ## @type boolean()
+      ## @default true
+      enable  =  true
+
+      ## @path dashboard.listeners.http.bind
+      ## @type union() non_neg_integer() | emqx_schema:ip_port()
+      ## @default 18083
+      bind  =  "0.0.0.0:18083"
+
+      ## @path dashboard.listeners.http.num_acceptors
+      ## @type integer()
+      ## @default 2
+      num_acceptors  =  2
+
+      ## @path dashboard.listeners.http.max_connections
+      ## @type integer()
+      ## @default 512
+      max_connections  =  512
+
+      ## @path dashboard.listeners.http.backlog
+      ## @type integer()
+      ## @default 1024
+      backlog  =  1024
+
+      ## @path dashboard.listeners.http.send_timeout
+      ## @type emqx_schema:duration()
+      ## @default 10s
+      send_timeout  =  10s
+
+      ## @path dashboard.listeners.http.inet6
+      ## @type boolean()
+      ## @default false
+      inet6  =  false
+
+      ## @path dashboard.listeners.http.ipv6_v6only
+      ## @type boolean()
+      ## @default false
+      ipv6_v6only  =  false
+
+      ## @path dashboard.listeners.http.proxy_header
+      ## @type boolean()
+      ## @default false
+      proxy_header  =  false
+     }
+
+    ## @path dashboard.listeners.https
+    https {
+      ## @path dashboard.listeners.https.enable
+      ## @type boolean()
+      ## @default false
+      enable  =  false
+
+      ## @path dashboard.listeners.https.bind
+      ## @type union() non_neg_integer() | emqx_schema:ip_port()
+      ## @default 18084
+      bind  =  "0.0.0.0:18084"
+
+      ## @path dashboard.listeners.https.num_acceptors
+      ## @type integer()
+      ## @default 2
+      num_acceptors  =  2
+
+      ## @path dashboard.listeners.https.max_connections
+      ## @type integer()
+      ## @default 512
+      max_connections  =  512
+
+      ## @path dashboard.listeners.https.backlog
+      ## @type integer()
+      ## @default 1024
+      backlog  =  1024
+
+      ## @path dashboard.listeners.https.send_timeout
+      ## @type emqx_schema:duration()
+      ## @default 10s
+      send_timeout  =  10s
+
+      ## @path dashboard.listeners.https.inet6
+      ## @type boolean()
+      ## @default false
+      inet6  =  false
+
+      ## @path dashboard.listeners.https.ipv6_v6only
+      ## @type boolean()
+      ## @default false
+      ipv6_v6only  =  false
+
+      ## @path dashboard.listeners.https.proxy_header
+      ## @type boolean()
+      ## @default false
+      proxy_header  =  false
+
+      ## @path dashboard.listeners.https.cacertfile
+      ## @type binary()
+      #  cacertfile  =  
+
+      ## @path dashboard.listeners.https.certfile
+      ## @type binary()
+      #  certfile  =  
+
+      ## @path dashboard.listeners.https.keyfile
+      ## @type binary()
+      #  keyfile  =  
+
+      ## @path dashboard.listeners.https.verify
+      ## @type enum: verify_peer | verify_none
+      ## @default verify_none
+      verify  =  verify_none
+
+      ## @path dashboard.listeners.https.reuse_sessions
+      ## @type boolean()
+      ## @default true
+      reuse_sessions  =  true
+
+      ## @path dashboard.listeners.https.depth
+      ## @type integer()
+      ## @default 10
+      depth  =  10
+
+      ## @path dashboard.listeners.https.versions
+      ## @type array()
+      ## @default [tlsv1.3, tlsv1.2, tlsv1.1, tlsv1]
+      versions  =  [tlsv1.3, tlsv1.2, tlsv1.1, tlsv1]
+
+      ## @path dashboard.listeners.https.ciphers
+      ## @type array()
+      ## @default []
+      ciphers  =  []
+
+      ## @path dashboard.listeners.https.secure_renegotiate
+      ## @type boolean()
+      ## @default true
+      secure_renegotiate  =  true
+
+      ## @path dashboard.listeners.https.hibernate_after
+      ## @type emqx_schema:duration()
+      ## @default 5s
+      hibernate_after  =  5s
+
+      ## @path dashboard.listeners.https.dhfile
+      ## @type string()
+      #  dhfile  =  
+
+      ## @path dashboard.listeners.https.honor_cipher_order
+      ## @type boolean()
+      ## @default true
+      honor_cipher_order  =  true
+
+      ## @path dashboard.listeners.https.client_renegotiation
+      ## @type boolean()
+      ## @default true
+      client_renegotiation  =  true
+
+      ## @path dashboard.listeners.https.handshake_timeout
+      ## @type emqx_schema:duration()
+      ## @default 15s
+      handshake_timeout  =  15s
+     }
+   }
+
+  ## @path dashboard.token_expired_time
+  ## @type emqx_schema:duration()
+  ## @default 60m
+  token_expired_time  =  60m
+
+  ## @path dashboard.cors
+  ## @type boolean()
+  ## @default false
+  cors  =  false
+ }
+## @path prometheus
+prometheus {
+  ## @path prometheus.push_gateway_server
+  ## @type string()
+  ## @default "http://127.0.0.1:9091"
+  push_gateway_server  =  "http://127.0.0.1:9091"
+
+  ## @path prometheus.interval
+  ## @type emqx_schema:duration_ms()
+  ## @default 15s
+  interval  =  15s
+
+  ## @path prometheus.headers
+  ## @type [{string(), string()}]
+  ## @default {}
+  headers  =  {}
+
+  ## @path prometheus.job_name
+  ## @type binary()
+  ## @default "${name}/instance/${name}~${host}"
+  job_name  =  "${name}/instance/${name}~${host}"
+
+  ## @path prometheus.enable
+  ## @type boolean()
+  ## @default false
+  enable  =  false
+ }
+## @path rule_engine
+rule_engine {
+  ## @path rule_engine.ignore_sys_message
+  ## @type boolean()
+  ## @default true
+  ignore_sys_message  =  true
+
+  ## @path rule_engine.jq_function_default_timeout
+  ## @type emqx_schema:duration_ms()
+  ## @default 10s
+  jq_function_default_timeout  =  10s
+
+  ## @path rule_engine.rules
+  ## @type map_struct()
+  ## @default {}
+    #  rules.id  =  
+    ## @path rule_engine.rules.$id
+    #   {
+      ## @path rule_engine.rules.$id.name
+      ## @type binary()
+      ## @default 
+      #  name  =  foo
+
+      ## @path rule_engine.rules.$id.sql
+      ## @type binary()
+      #  sql  =  "SELECT * FROM \"test/topic\" WHERE payload.x = 1"
+
+      ## @path rule_engine.rules.$id.actions
+      ## @type array()
+      ## @default []
+      #  actions  =  
+          #  [  "webhook:my_webhook",  {    args {payload = "${payload}", topic = "t/1"}    function = republish  },  {function = console}]
+
+
+      ## @path rule_engine.rules.$id.enable
+      ## @type boolean()
+      ## @default true
+      #  enable  =  true
+
+      ## @path rule_engine.rules.$id.description
+      ## @type binary()
+      ## @default 
+      #  description  =  "Some description"
+
+      ## @path rule_engine.rules.$id.metadata
+      ## @type map()
+      #  metadata  =  
+    #   }
+
+ }
+## @path exhook
+exhook {
+  ## @path exhook.servers
+  ## @type array()
+  ## @default []
+  servers  =  []
+ }
+## @path psk_authentication
+psk_authentication {
+  ## @path psk_authentication.enable
+  ## @type boolean()
+  ## @default false
+  enable  =  false
+
+  ## @path psk_authentication.init_file
+  ## @type binary()
+  #  init_file  =  
+
+  ## @path psk_authentication.separator
+  ## @type binary()
+  ## @default ":"
+  separator  =  ":"
+
+  ## @path psk_authentication.chunk_size
+  ## @type integer()
+  ## @default 50
+  chunk_size  =  50
+ }
+## @path api_key
+api_key {
+  ## @path api_key.bootstrap_file
+  ## @type binary()
+  ## @default 
+  bootstrap_file  =  
+ }
