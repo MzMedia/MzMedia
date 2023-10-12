@@ -86,9 +86,9 @@
 * 规则引擎（node-red+liteflow）
     - 相关技术：nodejs、html、js等
 * 流媒体服务器（zlmediakit）
-    - 相关技术：c++、sip、gb28181,rtmp,rtsp,flv,ffmpeg,ffprobe等
+    - 相关技术：c++、sip、gb28181、rtmp、rtsp、flv、ffmpeg、ffprobe等
 * 硬件端
-    - 相关技术：ESP-IDF、Arduino、openwrt,freeos,rt-thread等
+    - 相关技术：ESP-IDF、Arduino、openwrt、freeos、rt-thread等
 
 ### 四、本项目业务特性
 
@@ -124,7 +124,7 @@
 > script ----------------------- docker部署脚本和sql数据库脚本<br />
 
 ### 六、商用授权
-项目采用AGPL3协议，可用于个人学习和使用，商业用途需要赞助项目，获得授权，并提供商业版本源码、可视化平台和移动端源码。赞助过的用户请下载商业版本源码。
+项目采用AGPL3协议，可用于个人学习和使用，商业用途需要赞助项目，获得授权，并提供商业版本源码、可视化平台。赞助过的用户请下载商业版本源码。
 
 ### 七、参考文档
 
