@@ -12,7 +12,7 @@
     <artifactId>mz-common-web</artifactId>
 
     <description>
-        ruoyi-common-web web服务
+        mz-common-web web服务
     </description>
 
     <dependencies>

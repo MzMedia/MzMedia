@@ -12,7 +12,7 @@
     <artifactId>mz-common-redis</artifactId>
 
     <description>
-        ruoyi-common-redis 缓存服务
+        mz-common-redis 缓存服务
     </description>
 
     <dependencies>

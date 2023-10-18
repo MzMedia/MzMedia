@@ -12,7 +12,7 @@
     <artifactId>mz-common-translation</artifactId>
 
     <description>
-        ruoyi-common-translation 通用翻译功能
+        mz-common-translation 通用翻译功能
     </description>
 
     <dependencies>

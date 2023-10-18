@@ -12,7 +12,7 @@
     <artifactId>mz-common-mail</artifactId>
 
     <description>
-        ruoyi-common-mail 邮件模块
+        mz-common-mail 邮件模块
     </description>
 
     <dependencies>

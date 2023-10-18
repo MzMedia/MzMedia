@@ -12,7 +12,7 @@
     <artifactId>mz-common-log</artifactId>
 
     <description>
-        ruoyi-common-log 日志记录
+        mz-common-log 日志记录
     </description>
 
     <dependencies>

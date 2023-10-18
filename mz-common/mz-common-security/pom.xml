@@ -12,7 +12,7 @@
     <artifactId>mz-common-security</artifactId>
 
     <description>
-        ruoyi-common-security 安全模块
+        mz-common-security 安全模块
     </description>
 
     <dependencies>

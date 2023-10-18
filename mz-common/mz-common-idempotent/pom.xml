@@ -12,7 +12,7 @@
     <artifactId>mz-common-idempotent</artifactId>
 
     <description>
-        ruoyi-common-idempotent 幂等功能
+        mz-common-idempotent 幂等功能
     </description>
 
     <dependencies>

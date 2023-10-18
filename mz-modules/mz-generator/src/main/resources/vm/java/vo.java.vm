@@ -6,8 +6,8 @@ import ${import};
 import ${packageName}.domain.${ClassName};
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
-import ExcelDictFormat;
-import ExcelDictConvert;
+import com.mz.common.excel.annotation.ExcelDictFormat;
+import com.mz.common.excel.convert.ExcelDictConvert;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 

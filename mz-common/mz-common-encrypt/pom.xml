@@ -12,7 +12,7 @@
     <artifactId>mz-common-encrypt</artifactId>
 
     <description>
-        ruoyi-common-encrypt 数据加解密模块
+        mz-common-encrypt 数据加解密模块
     </description>
 
     <dependencies>

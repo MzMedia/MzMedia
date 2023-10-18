@@ -12,7 +12,7 @@
     <artifactId>mz-common-excel</artifactId>
 
     <description>
-        ruoyi-common-excel
+        mz-common-excel
     </description>
 
     <dependencies>

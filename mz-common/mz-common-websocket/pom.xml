@@ -12,7 +12,7 @@
     <artifactId>mz-common-websocket</artifactId>
 
     <description>
-        ruoyi-common-websocket 模块
+        mz-common-websocket 模块
     </description>
 
     <dependencies>

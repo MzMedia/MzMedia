@@ -12,7 +12,7 @@
     <artifactId>mz-common-sms</artifactId>
 
     <description>
-        ruoyi-common-sms 短信模块
+        mz-common-sms 短信模块
     </description>
 
     <dependencies>

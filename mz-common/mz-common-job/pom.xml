@@ -12,7 +12,7 @@
     <artifactId>mz-common-job</artifactId>
 
     <description>
-        ruoyi-common-job 定时任务
+        mz-common-job 定时任务
     </description>
 
     <dependencies>

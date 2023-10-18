@@ -12,7 +12,7 @@
     <artifactId>mz-common-sensitive</artifactId>
 
     <description>
-        ruoyi-common-sensitive 脱敏模块
+        mz-common-sensitive 脱敏模块
     </description>
 
     <dependencies>

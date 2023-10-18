@@ -12,7 +12,7 @@
     <artifactId>mz-common-mybatis</artifactId>
 
     <description>
-        ruoyi-common-mybatis 数据库服务
+        mz-common-mybatis 数据库服务
     </description>
 
     <dependencies>

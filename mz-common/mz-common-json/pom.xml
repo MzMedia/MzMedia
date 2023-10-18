@@ -12,7 +12,7 @@
     <artifactId>mz-common-json</artifactId>
 
     <description>
-        ruoyi-common-json 序列化模块
+        mz-common-json 序列化模块
     </description>
 
     <dependencies>

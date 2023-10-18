@@ -12,7 +12,7 @@
     <artifactId>mz-common-doc</artifactId>
 
     <description>
-        ruoyi-common-doc 系统接口
+        mz-common-doc 系统接口
     </description>
 
     <dependencies>

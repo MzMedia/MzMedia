@@ -12,7 +12,7 @@
     <artifactId>mz-common-core</artifactId>
 
     <description>
-        ruoyi-common-core 核心模块
+        mz-common-core 核心模块
     </description>
 
     <dependencies>

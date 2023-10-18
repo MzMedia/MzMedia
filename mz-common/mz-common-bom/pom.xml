@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <description>
-        ruoyi-common-bom common依赖项
+        mz-common-bom common依赖项
     </description>
 
     <properties>

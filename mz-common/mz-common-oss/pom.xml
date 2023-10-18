@@ -12,7 +12,7 @@
     <artifactId>mz-common-oss</artifactId>
 
     <description>
-        ruoyi-common-oss oss服务
+        mz-common-oss oss服务
     </description>
 
     <dependencies>

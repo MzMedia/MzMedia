@@ -12,7 +12,7 @@
     <artifactId>mz-common-ratelimiter</artifactId>
 
     <description>
-        ruoyi-common-ratelimiter 限流功能
+        mz-common-ratelimiter 限流功能
     </description>
 
     <dependencies>

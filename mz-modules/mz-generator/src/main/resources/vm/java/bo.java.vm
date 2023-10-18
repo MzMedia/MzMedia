@@ -3,6 +3,8 @@ package ${packageName}.domain.bo;
 import ${packageName}.domain.${ClassName};
 import com.mz.common.mybatis.core.domain.BaseEntity;
 import io.github.linpeilie.annotations.AutoMapper;
+import com.mz.common.core.validate.AddGroup;
+import com.mz.common.core.validate.EditGroup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import jakarta.validation.constraints.*;
