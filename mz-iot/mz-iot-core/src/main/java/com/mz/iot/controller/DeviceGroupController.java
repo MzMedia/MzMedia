@@ -31,7 +31,7 @@ import com.mz.common.mybatis.core.page.TableDataInfo;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/iot/group")
+@RequestMapping("/iot/devicegroup")
 public class DeviceGroupController extends BaseController {
 
     private final IDeviceGroupService deviceGroupService;

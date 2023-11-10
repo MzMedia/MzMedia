@@ -30,8 +30,7 @@ public class DeviceGroup extends TenantEntity {
     /**
      * 分组ID
      */
-    @TableId(value = "group_id")
+    //@TableId(value = "group_id")
     private Long groupId;
-
 
 }

@@ -31,7 +31,7 @@ import com.mz.common.mybatis.core.page.TableDataInfo;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/iot/device")
+@RequestMapping("/iot/sipdevice")
 public class SipDeviceController extends BaseController {
 
     private final ISipDeviceService sipDeviceService;

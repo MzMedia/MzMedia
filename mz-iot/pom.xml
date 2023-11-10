@@ -12,11 +12,7 @@
     <modules>
         <module>mz-iot-components</module>
         <module>mz-iot-core</module>
-        <module>mz-iot-message-bus</module>
-        <module>mz-iot-notify</module>
         <module>mz-iot-plugin</module>
-        <module>mz-iot-ruleengine</module>
-        <module>mz-iot-server</module>
     </modules>
 
     <artifactId>mz-iot</artifactId>

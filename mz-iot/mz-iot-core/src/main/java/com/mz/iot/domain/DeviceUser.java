@@ -35,7 +35,7 @@ public class DeviceUser extends TenantEntity {
     /**
      * 设备ID
      */
-    @TableId(value = "device_id")
+    //@TableId(value = "device_id",type = IdType.INPUT)
     private Long deviceId;
 
     /**

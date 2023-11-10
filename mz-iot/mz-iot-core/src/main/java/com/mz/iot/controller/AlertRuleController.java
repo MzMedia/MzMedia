@@ -31,7 +31,7 @@ import com.mz.common.mybatis.core.page.TableDataInfo;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/iot/rule")
+@RequestMapping("/iot/Alertrule")
 public class AlertRuleController extends BaseController {
 
     private final IAlertRuleService alertRuleService;

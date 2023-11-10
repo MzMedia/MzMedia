@@ -43,7 +43,7 @@ public class SipDeviceChannel extends TenantEntity {
     /**
      * 设备SipID
      */
-    @TableId(value = "device_sip_id")
+    //@TableId(value = "device_sip_id")
     private String deviceSipId;
 
     /**

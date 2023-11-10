@@ -71,6 +71,12 @@
             <artifactId>mz-demo</artifactId>
         </dependency>
 
+        <!--  iot模块  -->
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-iot-core</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-starter-client</artifactId>

@@ -31,7 +31,7 @@ import com.mz.common.mybatis.core.page.TableDataInfo;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/iot/log")
+@RequestMapping("/iot/alertlog")
 public class AlertLogController extends BaseController {
 
     private final IAlertLogService alertLogService;

@@ -31,7 +31,7 @@ import com.mz.common.mybatis.core.page.TableDataInfo;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/iot/rule")
+@RequestMapping("/iot/Scenerule")
 public class SceneRuleController extends BaseController {
 
     private final ISceneRuleService sceneRuleService;

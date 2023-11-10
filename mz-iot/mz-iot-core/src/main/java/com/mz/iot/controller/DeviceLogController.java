@@ -31,7 +31,7 @@ import com.mz.common.mybatis.core.page.TableDataInfo;
 @Validated
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/iot/log")
+@RequestMapping("/iot/devicelog")
 public class DeviceLogController extends BaseController {
 
     private final IDeviceLogService deviceLogService;

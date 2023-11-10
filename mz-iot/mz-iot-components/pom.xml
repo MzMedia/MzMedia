@@ -9,14 +9,22 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mz-iot-components</artifactId>
+    <modules>
+        <module>mz-iot-message-bus</module>
+        <module>mz-iot-notify</module>
+        <module>mz-iot-ruleengine</module>
+        <module>mz-iot-network</module>
+    </modules>
 
-    <description>
-        组件模块
-    </description>
+    <artifactId>mz-iot-components</artifactId>
+    <description>组件模块</description>
+    <packaging>pom</packaging>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-log</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
