@@ -16,6 +16,9 @@
 
 3. 本项目使用了多个Dromara组织框架和工具，包括：RuoYi-Vue-Plus，hutool，Sa-Token，LiteFlow，Forest，sms4j，go-view等，取之于Dromara组织，贡献于Dromara组织。
 
+4. 系统架构图
+   ![系统架构图](./doc/png/开源视频联动物联网平台架构.jpg "系统架构图")
+
 > RuoYi-Vue-Plus 是重写 RuoYi-Vue 针对 `分布式集群与多租户` 场景全方位升级
 
 > 项目代码、文档 均开源免费可商用 遵循开源协议在项目中保留开源协议文件即可<br>
