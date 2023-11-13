@@ -26,8 +26,11 @@
 
 > 系统演示: [传送门](https://plus-doc.dromara.org/#/common/demo_system)
 
-> 文档地址: [plus-doc](https://plus-doc.dromara.org) 
+> 文档地址: [plus-doc](https://plus-doc.dromara.org)
 
+> gitee: [MzMedia](https://gitee.com/mzmedia/mz-media)
+
+> github: [MzMedia](https://github.com/MzMedia/MzMedia.git)
 ### 二、系统功能
 
 #### 1.框架系统功能
