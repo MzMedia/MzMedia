@@ -24,13 +24,15 @@
 > 项目代码、文档 均开源免费可商用 遵循开源协议在项目中保留开源协议文件即可<br>
 活到老写到老 为兴趣而开源 为学习而开源 为让大家真正可以学到技术而开源
 
+> gitee: [MzMedia](https://gitee.com/mzmedia/mz-media)
+
+> github: [MzMedia](https://github.com/MzMedia/MzMedia.git)
+
 > 系统演示: [传送门](https://plus-doc.dromara.org/#/common/demo_system)
 
 > 文档地址: [plus-doc](https://plus-doc.dromara.org)
 
-> gitee: [MzMedia](https://gitee.com/mzmedia/mz-media)
 
-> github: [MzMedia](https://github.com/MzMedia/MzMedia.git)
 ### 二、系统功能
 
 #### 1.框架系统功能

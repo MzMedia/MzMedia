@@ -284,3 +284,14 @@ vertx:
       retry:
         initialSleepTime: 3000
         maxTimes: 3
+
+# mqtt客户端配置
+mqttClient:
+  username: MzMedia                       # 账号
+  password: MzMedia                       # 密码
+  host-url: tcp://localhost:1883          # mqtt连接tcp地址
+  client-id: ${random.int}
+  default-topic: MzMedia                  # 默认主题
+  timeout: 30                             # 超时时间
+  keepalive: 30                           # 保持连接
+  clearSession: true

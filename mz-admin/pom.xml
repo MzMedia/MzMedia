@@ -105,6 +105,18 @@
 <!--            <version>${与你的agent探针版本保持一致}</version>-->
 <!--        </dependency>-->
 
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>vertx-bus</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mqtt-bus</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

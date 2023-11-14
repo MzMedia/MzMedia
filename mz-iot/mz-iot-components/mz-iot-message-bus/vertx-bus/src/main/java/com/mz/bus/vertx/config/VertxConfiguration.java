@@ -1,5 +1,10 @@
 package com.mz.bus.vertx.config;
 
+import com.mz.bus.core.Pub;
+import com.mz.bus.core.Sub;
+import com.mz.bus.message.BaseMessage;
+import com.mz.bus.vertx.VertxPub;
+import com.mz.bus.vertx.VertxSub;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
@@ -12,6 +17,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -122,5 +128,17 @@ public class VertxConfiguration {
                 });
             }
         }
+    }
+
+    @ConditionalOnMissingBean
+    @Bean
+    public Pub<BaseMessage> getThingModelMessageProducer() {
+        return new VertxPub<>(BaseMessage.class);
+    }
+
+    @ConditionalOnMissingBean
+    @Bean
+    public Sub<BaseMessage> getThingModelMessageConsumer() {
+        return new VertxSub<>(BaseMessage.class);
     }
 }

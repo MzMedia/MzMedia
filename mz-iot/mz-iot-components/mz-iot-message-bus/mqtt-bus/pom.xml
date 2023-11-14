@@ -39,6 +39,12 @@
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-mqtt</artifactId>
+            <version>3.5.1</version>
+            <scope>compile</scope>
+        </dependency>
 
 
     </dependencies>
