@@ -11,12 +11,44 @@
     <artifactId>vertx-bus</artifactId>
     <description>vertx内部总线模块</description>
 
+    <properties>
+        <vertx.version>3.5.1</vertx.version>
+    </properties>
+
 	<dependencies>
 		<dependency>
             <groupId>com.mz</groupId>
 			<artifactId>bus-core</artifactId>
             <version>${revision}</version>
 		</dependency>
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-mqtt</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-zookeeper</artifactId>
+            <version>${vertx.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 	</dependencies>
 
 

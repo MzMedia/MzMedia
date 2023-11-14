@@ -262,3 +262,25 @@ websocket:
   path: /resource/websocket
   # 设置访问源地址
   allowedOrigins: '*'
+
+vertx:
+  service-id: ${spring.application.name}
+  udp:
+    port: 5010
+    host: 0.0.0.0
+  mqtt:
+    port: 1883
+    accept-backlog: 2048
+    send-buffer-size: 10240
+    receive-buffer-size: 32768
+  h-a-enabled: true
+  h-a-group: _DEFAULT_
+  cluster-host: 127.0.0.1 #告诉集群本机的ip
+  clustered: true #开启vertx集群
+  cluster:
+    config:
+      zookeeperHosts: 127.0.0.1:2181
+      rootPath: hsweb.iot.cloud
+      retry:
+        initialSleepTime: 3000
+        maxTimes: 3
