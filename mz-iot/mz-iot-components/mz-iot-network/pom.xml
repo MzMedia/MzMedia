@@ -16,7 +16,22 @@
     </description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>vertx-bus</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.hswebframework.web</groupId>
+            <artifactId>hsweb-core</artifactId>
+            <version>4.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hswebframework.web</groupId>
+            <artifactId>hsweb-commons-bean</artifactId>
+            <version>3.0.9</version>
+        </dependency>
     </dependencies>
 
 </project>

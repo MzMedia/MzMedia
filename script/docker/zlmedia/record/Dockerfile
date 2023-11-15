@@ -20,7 +20,7 @@ RUN export DEBIAN_FRONTEND=noninteractive &&\
 
 RUN cd /opt/media/bin && \
         echo '#!/bin/bash' > run.sh && \
-        echo 'java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/assist/heapdump/ -jar /fastbee-record.jar &' >> run.sh && \
+        echo 'java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/assist/heapdump/ -jar /record.jar &' >> run.sh && \
         echo '/opt/media/bin/MediaServer -d -m 3 -s default.pem -c ../conf/config.ini' >> run.sh && \
         chmod +x run.sh
 

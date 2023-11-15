@@ -1,27 +1,18 @@
 package com.mz.bus.mqtt;
 
 import com.mz.bus.core.Pub;
-import io.vertx.core.Vertx;
-import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class MqtttPub<T> implements Pub<T> {
+public class MqttPub<T> implements Pub<T> {
 
     @Autowired
     private MqttAsyncClient client;
-
-    @SneakyThrows
-    public MqtttPub(Class<T> cls) {
-
-    }
 
     public void publish(int qos, boolean retained, String topic, String pushMessage) {
         MqttMessage message = new MqttMessage();

@@ -1,23 +1,22 @@
 package com.mz.bus.mqtt;
 
 import com.mz.bus.core.SubCallback;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
+@Data
 @Component
 public class MqttCallback implements MqttCallbackExtended {
 
-    @Autowired
-    private MqttAsyncClient client;
-
-    @Autowired
     private MqttConnectOptions options;
+
+    private MqttAsyncClient client;;
 
     private final Map<String, SubCallback> subCallbackMap = new ConcurrentHashMap<>();
 

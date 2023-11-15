@@ -5,34 +5,25 @@ import com.mz.bus.core.Sub;
 import com.mz.bus.message.BaseMessage;
 import com.mz.bus.vertx.VertxPub;
 import com.mz.bus.vertx.VertxSub;
-import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.spi.VerticleFactory;
 import io.vertx.core.spi.cluster.ClusterManager;
 import io.vertx.mqtt.MqttServerOptions;
 import io.vertx.spi.cluster.zookeeper.ZookeeperClusterManager;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * @author zhouhao
- * @since 1.0.0
- */
 
 @Slf4j
 @Configuration
@@ -94,40 +85,6 @@ public class VertxConfiguration {
             vertx = Vertx.vertx(vertxOptions);
         }
         return vertx;
-    }
-
-    @Bean
-    public VerticleRegisterProcessor startMqttServerProcessor() {
-        return new VerticleRegisterProcessor();
-    }
-
-    public static class VerticleRegisterProcessor implements CommandLineRunner {
-
-        @Autowired
-        private VerticleFactory verticleFactory;
-
-        @Autowired
-        private List<VerticleSupplier> verticles;
-
-        @Autowired
-        private Vertx vertx;
-
-        @Override
-        public void run(String... args) throws Exception {
-            vertx.registerVerticleFactory(verticleFactory);
-            for (VerticleSupplier suplier : verticles) {
-                DeploymentOptions options = new DeploymentOptions();
-                options.setHa(true);
-                options.setInstances(suplier.getInstances());
-                vertx.deployVerticle(suplier, options, e -> {
-                    if (!e.succeeded()) {
-                        log.error("deploy verticle :{} {} {} error", suplier, e.succeeded(), e.cause());
-                    } else {
-                        log.debug("deploy verticle :{} success",suplier);
-                    }
-                });
-            }
-        }
     }
 
     @ConditionalOnMissingBean

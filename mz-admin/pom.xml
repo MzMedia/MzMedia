@@ -117,6 +117,17 @@
             <version>${revision}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-iot-core</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-iot-network</artifactId>
+            <version>${revision}</version>
+        </dependency>
     </dependencies>
 
     <build>

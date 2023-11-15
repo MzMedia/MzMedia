@@ -1,5 +1,13 @@
 version: '3'
 
+networks:
+  network:
+    ipam:
+      driver: default
+      config:
+        - subnet: '177.7.0.0/16'
+
+
 services:
   mysql:
     image: mysql:8.0.33
@@ -25,7 +33,9 @@ services:
       --explicit_defaults_for_timestamp=true
       --lower_case_table_names=1
     privileged: true
-    network_mode: "host"
+    networks:
+      network:
+        ipv4_address: 177.7.0.10
 
   nginx-web:
     image: nginx:1.23.4
@@ -46,7 +56,10 @@ services:
       # 日志目录
       - /opt/MzMedia/nginx/log:/var/log/nginx
     privileged: true
-    network_mode: "host"
+    networks:
+      network:
+        ipv4_address: 177.7.0.11
+
 
   redis:
     image: redis:7.0.0
@@ -62,14 +75,16 @@ services:
       # 数据文件
       - /opt/MzMedia/redis/data/:/redis/data/:rw
     privileged: true
-    network_mode: "host"
     command: "redis-server /redis/config/redis.conf"
+    networks:
+      network:
+        ipv4_address: 177.7.0.12
 
 
   tdengine:
     image: 'tdengine/tdengine:2.6.0.12'
     container_name: tdengine
-    hostname: fastbee
+    hostname: MzMedia
     ports:
       - 6030-6049:6030-6049
       - 6030-6049:6030-6049/udp
@@ -79,6 +94,9 @@ services:
       - "/etc/localtime:/etc/localtime"
     environment:
       TZ: Asia/Shanghai
+    networks:
+      network:
+        ipv4_address: 177.7.0.13
 
   emqx:
     image: emqx:5.1
@@ -93,10 +111,14 @@ services:
       - /etc/localtime:/etc/localtime
       - /opt/MzMedia/emqx/etc/emqx.conf:/opt/emqx/etc/emqx.conf
       - /opt/MzMedia/emqx/etc/acl.conf:/opt/emqx/etc/acl.conf
-      - /opt/MzMedia/emqx/etc/log:/opt/emqx/log
+      - /opt/MzMedia/emqx/log:/opt/emqx/log
+      - /opt/MzMedia/emqx/data:/opt/emqx/data
     environment:
       SET_CONTAINER_TIMEZONE: "true"
       CONTAINER_TIMEZONE: Asia/Shanghai
+    networks:
+      network:
+        ipv4_address: 177.7.0.14
 
   node-red:
     image: nodered/node-red:latest
@@ -109,6 +131,9 @@ services:
       - /opt/MzMedia/nodered/data:/data
     environment:
       - TZ=Asia/Shanghai
+    networks:
+      network:
+        ipv4_address: 177.7.0.15
 
   minio:
     image: minio/minio:RELEASE.2023-04-13T03-08-07Z
@@ -141,7 +166,9 @@ services:
       - /opt/MzMedia/minio/config:/root/.minio/
     command: server --address ':9000' --console-address ':9001' /data  # 指定容器中的目录 /data
     privileged: true
-    network_mode: "host"
+    networks:
+      network:
+        ipv4_address: 177.7.0.16
 
 #  ruoyi-server1:
 #    image: ruoyi/ruoyi-server:5.1.0
@@ -156,7 +183,6 @@ services:
 #      # skywalking 探针
 ##      - /opt/MzMedia/skywalking/agent/:/ruoyi/skywalking/agent
 #    privileged: true
-#    network_mode: "host"
 #
 #  ruoyi-monitor-admin:
 #    image: ruoyi/ruoyi-monitor-admin:5.1.0
@@ -168,7 +194,6 @@ services:
 #      # 配置文件
 #      - /opt/MzMedia/monitor/logs/:/ruoyi/monitor/logs
 #    privileged: true
-#    network_mode: "host"
 #
 #  ruoyi-powerjob-server:
 #    image: ruoyi/ruoyi-powerjob-server:5.1.0
@@ -183,6 +208,6 @@ services:
 #    volumes:
 #      - /opt/MzMedia/powerjob/logs/:/ruoyi/powerjob/logs
 #    privileged: true
-#    network_mode: "host"
+
 
 

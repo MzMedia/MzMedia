@@ -18,11 +18,6 @@ public class MqttSub<T> implements Sub<T> {
     @Autowired
     private MqttCallback mqttCallback;
 
-    @SneakyThrows
-    public MqttSub(Class<T> cls) {
-
-    }
-
     @Override
     public void sub(String route, SubCallback<T> handler) {
         mqttCallback.put(route, handler);

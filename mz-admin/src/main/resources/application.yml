@@ -276,20 +276,20 @@ vertx:
   h-a-enabled: true
   h-a-group: _DEFAULT_
   cluster-host: 127.0.0.1 #告诉集群本机的ip
-  clustered: true #开启vertx集群
+  clustered: false #开启vertx集群
   cluster:
     config:
       zookeeperHosts: 127.0.0.1:2181
-      rootPath: hsweb.iot.cloud
+      rootPath: mz.iot.cloud
       retry:
         initialSleepTime: 3000
         maxTimes: 3
 
 # mqtt客户端配置
-mqttClient:
+mqttclient:
   username: MzMedia                       # 账号
   password: MzMedia                       # 密码
-  host-url: tcp://localhost:1883          # mqtt连接tcp地址
+  host-url: tcp://10.10.10.41:1883        # mqtt连接tcp地址
   client-id: ${random.int}
   default-topic: MzMedia                  # 默认主题
   timeout: 30                             # 超时时间
