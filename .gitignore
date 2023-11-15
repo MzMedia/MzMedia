@@ -46,3 +46,26 @@ nbdist/
 !*/build/*.xml
 
 .flattened-pom.xml
+
+######################################################################
+# docs
+
+# npm
+/doc/doc-web/package-lock.json
+/doc/doc-web/node_modules
+/doc/doc-web/yarn-error.log
+
+# vscode
+/doc/doc-web/.vscode
+
+#yarn
+/doc/doc-web/yarn.lock
+
+# vuepress
+/doc/doc-web/docs/.vuepress/dist
+
+# 百度链接推送
+/doc/doc-web/urls.txt
+
+# mac
+/doc/doc-web/.DS_Store
