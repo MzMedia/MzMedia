@@ -28,9 +28,9 @@
 
 > github: [MzMedia](https://github.com/MzMedia/MzMedia.git)
 
+> 文档地址: [MzMedia](https://mzmedia.github.io/)
+ 
 > 系统演示: [传送门](https://plus-doc.dromara.org/#/common/demo_system)
-
-> 文档地址: [plus-doc](https://plus-doc.dromara.org)
 
 
 ### 二、系统功能
