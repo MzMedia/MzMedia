@@ -4,7 +4,6 @@ import com.mz.bus.core.Sub;
 import com.mz.bus.core.SubCallback;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

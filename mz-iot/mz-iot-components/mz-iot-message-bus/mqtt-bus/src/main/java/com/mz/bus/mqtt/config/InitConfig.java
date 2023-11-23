@@ -1,7 +1,6 @@
 package com.mz.bus.mqtt.config;
 
 import com.mz.bus.mqtt.MqttCallback;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;

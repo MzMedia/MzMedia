@@ -12,11 +12,13 @@
 
 1. MzMedia开源视频联动物联网平台，简单易用，更适合中小企业和个人学习使用。适用于智能家居、农业监测、水利监测、工业控制，车联网，视频联动等场景。
 
-2. 系统后端采用Spring boot；前端采用Vue3+Element Plus；消息服务器采用EMQX5.0；数据库采用Mysql、TDengine和Redis；设备端支持OpenWrt,FreeRTOS,RT-Thread等操作系统的接入sdk；
+2. 支持抖音，视频号等主流短视频平台推流直播，提取视频切片等功能
 
-3. 本项目使用了多个Dromara组织框架和工具，包括：RuoYi-Vue-Plus，hutool，Sa-Token，LiteFlow，Forest，sms4j，go-view等，取之于Dromara组织，贡献于Dromara组织。
+3. 系统后端采用Spring boot；前端采用Vue3+Element Plus；消息服务器采用EMQX5.0；数据库采用Mysql、TDengine和Redis；设备端支持OpenWrt,FreeRTOS,RT-Thread等操作系统的接入sdk；
 
-4. 系统架构图
+4. 本项目使用了多个Dromara组织框架和工具，包括：RuoYi-Vue-Plus，hutool，Sa-Token，LiteFlow，Forest，sms4j，go-view等，取之于Dromara组织，贡献于Dromara组织。
+
+5. 系统架构图
    ![系统架构图](./doc/img/开源视频联动物联网平台架构.jpg "系统架构图")
 
 > RuoYi-Vue-Plus 是重写 RuoYi-Vue 针对 `分布式集群与多租户` 场景全方位升级
