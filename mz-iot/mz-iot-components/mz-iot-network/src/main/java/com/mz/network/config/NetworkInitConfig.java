@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @Configuration
-public class InitConfig {
+public class NetworkInitConfig {
     @Bean
     public VerticleRegisterProcessor startMqttServerProcessor() {
         return new VerticleRegisterProcessor();

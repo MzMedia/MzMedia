@@ -17,6 +17,4 @@ public class DeviceReportEvent extends ClientMessage {
 
     @NotBlank
     private String action;
-
-
 }

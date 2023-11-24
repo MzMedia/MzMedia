@@ -12,7 +12,7 @@
     <description>vertx内部总线模块</description>
 
     <properties>
-        <vertx.version>3.5.1</vertx.version>
+        <vertx.version>3.9.5</vertx.version>
     </properties>
 
 	<dependencies>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-zookeeper</artifactId>
-            <version>${vertx.version}</version>
+            <version>3.5.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>

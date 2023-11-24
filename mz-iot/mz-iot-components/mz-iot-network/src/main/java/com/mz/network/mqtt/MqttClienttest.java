@@ -10,13 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class MqttClient implements Client {
+public class MqttClienttest implements Client {
 
     private MqttEndpoint endpoint;
 
     private volatile long lastPingTime = System.currentTimeMillis();
 
-    public MqttClient(MqttEndpoint endpoint) {
+    public MqttClienttest(MqttEndpoint endpoint) {
         endpoint.pingHandler(r -> ping());
         this.endpoint = endpoint;
     }
