@@ -1,6 +1,6 @@
 package com.mz.network.events;
 
-import com.mz.network.client.message.ClientMessage;
+import com.mz.network.client.message.BaseMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeviceReportEvent extends ClientMessage {
+public class DeviceReportEvent extends BaseMessage {
 
     @NotBlank
     private String action;

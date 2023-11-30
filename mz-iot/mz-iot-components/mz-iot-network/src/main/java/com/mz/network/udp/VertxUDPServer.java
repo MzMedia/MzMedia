@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.mz.network.authority.DeviceAuthorityService;
 import com.mz.network.client.Client;
 import com.mz.network.client.ClientRepository;
-import com.mz.network.client.message.ClientMessage;
-import com.mz.network.client.message.MessageCode;
+import com.mz.network.client.message.BaseMessage;
+import com.mz.network.client.message.em.MessageCode;
 import com.mz.network.events.CommandReplyEvent;
 import com.mz.network.events.DeviceReportEvent;
 import io.vertx.core.AbstractVerticle;
@@ -73,7 +73,7 @@ public class VertxUDPServer extends AbstractVerticle {
                         sendMessageCode(sender, MessageCode.UN_REGISTERED_CLIENT);
                         return;
                     }
-                    ClientMessage clientMessage = null;
+                    BaseMessage clientMessage = null;
                     switch (messageObject.getType()) {
                         case "ping":
                             client.ping();

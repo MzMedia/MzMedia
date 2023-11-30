@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.mz.network.authority.DeviceAuthorityService;
 import com.mz.network.client.Client;
 import com.mz.network.client.ClientRepository;
-import com.mz.network.client.message.ClientMessage;
+import com.mz.network.client.message.BaseMessage;
 import com.mz.network.core.Topics;
 import com.mz.network.events.CommandReplyEvent;
 import com.mz.network.events.DeviceReportEvent;
@@ -141,7 +141,7 @@ public class VertxMqttServer extends AbstractVerticle {
                     handlePublish(message);
                     //平台物模型处理
                     try {
-                        ClientMessage event = null;
+                        BaseMessage event = null;
                         //目前仅支持reply和report的topic
                         if (Topics.reply.equals(topicName)) {
                             event = JSON.parseObject(payload, CommandReplyEvent.class);
