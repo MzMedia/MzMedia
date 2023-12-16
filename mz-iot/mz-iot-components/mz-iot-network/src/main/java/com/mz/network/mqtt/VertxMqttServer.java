@@ -1,13 +1,10 @@
 package com.mz.network.mqtt;
 
-import com.alibaba.fastjson.JSON;
 import com.mz.network.authority.DeviceAuthorityService;
 import com.mz.network.client.Client;
 import com.mz.network.client.ClientRepository;
 import com.mz.network.client.message.BaseMessage;
-import com.mz.network.core.Topics;
-import com.mz.network.events.CommandReplyEvent;
-import com.mz.network.events.DeviceReportEvent;
+import com.mz.network.client.message.Route;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.AbstractVerticle;
@@ -141,17 +138,12 @@ public class VertxMqttServer extends AbstractVerticle {
                     handlePublish(message);
                     //平台物模型处理
                     try {
-                        BaseMessage event = null;
-                        //目前仅支持reply和report的topic
-                        if (Topics.reply.equals(topicName)) {
-                            event = JSON.parseObject(payload, CommandReplyEvent.class);
-                        } else if (Topics.report.equals(topicName)) {
-                            event = JSON.parseObject(payload, DeviceReportEvent.class);
-                        }
-                        if (null != event) {
-                            event.setClientId(clientId);
+                        //topic处理
+                        BaseMessage msg = parseMsg(parseRoute(topicName),payload);
+                        if (null != msg) {
+                            msg.setClientId(clientId);
                             //发布事件到spring
-                            eventPublisher.publishEvent(event);
+                            eventPublisher.publishEvent(msg);
                         } else {
                             log.warn("不支持的topic:{} => {}", topicName, payload);
                         }
@@ -166,6 +158,18 @@ public class VertxMqttServer extends AbstractVerticle {
         //注册设备
         clientRepository.register(client);
     }
+
+    private Route parseRoute(String topicName) {
+        String[] arr = topicName.split("/");
+        Route route =new Route();
+        return route;
+    }
+
+    private BaseMessage parseMsg(Route route, String payload) {
+        BaseMessage msg =new BaseMessage();
+        return msg;
+    }
+
     private void handlePublish(MqttPublishMessage message) {
         // Handle incoming publish messages
         String topic = message.topicName();
