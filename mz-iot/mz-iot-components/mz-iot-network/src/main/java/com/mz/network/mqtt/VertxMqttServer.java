@@ -10,6 +10,7 @@ import com.mz.network.client.message.BaseMessage;
 import com.mz.network.client.message.Item;
 import com.mz.network.client.message.Message;
 import com.mz.network.client.message.Route;
+import com.mz.network.events.MessageEvent;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.AbstractVerticle;
@@ -148,7 +149,7 @@ public class VertxMqttServer extends AbstractVerticle {
                     BaseMessage msg = parseMsg(parseRoute(topicName), payload);
                     msg.setClientId(clientId);
                     //发布事件到spring
-                    eventPublisher.publishEvent(msg);
+                    eventPublisher.publishEvent(new MessageEvent(this, msg));
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
                 }
@@ -167,11 +168,11 @@ public class VertxMqttServer extends AbstractVerticle {
         if (arr.length < 4) {
             throw new IllegalArgumentException("topicName is invalid");
         } else {
-            route.setIsall(Objects.equals(arr[1], "all"));
-            route.setDirection(arr[0]);
-            route.setRoute(arr[1]);
-            route.setParams("productID", arr[2]);
-            route.setParams("deviceSN", arr[3]);
+            route.setIsall(Objects.equals(arr[2], "all"));
+            route.setDirection(arr[1]);
+            route.setRoute(arr[2]);
+            route.setParams("productID", arr[3]);
+            route.setParams("deviceSN", arr[4]);
         }
         return route;
     }
@@ -183,8 +184,7 @@ public class VertxMqttServer extends AbstractVerticle {
 
         //list Item
         if (payload.startsWith("[")) {
-            List<Item> list = mapper.readValue(payload, new TypeReference<List<Item>>() {
-            });
+            List<Item> list = mapper.readValue(payload, new TypeReference<List<Item>>(){});
             list.forEach(item -> {
                 bmsg.setParams(item.getKey(), item.getValue());
             });
@@ -295,9 +295,19 @@ public class VertxMqttServer extends AbstractVerticle {
                 System.out.println("Publisher connected to MQTT server");
 
                 // Simulate publishing messages to different topics
-                String topic1 = "example/topic1";
-                String topic2 = "example/topic2";
-                Buffer payload = Buffer.buffer("Hello Vert.x MQTT Server");
+                String topic1 = "/up/property/11/test";
+                String topic2 = "/down/all/11/test";
+                Buffer payload = Buffer.buffer("[{\"key\": \"name\", \"value\": \"John\", \"remark\": \"名字\"}, {\"key\": \"age\", \"value\": 25, \"remark\": \"年龄\"}]");
+                Buffer payload2 = Buffer.buffer("{\n" +
+                    "    \"method\": \"baseinfo\",\n" +
+                    "    \"token\": \"1234567\",\n" +
+                    "    \"params\": {\n" +
+                    "        \"name\": \"dev001\",\n" +
+                    "        \"imei\": \"ddd\",\n" +
+                    "        \"module_hardinfo\": \"ddd\",      \n" +
+                    "        \"mac\": \"ddd\" \n" +
+                    "    }\n" +
+                    "}");
                 MqttQoS qos = MqttQoS.valueOf(1);
 
                 publisher.publish(topic1, payload, qos, false, false, publishResult -> {
@@ -309,7 +319,7 @@ public class VertxMqttServer extends AbstractVerticle {
                     }
                 });
 
-                publisher.publish(topic2, payload, qos, false, false, publishResult -> {
+                publisher.publish(topic2, payload2, qos, false, false, publishResult -> {
                     if (publishResult.succeeded()) {
                         System.out.println("Message published to [" + topic2 + "] with QoS " + qos);
                     } else {
