@@ -197,9 +197,9 @@ springdoc:
     version: '版本号: ${app.version}'
     # 作者信息
     contact:
-      name: Lion Li
-      email: crazylionli@163.com
-      url: https://gitee.com/dromara/RuoYi-Vue-Plus
+      name: 帐篷Li
+      email: 908349383@qq.com
+      url: https://gitee.com/mzmedia/mz-media
   components:
     # 鉴权方式配置
     security-schemes:
@@ -275,8 +275,8 @@ vertx:
     receive-buffer-size: 32768
   h-a-enabled: true
   h-a-group: _DEFAULT_
-  cluster-host: 127.0.0.1 #告诉集群本机的ip
-  clustered: false #开启vertx集群
+#  cluster-host: 127.0.0.1 #告诉集群本机的ip
+#  clustered: false #开启vertx集群
   cluster:
     config:
       zookeeperHosts: 127.0.0.1:2181
@@ -289,7 +289,7 @@ vertx:
 mqttclient:
   username: MzMedia                       # 账号
   password: MzMedia                       # 密码
-  host-url: tcp://10.10.10.41:1883        # mqtt连接tcp地址
+  host-url: tcp://192.168.2.120:1883        # mqtt连接tcp地址
   client-id: ${random.int}
   default-topic: MzMedia                  # 默认主题
   timeout: 30                             # 超时时间
