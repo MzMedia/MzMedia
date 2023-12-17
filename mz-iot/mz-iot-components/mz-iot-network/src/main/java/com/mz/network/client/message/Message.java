@@ -14,6 +14,13 @@ public class Message {
         return Optional.ofNullable(params == null ? null : params.get(key));
     }
 
+    public void setParams(String key, Object value) {
+        if (params == null) {
+            params = new java.util.HashMap<>();
+        }
+        params.put(key, value);
+    }
+
     public String getStringData(String key) {
         return getParams(key).map(String::valueOf).orElse(null);
     }
