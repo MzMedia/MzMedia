@@ -1,15 +1,20 @@
 package com.mz.network.events;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.context.ApplicationEvent;
 
 import java.util.Date;
 
 
-@AllArgsConstructor
-@Getter
-public class DeviceDisconnectEvent {
-    private String clientId;
 
-    private Date disconnectTime;
+@Getter
+public class DeviceDisconnectEvent extends ApplicationEvent {
+    private final String clientId;
+    private final Date disconnectTime;
+
+    public DeviceDisconnectEvent(Object source,String clientId,Date disconnectTime) {
+        super(source);
+        this.clientId = clientId;
+        this.disconnectTime = disconnectTime;
+    }
 }

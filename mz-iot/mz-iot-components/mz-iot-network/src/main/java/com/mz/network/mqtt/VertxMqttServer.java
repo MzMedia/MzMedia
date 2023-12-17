@@ -126,7 +126,9 @@ public class VertxMqttServer extends AbstractVerticle {
                 // ack the subscriptions request
                 endpoint.unsubscribeAcknowledge(unsubscribe.messageId());
             })
-            .disconnectHandler(v -> log.info("[{}] Received disconnect from client", clientId))
+            .disconnectHandler(v -> {
+                log.info("[{}] Received disconnect from client", clientId);
+            })
             .exceptionHandler(e -> log.error(clientId, e))
             .publishHandler(message -> {
                 //设备推送了消息

@@ -70,7 +70,7 @@ public class HashMapClientRepository implements ClientRepository, IotCommandSend
         }
 
         //发布设备连接给spring事件
-        eventPublisher.publishEvent(new DeviceConnectEvent(client.getClientId(), new Date()));
+        eventPublisher.publishEvent(new DeviceConnectEvent(this, client.getClientId(), new Date()));
 
         if (vertx.isClustered()) {
             //集群下通过eventBus来接收从集群的其他节点发来的命令
@@ -159,7 +159,7 @@ public class HashMapClientRepository implements ClientRepository, IotCommandSend
                 supplier.accept(true);
             }
             //发布连接断开事件给spring
-            eventPublisher.publishEvent(new DeviceDisconnectEvent(old.getClientId(), new Date()));
+            eventPublisher.publishEvent(new DeviceDisconnectEvent(this, old.getClientId(), new Date()));
             old.close();
         } else {
             supplier.accept(false);

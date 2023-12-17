@@ -1,15 +1,20 @@
 package com.mz.network.events;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.context.ApplicationEvent;
 
 import java.util.Date;
 
 
-@AllArgsConstructor
-@Getter
-public class DeviceConnectEvent {
-    private String clientId;
 
-    private Date connectTime;
+@Getter
+public class DeviceConnectEvent extends ApplicationEvent {
+    private final String clientId;
+    private final Date connectTime;
+
+    public DeviceConnectEvent(Object source,String clientId,Date connectTime) {
+        super(source);
+        this.clientId = clientId;
+        this.connectTime = connectTime;
+    }
 }
