@@ -14,6 +14,7 @@
         <module>mz-iot-notify</module>
         <module>mz-iot-ruleengine</module>
         <module>mz-iot-network</module>
+        <module>mz-iot-protocol</module>
     </modules>
 
     <artifactId>mz-iot-components</artifactId>
