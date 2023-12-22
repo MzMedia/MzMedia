@@ -7,6 +7,7 @@ public class VertxSipServer extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
+        //写javax.sip启动
 
     }
 

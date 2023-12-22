@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.mz</groupId>
         <artifactId>mz-iot-components</artifactId>
-        <version>5.1.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>mz-iot-protocol</artifactId>
@@ -18,6 +18,63 @@
     </properties>
 
     <dependencies>
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-doc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-mybatis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-translation</artifactId>
+        </dependency>
+
+        <!-- OSS功能模块 -->
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-oss</artifactId>
+        </dependency>
+
+        <!-- excel-->
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-excel</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-log</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-tenant</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mz</groupId>
+            <artifactId>mz-common-idempotent</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

@@ -6,4 +6,6 @@ public interface ICodec {
     void decode(String msg);
 
     void encode(String service, String device);
+
+    void putScriptEnv(String key, Object value);
 }

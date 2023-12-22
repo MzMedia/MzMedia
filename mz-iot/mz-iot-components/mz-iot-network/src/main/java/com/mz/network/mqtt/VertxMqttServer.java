@@ -63,7 +63,7 @@ public class VertxMqttServer extends AbstractVerticle {
             if (result.succeeded()) {
                 int port = mqttServer.actualPort();
                 log.debug("MQTT server started on port {}", port);
-                simulateClients();
+                //simulateClients();
             } else {
                 log.warn("MQTT server start failed", result.cause());
             }
