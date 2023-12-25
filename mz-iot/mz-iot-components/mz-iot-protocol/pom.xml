@@ -10,6 +10,13 @@
     </parent>
 
     <artifactId>mz-iot-protocol</artifactId>
+    <description>协议模块</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>mz-iot-mqtt</module>
+        <module>mz-iot-protocol-core</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
