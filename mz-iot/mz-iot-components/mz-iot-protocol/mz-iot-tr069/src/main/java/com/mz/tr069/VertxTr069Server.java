@@ -1,4 +1,4 @@
-package com.mz.network.tr069;
+package com.mz.tr069;
 
 import io.vertx.core.AbstractVerticle;
 import lombok.extern.slf4j.Slf4j;

@@ -201,23 +201,25 @@ public class HashMapClientRepository implements ClientRepository, IotCommandSend
                                     .clientId(clientId)
                                     .command(command)
                                     .build()
-                                    .toJSONString(),
-                            handler -> {
-                                try {
-                                    if (handler.succeeded()) {
-                                        log.debug("成功向集群中的其他节点发送客户端[{}]命令:{},节点返回:{}", clientId, command, handler.result().body());
-
-                                        Object body = handler.result().body();
-                                        if (!"ok".equals(body)) {
-                                            errorReference.set(new BusinessException("设备未注册", ErrorCode.unregistered.getValue()));
-                                        }
-                                    } else {
-                                        errorReference.set(handler.cause());
-                                    }
-                                } finally {
-                                    latch.countDown();
-                                }
-                            });
+                                    .toJSONString(), null
+//                            handler -> {
+//                                try {
+//                                    log.debug("成功向集群中的其他节点发送客户端[{}]命令:{}", clientId, command);
+//                                    errorReference.set(new BusinessException("设备未注册", ErrorCode.unregistered.getValue()));
+//                                    if (handler.succeeded()) {
+//                                        log.debug("成功向集群中的其他节点发送客户端[{}]命令:{},节点返回:{}", clientId, command, handler.result().body());
+//
+//                                        Object body = handler.result().body();
+//                                        if (!"ok".equals(body)) {
+//                                            errorReference.set(new BusinessException("设备未注册", ErrorCode.unregistered.getValue()));
+//                                        }
+//                                    } else {
+//                                        errorReference.set(handler.cause());
+//                                    }
+//                                } finally {
+//                                    latch.countDown();
+//                                }}
+                    );
             try {
                 boolean success = latch.await(10, TimeUnit.SECONDS);
                 if (!success) {

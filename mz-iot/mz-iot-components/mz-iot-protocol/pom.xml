@@ -16,6 +16,8 @@
     <modules>
         <module>mz-iot-mqtt</module>
         <module>mz-iot-protocol-core</module>
+        <module>mz-iot-sip</module>
+        <module>mz-iot-tr069</module>
     </modules>
 
     <properties>

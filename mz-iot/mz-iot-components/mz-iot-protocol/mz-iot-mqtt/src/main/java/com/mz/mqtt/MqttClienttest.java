@@ -1,4 +1,4 @@
-package com.mz.network.mqtt;
+package com.mz.mqtt;
 
 import com.mz.network.client.Client;
 import com.mz.network.core.IotCommand;

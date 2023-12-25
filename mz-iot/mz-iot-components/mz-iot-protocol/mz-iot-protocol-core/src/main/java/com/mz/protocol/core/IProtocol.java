@@ -9,7 +9,7 @@ public interface IProtocol {
 
     void start();
 
-    void stop();
+    void stop() throws Exception;
 
     void destroy();
 

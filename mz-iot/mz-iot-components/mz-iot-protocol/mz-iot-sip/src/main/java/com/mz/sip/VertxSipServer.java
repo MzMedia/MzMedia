@@ -1,4 +1,4 @@
-package com.mz.network.sip;
+package com.mz.sip;
 
 import io.vertx.core.AbstractVerticle;
 import lombok.extern.slf4j.Slf4j;

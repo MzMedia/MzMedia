@@ -108,7 +108,7 @@ public class ProductProtocolManager {
         states.put(protocol.getId(), false);
     }
 
-    public void unregister(Long id) {
+    public void unregister(Long id) throws Exception {
         IProductProtocol component = components.remove(id);
         states.remove(id);
         if (component == null) {
@@ -148,7 +148,7 @@ public class ProductProtocolManager {
         states.put(id, true);
     }
 
-    public void stop(String id) {
+    public void stop(String id) throws Exception {
         IProductProtocol component = components.get(id);
         if (component == null) {
             return;
