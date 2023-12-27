@@ -10,6 +10,7 @@ public class BaseMessage extends Message {
     private String clientId;
     private String productID;
     private String deviceSN;
+    private String type;
     private int code;
     private NetSocket socket;
     private Buffer buffer;

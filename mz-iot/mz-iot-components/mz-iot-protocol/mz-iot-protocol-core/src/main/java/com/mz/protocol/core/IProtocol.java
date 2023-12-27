@@ -19,5 +19,9 @@ public interface IProtocol {
 
     String getScript();
 
+    void setScriptLang(String scriptLang);
+
+    String getScriptLang();
+
     void putScriptEnv(String key, Object value);
 }

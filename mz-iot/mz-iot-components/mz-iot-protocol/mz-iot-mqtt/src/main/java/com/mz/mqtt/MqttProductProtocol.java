@@ -25,7 +25,10 @@ public class MqttProductProtocol extends AbstractProductProtocol {
         vertx = Vertx.vertx();
         MqttConfig mqttConfig = JsonUtils.parseObject(config.getConfig(), MqttConfig.class);
         vertxMqttServer = new VertxMqttServer(mqttConfig);
+        DefaultMqttHandler handler = (DefaultMqttHandler) getHandler();
+        vertxMqttServer.setHandler(handler);
     }
+
     @Override
     public void start() {
         try {
@@ -33,11 +36,12 @@ public class MqttProductProtocol extends AbstractProductProtocol {
             Future<String> future = vertx.deployVerticle(vertxMqttServer);
             future.onSuccess((s -> {
                 deployedId = s;
+                log.info("start mqtt Protocol {}", deployedId);
                 countDownLatch.countDown();
             }));
             future.onFailure((e) -> {
                 countDownLatch.countDown();
-                log.error("start mqtt component failed", e);
+                log.error("start mqtt Protocol failed", e);
             });
             countDownLatch.await();
             future.succeeded();
@@ -57,4 +61,5 @@ public class MqttProductProtocol extends AbstractProductProtocol {
     public void destroy() {
 
     }
+
 }

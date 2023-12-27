@@ -8,7 +8,6 @@ import io.vertx.mqtt.MqttEndpoint;
 import lombok.extern.slf4j.Slf4j;
 
 
-
 @Slf4j
 public class MqttClienttest implements Client {
 

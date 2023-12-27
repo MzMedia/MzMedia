@@ -39,8 +39,6 @@ public class ProductProtocolManager {
     @Autowired
     private IProtocolService protocolService;
 
-    private IScriptEngine scriptEngine;
-
     @Autowired
     private JarPathConfig jarPathConfig;
 
@@ -68,18 +66,17 @@ public class ProductProtocolManager {
         File file = path.resolve(component.getJarFile()).toAbsolutePath().toFile();
         IProductProtocol componentInstance;
         try {
-            componentInstance = ComponentClassLoader.getComponent(component.getId().toString(), file);
+            componentInstance = ComponentClassLoader.getComponent(component.getJarFile(), file);
         } catch (Throwable e) {
             throw new JarException(ErrCode.GET_COMPONENT_INSTANCE_ERROR, e);
         }
         componentInstance.create(new ProtocolConfig(300, component.getConfig()));
-
         try {
             //编解码处理函数来自jar
-            if(Protocol.CODEC_TYPE_CUSTOM.equals(component.getCodecType())){
+            if(Protocol.CODEC_TYPE_CUSTOM_JAR.equals(component.getCodecType())){
                 ICodec converterInstance;
                 try {
-                    converterInstance=ComponentClassLoader.getCodec(component.getId().toString());
+                    converterInstance=ComponentClassLoader.getCodec(component.getJarFile());
                 } catch (Throwable e) {
                     throw new JarException(ErrCode.GET_SPI_CONVERT_ERROR, e);
                 }
@@ -89,11 +86,11 @@ public class ProductProtocolManager {
                 setScriptConvert(component, componentInstance);
             }
             //加载默认脚本
-            scriptEngine = ScriptEngineFactory.getScriptEngine(component.getScriptLang());
             String componentScript = FileUtils.readFileToString(path.
                 resolve(Protocol.SCRIPT_FILE_NAME).toFile(), StandardCharsets.UTF_8);
             componentInstance.setScript(componentScript);
-
+            componentInstance.setScriptLang(component.getScriptLang());
+            componentInstance.setCodecType(component.getCodecType());
             register(id, componentInstance);
         } catch (IOException e) {
             throw new JarException(ErrCode.GET_COMPONENT_SCRIPT_ERROR, e);
@@ -137,12 +134,11 @@ public class ProductProtocolManager {
         if (component == null) {
             return;
         }
-
-        ProductMessageHandler messageHandler = new ProductMessageHandler(
+        //创建消息处理接口，将脚本和编解码器传入
+        DefaultProductMessageHandler messageHandler = new DefaultProductMessageHandler(
             this, component,
-            scriptEngine,
-            component.getScript(), component.getCodec());
-
+            component.getScriptLang(),
+            component.getScript(), component.getCodecType(),component.getCodec());
         component.setHandler(messageHandler);
         component.start();
         states.put(id, true);

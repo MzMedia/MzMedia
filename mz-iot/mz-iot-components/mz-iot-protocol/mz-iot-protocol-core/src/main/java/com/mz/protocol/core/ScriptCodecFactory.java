@@ -1,5 +1,7 @@
 package com.mz.protocol.core;
 
+import java.util.Map;
+
 public class ScriptCodecFactory {
     public static ICodec getCovert(String type) {
         if (type == null) {
@@ -17,6 +19,11 @@ public class ScriptCodecFactory {
                     @Override
                     public void decode(String msg) {
 
+                    }
+
+                    @Override
+                    public Map<String, Object> decodeMap(String msg) {
+                        return null;
                     }
 
                     @Override

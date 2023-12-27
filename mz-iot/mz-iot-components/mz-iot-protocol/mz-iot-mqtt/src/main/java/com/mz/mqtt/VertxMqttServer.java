@@ -11,7 +11,7 @@ import com.mz.network.client.message.BaseMessage;
 import com.mz.network.client.message.Item;
 import com.mz.network.client.message.Message;
 import com.mz.network.client.message.Route;
-import com.mz.network.events.MessageEvent;
+import com.mz.protocol.core.IMessageHandler;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.AbstractVerticle;
@@ -24,19 +24,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class VertxMqttServer extends AbstractVerticle {
-    @Autowired
-    private ClientRepository clientRepository;
 
     @Value("${vertx.service-id}")
     private String serviceId;
+    private final MqttConfig config;
+    private final Map<String, MqttEndpoint> subscribers = new ConcurrentHashMap<>();
+
+    private IMessageHandler handler;
+
+    @Autowired
+    private DeviceAuthorityService authorityService;
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
@@ -44,15 +46,16 @@ public class VertxMqttServer extends AbstractVerticle {
     @Autowired
     private MqttServerOptions mqttServerOptions;
 
-    private final MqttConfig config;
-
     @Autowired
-    private DeviceAuthorityService authorityService;
+    private ClientRepository clientRepository;
 
-    private final Map<String, MqttEndpoint> subscribers = new ConcurrentHashMap<>();
 
     public VertxMqttServer(MqttConfig config) {
         this.config = config;
+    }
+
+    public void setHandler(IMessageHandler handler) {
+        this.handler = handler;
     }
 
     @Override
@@ -151,11 +154,11 @@ public class VertxMqttServer extends AbstractVerticle {
                 handlePublish(message);
                 //平台物模型处理
                 try {
-                    //topic处理
-                    BaseMessage msg = parseMsg(parseRoute(topicName), payload);
-                    msg.setClientId(clientId);
-                    //发布事件到spring
-                    eventPublisher.publishEvent(new MessageEvent(this, msg));
+                    //接收裸数据
+                    Map<String, Object> params = new HashMap<>();
+                    String topic = message.topicName();
+                    params.put("topic", topic);
+                    handler.onReceive(params, "publish", payload);
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
                 }
@@ -186,7 +189,6 @@ public class VertxMqttServer extends AbstractVerticle {
     private BaseMessage parseMsg(Route route, String payload) throws JsonProcessingException {
         BaseMessage bmsg = new BaseMessage();
         ObjectMapper mapper = new ObjectMapper();
-        //脚本钩子hook
 
         //list Item
         if (payload.startsWith("[")) {

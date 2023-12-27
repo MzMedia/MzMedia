@@ -23,14 +23,14 @@ public class Protocol extends TenantEntity {
 
     public static final String STATE_STOPPED = "stopped";
     public static final String STATE_RUNNING = "running";
+
     public static final String CODEC_TYPE_JSON = "JSON";
     public static final String CODEC_TYPE_XML = "XML";
     public static final String CODEC_TYPE_SOAP = "SOAP";
     public static final String CODEC_TYPE_PROTOBUF = "PROTOBUF";
-    public static final String CODEC_TYPE_CUSTOM = "CUSTOM";
-    public static final String CODEC_TYPE_JAR = "JAR";
-    public static final String CODEC_TYPE_SCRIPT = "SCRIPT";
-    public static final String SCRIPT_FILE_NAME = "component.js";
+    public static final String CODEC_TYPE_CUSTOM_JAR = "CUSTOM_JAR";
+    public static final String CODEC_TYPE_CUSTOM_SCRIPT = "CUSTOM_SCRIPT";
+    public static final String SCRIPT_FILE_NAME = "protocol.js";
 
     /**
      * ID

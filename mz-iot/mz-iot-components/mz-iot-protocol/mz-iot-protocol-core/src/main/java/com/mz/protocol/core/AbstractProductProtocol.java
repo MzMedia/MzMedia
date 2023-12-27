@@ -15,6 +15,9 @@ public abstract class AbstractProductProtocol implements IProductProtocol {
     protected ProtocolConfig config;
 
     protected String script;
+    protected String scriptLang;
+
+    protected String codecType;
 
     protected String id;
 
@@ -22,6 +25,10 @@ public abstract class AbstractProductProtocol implements IProductProtocol {
     public void create(ProtocolConfig config) {
         this.config = config;
         this.id = UUID.randomUUID().toString();
+    }
+    @Override
+    public ProtocolConfig getConfig() {
+        return config;
     }
 
     @Override
@@ -31,11 +38,27 @@ public abstract class AbstractProductProtocol implements IProductProtocol {
 
     @Override
     public String getScript() {
-        return script;
+        return this.script;
     }
+
     @Override
-    public ProtocolConfig getConfig() {
-        return config;
+    public void setScriptLang(String scriptLang) {
+        this.scriptLang = scriptLang;
+    }
+
+    @Override
+    public String getScriptLang() {
+        return this.scriptLang;
+    }
+
+    @Override
+    public String getCodecType() {
+        return this.codecType;
+    }
+
+    @Override
+    public void setCodecType(String codecType) {
+        this.codecType = codecType;
     }
 
     @Override

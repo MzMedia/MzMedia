@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Map;
+
 @Slf4j
 @Data
 public class JavaScriptCodec implements ICodec {
@@ -19,6 +21,11 @@ public class JavaScriptCodec implements ICodec {
     public void decode(String msg) {
         scriptEngine.invokeMethod(new TypeReference<>() {
         }, "decode", msg);
+    }
+
+    @SneakyThrows
+    public Map<String, Object> decodeMap(String msg) {
+        return null;
     }
 
     @SneakyThrows
