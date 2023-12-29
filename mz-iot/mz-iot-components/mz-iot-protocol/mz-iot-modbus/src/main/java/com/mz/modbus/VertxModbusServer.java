@@ -1,22 +1,22 @@
-package com.mz.sip;
+package com.mz.modbus;
 
+import com.mz.modbus.config.ModbusConfig;
 import com.mz.protocol.core.IMessageHandler;
-import com.mz.sip.config.SipConfig;
 import io.vertx.core.AbstractVerticle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 
 @Slf4j
-public class VertxSipServer extends AbstractVerticle {
+public class VertxModbusServer extends AbstractVerticle {
 
-    private final SipConfig config;
+    private final ModbusConfig config;
     private IMessageHandler handler;
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    public VertxSipServer(SipConfig config) {
+    public VertxModbusServer(ModbusConfig config) {
         this.config = config;
     }
 
