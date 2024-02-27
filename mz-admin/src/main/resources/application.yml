@@ -67,7 +67,7 @@ spring:
     # 国际化资源文件路径
     basename: i18n/messages
   profiles:
-    active: @profiles.active@
+    active: prod
   # 文件上传
   servlet:
     multipart:
@@ -197,8 +197,8 @@ springdoc:
     version: '版本号: ${app.version}'
     # 作者信息
     contact:
-      name: 帐篷Li
-      email: 908349383@qq.com
+      name: MzMedia
+      email: mzmedia2023@126.com
       url: https://gitee.com/mzmedia/mz-media
   components:
     # 鉴权方式配置
@@ -284,14 +284,3 @@ vertx:
       retry:
         initialSleepTime: 3000
         maxTimes: 3
-
-# mqtt客户端配置
-mqttclient:
-  username: MzMedia                       # 账号
-  password: MzMedia                       # 密码
-  host-url: tcp://192.168.2.120:1883        # mqtt连接tcp地址
-  client-id: ${random.int}
-  default-topic: MzMedia                  # 默认主题
-  timeout: 30                             # 超时时间
-  keepalive: 30                           # 保持连接
-  clearSession: true

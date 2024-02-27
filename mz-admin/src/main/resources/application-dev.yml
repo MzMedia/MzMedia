@@ -249,3 +249,14 @@ justauth:
       client-id: 10**********6
       client-secret: 1f7d08**********5b7**********29e
       redirect-uri: ${justauth.address}/social-callback?source=gitlab
+
+# mqtt客户端配置
+mqttclient:
+  username: MzMedia                       # 账号
+  password: MzMedia                       # 密码
+  host-url: tcp://192.168.2.120:1883        # mqtt连接tcp地址
+  client-id: ${random.int}
+  default-topic: MzMedia                  # 默认主题
+  timeout: 30                             # 超时时间
+  keepalive: 30                           # 保持连接
+  clearSession: true

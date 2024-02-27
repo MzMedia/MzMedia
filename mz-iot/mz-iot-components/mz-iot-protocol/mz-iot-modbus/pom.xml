@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>mz-iot-protocol</artifactId>
         <groupId>com.mz</groupId>
-        <version>5.1.0</version>
+        <artifactId>mz-iot-protocol</artifactId>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

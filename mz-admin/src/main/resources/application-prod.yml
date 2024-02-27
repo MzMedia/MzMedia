@@ -46,15 +46,15 @@ spring:
           driverClassName: com.mysql.cj.jdbc.Driver
           # jdbc 所有参数配置参考 https://lionli.blog.csdn.net/article/details/122018562
           # rewriteBatchedStatements=true 批处理优化 大幅提升批量插入更新删除性能(对数据库有性能损耗 使用批量操作应考虑性能问题)
-          url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+          url: jdbc:mysql://mysql:3306/MzMedia?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
           username: root
-          password: root
+          password: MzMedia
         # 从库数据源
         slave:
           lazy: true
           type: ${spring.datasource.type}
           driverClassName: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+          url: jdbc:mysql://mysql:3306/MzMedia?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&autoReconnect=true&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
           username:
           password:
 #        oracle:
@@ -99,7 +99,7 @@ spring:
 spring.data:
   redis:
     # 地址
-    host: localhost
+    host: redis
     # 端口，默认为6379
     port: 6379
     # 数据库索引
@@ -251,3 +251,14 @@ justauth:
       client-id: 10**********6
       client-secret: 1f7d08**********5b7**********29e
       redirect-uri: ${justauth.address}/social-callback?source=gitlab
+
+# mqtt客户端配置
+mqttclient:
+  username: MzMedia                       # 账号
+  password: MzMedia                       # 密码
+  host-url: tcp://emqx:1883        # mqtt连接tcp地址
+  client-id: ${random.int}
+  default-topic: MzMedia                  # 默认主题
+  timeout: 30                             # 超时时间
+  keepalive: 30                           # 保持连接
+  clearSession: true
