@@ -53,37 +53,37 @@ public class VertxConfiguration {
         VertxOptions vertxOptions = vertxOptions();
         log.debug("init vertx : \n{}", vertxOptions);
         Vertx vertx;
-        if (vertxOptions.isClustered()) {
-            JsonObject config = new JsonObject(zookeeperConfig());
-            log.info("use zookeeper config:\n{}", config);
-            ClusterManager clusterManager = new ZookeeperClusterManager(config);
-            vertxOptions.setClusterManager(clusterManager);
-            CountDownLatch clusterLatch = new CountDownLatch(1);
-            AtomicReference<Throwable> errorReference = new AtomicReference<>();
-            AtomicReference<Vertx> vertxAtomicReference = new AtomicReference<>();
-            Vertx.clusteredVertx(vertxOptions, e -> {
-                try {
-                    if (e.succeeded()) {
-                        log.debug("init clustered vertx success");
-                        vertxAtomicReference.set(e.result());
-                    } else {
-                        errorReference.set(e.cause());
-                    }
-                } finally {
-                    clusterLatch.countDown();
-                }
-            });
-            boolean success = clusterLatch.await(1, TimeUnit.MINUTES);
-            if (!success) {
-                log.warn("wait vertx init timeout!");
-            }
-            if (errorReference.get() != null) {
-                throw errorReference.get();
-            }
-            vertx = vertxAtomicReference.get();
-        } else {
+//        if (vertxOptions.isClustered()) {
+//            JsonObject config = new JsonObject(zookeeperConfig());
+//            log.info("use zookeeper config:\n{}", config);
+//            ClusterManager clusterManager = new ZookeeperClusterManager(config);
+//            vertxOptions.setClusterManager(clusterManager);
+//            CountDownLatch clusterLatch = new CountDownLatch(1);
+//            AtomicReference<Throwable> errorReference = new AtomicReference<>();
+//            AtomicReference<Vertx> vertxAtomicReference = new AtomicReference<>();
+//            Vertx.clusteredVertx(vertxOptions, e -> {
+//                try {
+//                    if (e.succeeded()) {
+//                        log.debug("init clustered vertx success");
+//                        vertxAtomicReference.set(e.result());
+//                    } else {
+//                        errorReference.set(e.cause());
+//                    }
+//                } finally {
+//                    clusterLatch.countDown();
+//                }
+//            });
+//            boolean success = clusterLatch.await(1, TimeUnit.MINUTES);
+//            if (!success) {
+//                log.warn("wait vertx init timeout!");
+//            }
+//            if (errorReference.get() != null) {
+//                throw errorReference.get();
+//            }
+//            vertx = vertxAtomicReference.get();
+//        } else {
             vertx = Vertx.vertx(vertxOptions);
-        }
+//        }
         return vertx;
     }
 
