@@ -18,11 +18,11 @@ export const listProduct = (query?: ProductQuery): AxiosPromise<ProductVO[]> => 
 
 /**
  * 查询产品详细
- * @param productId
+ * @param id
  */
-export const getProduct = (productId: string | number): AxiosPromise<ProductVO> => {
+export const getProduct = (id: string | number): AxiosPromise<ProductVO> => {
   return request({
-    url: '/iot/product/' + productId,
+    url: '/iot/product/' + id,
     method: 'get'
   });
 };
@@ -53,11 +53,11 @@ export const updateProduct = (data: ProductForm) => {
 
 /**
  * 删除产品
- * @param productId
+ * @param id
  */
-export const delProduct = (productId: string | number | Array<string | number>) => {
+export const delProduct = (id: string | number | Array<string | number>) => {
   return request({
-    url: '/iot/product/' + productId,
+    url: '/iot/product/' + id,
     method: 'delete'
   });
 };

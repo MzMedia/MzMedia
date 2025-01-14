@@ -1,13 +1,24 @@
 <template>
   <div class="p-2">
     <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave">
-      <div class="search" v-show="showSearch">
-        <el-form :model="queryParams" ref="queryFormRef" :inline="true" label-width="68px">
-          <el-form-item>
-            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-          </el-form-item>
-        </el-form>
+      <div v-show="showSearch" class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form ref="queryFormRef" :model="queryParams" :inline="true">
+            <el-form-item label="用户ID" prop="userId">
+              <el-input v-model="queryParams.userId" placeholder="请输入用户ID" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="分组名称" prop="groupName">
+              <el-input v-model="queryParams.groupName" placeholder="请输入分组名称" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="分组排序" prop="groupOrder">
+              <el-input v-model="queryParams.groupOrder" placeholder="请输入分组排序" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+              <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
       </div>
     </transition>
 
@@ -32,8 +43,11 @@
 
       <el-table v-loading="loading" :data="groupList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="设备ID" align="center" prop="deviceId" v-if="true" />
-        <el-table-column label="分组ID" align="center" prop="groupId" v-if="true" />
+        <el-table-column label="分组ID" align="center" prop="id" v-if="true" />
+        <el-table-column label="用户ID" align="center" prop="userId" />
+        <el-table-column label="分组名称" align="center" prop="groupName" />
+        <el-table-column label="分组排序" align="center" prop="groupOrder" />
+        <el-table-column label="备注" align="center" prop="remark" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template #default="scope">
             <el-tooltip content="修改" placement="top">
@@ -46,17 +60,23 @@
         </el-table-column>
       </el-table>
 
-      <pagination
-          v-show="total>0"
-          :total="total"
-          v-model:page="queryParams.pageNum"
-          v-model:limit="queryParams.pageSize"
-          @pagination="getList"
-      />
+      <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
     </el-card>
     <!-- 添加或修改设备分组对话框 -->
     <el-dialog :title="dialog.title" v-model="dialog.visible" width="500px" append-to-body>
       <el-form ref="groupFormRef" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="用户ID" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入用户ID" />
+        </el-form-item>
+        <el-form-item label="分组名称" prop="groupName">
+          <el-input v-model="form.groupName" placeholder="请输入分组名称" />
+        </el-form-item>
+        <el-form-item label="分组排序" prop="groupOrder">
+          <el-input v-model="form.groupOrder" placeholder="请输入分组排序" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
+        </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -92,23 +112,38 @@ const dialog = reactive<DialogOption>({
 });
 
 const initFormData: GroupForm = {
-  deviceId: undefined,
-  groupId: undefined
+  id: undefined,
+  userId: undefined,
+  groupName: undefined,
+  groupOrder: undefined,
+  remark: undefined
 }
 const data = reactive<PageData<GroupForm, GroupQuery>>({
   form: {...initFormData},
   queryParams: {
     pageNum: 1,
     pageSize: 10,
+    userId: undefined,
+    groupName: undefined,
+    groupOrder: undefined,
     params: {
     }
   },
   rules: {
-    deviceId: [
-      { required: true, message: "设备ID不能为空", trigger: "blur" }
-    ],
-    groupId: [
+    id: [
       { required: true, message: "分组ID不能为空", trigger: "blur" }
+    ],
+    userId: [
+      { required: true, message: "用户ID不能为空", trigger: "blur" }
+    ],
+    groupName: [
+      { required: true, message: "分组名称不能为空", trigger: "blur" }
+    ],
+    groupOrder: [
+      { required: true, message: "分组排序不能为空", trigger: "blur" }
+    ],
+    remark: [
+      { required: true, message: "备注不能为空", trigger: "blur" }
     ]
   }
 });
@@ -150,7 +185,7 @@ const resetQuery = () => {
 
 /** 多选框选中数据 */
 const handleSelectionChange = (selection: GroupVO[]) => {
-  ids.value = selection.map(item => item.deviceId);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -165,8 +200,8 @@ const handleAdd = () => {
 /** 修改按钮操作 */
 const handleUpdate = async (row?: GroupVO) => {
   reset();
-  const _deviceId = row?.deviceId || ids.value[0]
-  const res = await getGroup(_deviceId);
+  const _id = row?.id || ids.value[0]
+  const res = await getGroup(_id);
   Object.assign(form.value, res.data);
   dialog.visible = true;
   dialog.title = "修改设备分组";
@@ -177,12 +212,12 @@ const submitForm = () => {
   groupFormRef.value?.validate(async (valid: boolean) => {
     if (valid) {
       buttonLoading.value = true;
-      if (form.value.deviceId) {
+      if (form.value.id) {
         await updateGroup(form.value).finally(() =>  buttonLoading.value = false);
       } else {
         await addGroup(form.value).finally(() =>  buttonLoading.value = false);
       }
-      proxy?.$modal.msgSuccess("修改成功");
+      proxy?.$modal.msgSuccess("操作成功");
       dialog.visible = false;
       await getList();
     }
@@ -191,9 +226,9 @@ const submitForm = () => {
 
 /** 删除按钮操作 */
 const handleDelete = async (row?: GroupVO) => {
-  const _deviceIds = row?.deviceId || ids.value;
-  await proxy?.$modal.confirm('是否确认删除设备分组编号为"' + _deviceIds + '"的数据项？').finally(() => loading.value = false);
-  await delGroup(_deviceIds);
+  const _ids = row?.id || ids.value;
+  await proxy?.$modal.confirm('是否确认删除设备分组编号为"' + _ids + '"的数据项？').finally(() => loading.value = false);
+  await delGroup(_ids);
   proxy?.$modal.msgSuccess("删除成功");
   await getList();
 }

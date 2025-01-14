@@ -20,7 +20,8 @@ export function login(data: LoginData): AxiosPromise<LoginResult> {
     url: '/auth/login',
     headers: {
       isToken: false,
-      isEncrypt: true
+      isEncrypt: true,
+      repeatSubmit: false
     },
     method: 'post',
     data: params
@@ -29,14 +30,20 @@ export function login(data: LoginData): AxiosPromise<LoginResult> {
 
 // 注册方法
 export function register(data: any) {
+  const params = {
+    ...data,
+    clientId: clientId,
+    grantType: 'password'
+  };
   return request({
     url: '/auth/register',
     headers: {
       isToken: false,
-      isEncrypt: true
+      isEncrypt: true,
+      repeatSubmit: false
     },
     method: 'post',
-    data: data
+    data: params
   });
 }
 
@@ -44,6 +51,10 @@ export function register(data: any) {
  * 注销
  */
 export function logout() {
+  request({
+    url: '/resource/sse/close',
+    method: 'get'
+  });
   return request({
     url: '/auth/logout',
     method: 'post'

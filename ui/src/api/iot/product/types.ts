@@ -1,13 +1,13 @@
 export interface ProductVO {
   /**
+   * 产品ID
+   */
+  id: string | number;
+
+  /**
    * 产品分类ID
    */
   categoryId: string | number;
-
-  /**
-   * 产品ID
-   */
-  productId: string | number;
 
   /**
    * 产品名称
@@ -83,14 +83,14 @@ export interface ProductVO {
 
 export interface ProductForm extends BaseEntity {
   /**
+   * 产品ID
+   */
+  id?: string | number;
+
+  /**
    * 产品分类ID
    */
   categoryId?: string | number;
-
-  /**
-   * 产品ID
-   */
-  productId?: string | number;
 
   /**
    * 产品名称

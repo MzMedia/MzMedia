@@ -25,7 +25,8 @@ export function addTenant(data: TenantForm) {
     url: '/system/tenant',
     method: 'post',
     headers: {
-      isEncrypt: true
+      isEncrypt: true,
+      repeatSubmit: false
     },
     data: data
   });
@@ -88,5 +89,13 @@ export function syncTenantPackage(tenantId: string | number, packageId: string |
     url: '/system/tenant/syncTenantPackage',
     method: 'get',
     params: data
+  });
+}
+
+// 同步租户字典
+export function syncTenantDict() {
+  return request({
+    url: '/system/tenant/syncTenantDict',
+    method: 'get',
   });
 }

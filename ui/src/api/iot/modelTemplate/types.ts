@@ -2,7 +2,7 @@ export interface ModelTemplateVO {
   /**
    * 物模型ID
    */
-  templateId: string | number;
+  id: string | number;
 
   /**
    * 物模型名称
@@ -75,7 +75,7 @@ export interface ModelTemplateForm extends BaseEntity {
   /**
    * 物模型ID
    */
-  templateId?: string | number;
+  id?: string | number;
 
   /**
    * 物模型名称

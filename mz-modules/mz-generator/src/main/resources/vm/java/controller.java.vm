@@ -8,20 +8,20 @@ import jakarta.validation.constraints.*;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
-import com.mz.common.idempotent.annotation.RepeatSubmit;
-import com.mz.common.log.annotation.Log;
-import com.mz.common.web.core.BaseController;
-import com.mz.common.mybatis.core.page.PageQuery;
-import com.mz.common.core.domain.R;
-import com.mz.common.core.validate.AddGroup;
-import com.mz.common.core.validate.EditGroup;
-import com.mz.common.log.enums.BusinessType;
-import com.mz.common.excel.utils.ExcelUtil;
+import org.dromara.common.idempotent.annotation.RepeatSubmit;
+import org.dromara.common.log.annotation.Log;
+import org.dromara.common.web.core.BaseController;
+import org.dromara.common.mybatis.core.page.PageQuery;
+import org.dromara.common.core.domain.R;
+import org.dromara.common.core.validate.AddGroup;
+import org.dromara.common.core.validate.EditGroup;
+import org.dromara.common.log.enums.BusinessType;
+import org.dromara.common.excel.utils.ExcelUtil;
 import ${packageName}.domain.vo.${ClassName}Vo;
 import ${packageName}.domain.bo.${ClassName}Bo;
 import ${packageName}.service.I${ClassName}Service;
-#if($table.crud || $table.sub)
-import com.mz.common.mybatis.core.page.TableDataInfo;
+#if($table.crud)
+import org.dromara.common.mybatis.core.page.TableDataInfo;
 #elseif($table.tree)
 #end
 
@@ -44,7 +44,7 @@ public class ${ClassName}Controller extends BaseController {
      */
     @SaCheckPermission("${permissionPrefix}:list")
     @GetMapping("/list")
-#if($table.crud || $table.sub)
+#if($table.crud)
     public TableDataInfo<${ClassName}Vo> list(${ClassName}Bo bo, PageQuery pageQuery) {
         return ${className}Service.queryPageList(bo, pageQuery);
     }

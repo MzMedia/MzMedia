@@ -99,7 +99,7 @@ services:
         ipv4_address: 177.7.0.13
 
   emqx:
-    image: emqx:5.1
+    image: emqx:5.7.2
     container_name: emqx
     ports:
       - 1883:1883
@@ -147,9 +147,9 @@ services:
       # 时区上海
       TZ: Asia/Shanghai
       # 管理后台用户名
-      MINIO_ROOT_USER: ruoyi
+      MINIO_ROOT_USER: MzMedia
       # 管理后台密码，最小8个字符
-      MINIO_ROOT_PASSWORD: ruoyi123
+      MINIO_ROOT_PASSWORD: MzMedia123
       # https需要指定域名
       #MINIO_SERVER_URL: "https://xxx.com:9000"
       #MINIO_BROWSER_REDIRECT_URL: "https://xxx.com:9001"
@@ -169,6 +169,35 @@ services:
     networks:
       network:
         ipv4_address: 177.7.0.16
+
+  zlmedia:
+    build:
+      context: ./zlmedia/record
+    container_name: zlmedia-record
+    privileged: true
+    restart: always
+    ports:
+      - "18081:18081"
+      - "8082:80"
+      - "8443:443"
+      - "554:554"
+      - "1935:1935"
+      - "8000:8000/tcp"
+      - "8000:8000/udp"
+      - "9000:9000/udp"
+      - "10000:10000/tcp"
+      - "10000:10000/udp"
+      - "30000-30100:30000-30100/tcp"
+      - "30000-30100:30000-30100/udp"
+    volumes:
+      - /opt/MzMedia/zlmedia/record/fastbee-record.jar:/fastbee-record.jar
+      - /opt/MzMedia/zlmedia/record/logs:/opt/assist/logs
+      - /opt/MzMedia/zlmedia/logs:/opt/media/bin/log
+      - /opt/MzMedia/zlmedia/conf/config.ini:/opt/media/conf/config.ini
+      - /opt/MzMedia/zlmedia/conf/default.pem:/opt/media/bin/default.pem
+    networks:
+      network:
+        ipv4_address: 177.7.0.17
 
 #  ruoyi-server1:
 #    image: ruoyi/ruoyi-server:5.1.0

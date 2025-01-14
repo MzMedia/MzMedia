@@ -1,62 +1,9 @@
 declare module '*.vue' {
   import { DefineComponent } from 'vue';
-  const component: DefineComponent<{}, {}, any>;
-  export default component;
-}
-declare module '*.avif' {
-  const src: string;
-  export default src;
+  const Component: DefineComponent<{}, {}, any>;
+  export default Component;
 }
 
-declare module '*.bmp' {
-  const src: string;
-  export default src;
-}
-
-declare module '*.gif' {
-  const src: string;
-  export default src;
-}
-
-declare module '*.jpg' {
-  const src: string;
-  export default src;
-}
-
-declare module '*.jpeg' {
-  const src: string;
-  export default src;
-}
-
-declare module '*.png' {
-  const src: string;
-  export default src;
-}
-
-declare module '*.webp' {
-  const src: string;
-  export default src;
-}
-
-declare module '*.svg' {
-  const src: string;
-  export default src;
-}
-
-declare module '*.module.css' {
-  const classes: { readonly [key: string]: string };
-  export default classes;
-}
-
-declare module '*.module.scss' {
-  const classes: { readonly [key: string]: string };
-  export default classes;
-}
-
-declare module '*.module.sass' {
-  const classes: { readonly [key: string]: string };
-  export default classes;
-}
 // 环境变量
 interface ImportMetaEnv {
   VITE_APP_TITLE: string;
@@ -64,11 +11,15 @@ interface ImportMetaEnv {
   VITE_APP_BASE_API: string;
   VITE_APP_BASE_URL: string;
   VITE_APP_CONTEXT_PATH: string;
-  VITE_APP_MONITRO_ADMIN: string;
-  VITE_APP_POWERJOB_ADMIN: string;
+  VITE_APP_MONITOR_ADMIN: string;
+  VITE_APP_SNAILJOB_ADMIN: string;
   VITE_APP_ENV: string;
+  VITE_APP_ENCRYPT: string;
   VITE_APP_RSA_PUBLIC_KEY: string;
+  VITE_APP_RSA_PRIVATE_KEY: string;
   VITE_APP_CLIENT_ID: string;
+  VITE_APP_WEBSOCKET: string;
+  VITE_APP_SSE: string;
 }
 interface ImportMeta {
   readonly env: ImportMetaEnv;

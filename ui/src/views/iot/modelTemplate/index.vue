@@ -1,40 +1,42 @@
 <template>
   <div class="p-2">
     <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave">
-      <div class="search" v-show="showSearch">
-        <el-form :model="queryParams" ref="queryFormRef" :inline="true" label-width="68px">
-          <el-form-item label="物模型名称" prop="templateName">
-            <el-input v-model="queryParams.templateName" placeholder="请输入物模型名称" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="标识符，产品下唯一" prop="identifier">
-            <el-input v-model="queryParams.identifier" placeholder="请输入标识符，产品下唯一" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="是否系统通用" prop="isSys">
-            <el-input v-model="queryParams.isSys" placeholder="请输入是否系统通用" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="是否图表展示" prop="isChart">
-            <el-input v-model="queryParams.isChart" placeholder="请输入是否图表展示" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="是否实时监测" prop="isMonitor">
-            <el-input v-model="queryParams.isMonitor" placeholder="请输入是否实时监测" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="是否历史存储 (0-否，1-是）" prop="isHistory">
-            <el-input v-model="queryParams.isHistory" placeholder="请输入是否历史存储 (0-否，1-是）" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="是否只读数据(0-否，1-是)" prop="isReadonly">
-            <el-input v-model="queryParams.isReadonly" placeholder="请输入是否只读数据(0-否，1-是)" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="是否设备分享权限(0-否，1-是)" prop="isSharePerm">
-            <el-input v-model="queryParams.isSharePerm" placeholder="请输入是否设备分享权限(0-否，1-是)" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="排序，值越大，排序越靠前" prop="modelOrder">
-            <el-input v-model="queryParams.modelOrder" placeholder="请输入排序，值越大，排序越靠前" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-          </el-form-item>
-        </el-form>
+      <div v-show="showSearch" class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form ref="queryFormRef" :model="queryParams" :inline="true">
+            <el-form-item label="物模型名称" prop="templateName">
+              <el-input v-model="queryParams.templateName" placeholder="请输入物模型名称" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="标识符，产品下唯一" prop="identifier">
+              <el-input v-model="queryParams.identifier" placeholder="请输入标识符，产品下唯一" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="是否系统通用" prop="isSys">
+              <el-input v-model="queryParams.isSys" placeholder="请输入是否系统通用" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="是否图表展示" prop="isChart">
+              <el-input v-model="queryParams.isChart" placeholder="请输入是否图表展示" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="是否实时监测" prop="isMonitor">
+              <el-input v-model="queryParams.isMonitor" placeholder="请输入是否实时监测" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="是否历史存储 (0-否，1-是）" prop="isHistory">
+              <el-input v-model="queryParams.isHistory" placeholder="请输入是否历史存储 (0-否，1-是）" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="是否只读数据(0-否，1-是)" prop="isReadonly">
+              <el-input v-model="queryParams.isReadonly" placeholder="请输入是否只读数据(0-否，1-是)" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="是否设备分享权限(0-否，1-是)" prop="isSharePerm">
+              <el-input v-model="queryParams.isSharePerm" placeholder="请输入是否设备分享权限(0-否，1-是)" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="排序，值越大，排序越靠前" prop="modelOrder">
+              <el-input v-model="queryParams.modelOrder" placeholder="请输入排序，值越大，排序越靠前" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+              <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
       </div>
     </transition>
 
@@ -59,7 +61,7 @@
 
       <el-table v-loading="loading" :data="modelTemplateList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="物模型ID" align="center" prop="templateId" v-if="true" />
+        <el-table-column label="物模型ID" align="center" prop="id" v-if="true" />
         <el-table-column label="物模型名称" align="center" prop="templateName" />
         <el-table-column label="标识符，产品下唯一" align="center" prop="identifier" />
         <el-table-column label="模型类别" align="center" prop="type" />
@@ -85,13 +87,7 @@
         </el-table-column>
       </el-table>
 
-      <pagination
-          v-show="total>0"
-          :total="total"
-          v-model:page="queryParams.pageNum"
-          v-model:limit="queryParams.pageSize"
-          @pagination="getList"
-      />
+      <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
     </el-card>
     <!-- 添加或修改物模型模板对话框 -->
     <el-dialog :title="dialog.title" v-model="dialog.visible" width="500px" append-to-body>
@@ -124,7 +120,7 @@
           <el-input v-model="form.modelOrder" placeholder="请输入排序，值越大，排序越靠前" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-            <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -161,7 +157,7 @@ const dialog = reactive<DialogOption>({
 });
 
 const initFormData: ModelTemplateForm = {
-  templateId: undefined,
+  id: undefined,
   templateName: undefined,
   identifier: undefined,
   type: undefined,
@@ -197,7 +193,7 @@ const data = reactive<PageData<ModelTemplateForm, ModelTemplateQuery>>({
     }
   },
   rules: {
-    templateId: [
+    id: [
       { required: true, message: "物模型ID不能为空", trigger: "blur" }
     ],
     templateName: [
@@ -279,7 +275,7 @@ const resetQuery = () => {
 
 /** 多选框选中数据 */
 const handleSelectionChange = (selection: ModelTemplateVO[]) => {
-  ids.value = selection.map(item => item.templateId);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -294,8 +290,8 @@ const handleAdd = () => {
 /** 修改按钮操作 */
 const handleUpdate = async (row?: ModelTemplateVO) => {
   reset();
-  const _templateId = row?.templateId || ids.value[0]
-  const res = await getModelTemplate(_templateId);
+  const _id = row?.id || ids.value[0]
+  const res = await getModelTemplate(_id);
   Object.assign(form.value, res.data);
   dialog.visible = true;
   dialog.title = "修改物模型模板";
@@ -306,12 +302,12 @@ const submitForm = () => {
   modelTemplateFormRef.value?.validate(async (valid: boolean) => {
     if (valid) {
       buttonLoading.value = true;
-      if (form.value.templateId) {
+      if (form.value.id) {
         await updateModelTemplate(form.value).finally(() =>  buttonLoading.value = false);
       } else {
         await addModelTemplate(form.value).finally(() =>  buttonLoading.value = false);
       }
-      proxy?.$modal.msgSuccess("修改成功");
+      proxy?.$modal.msgSuccess("操作成功");
       dialog.visible = false;
       await getList();
     }
@@ -320,9 +316,9 @@ const submitForm = () => {
 
 /** 删除按钮操作 */
 const handleDelete = async (row?: ModelTemplateVO) => {
-  const _templateIds = row?.templateId || ids.value;
-  await proxy?.$modal.confirm('是否确认删除物模型模板编号为"' + _templateIds + '"的数据项？').finally(() => loading.value = false);
-  await delModelTemplate(_templateIds);
+  const _ids = row?.id || ids.value;
+  await proxy?.$modal.confirm('是否确认删除物模型模板编号为"' + _ids + '"的数据项？').finally(() => loading.value = false);
+  await delModelTemplate(_ids);
   proxy?.$modal.msgSuccess("删除成功");
   await getList();
 }

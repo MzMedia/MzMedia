@@ -1,5 +1,10 @@
 export interface DeviceVO {
   /**
+   * 设备ID
+   */
+  id: string | number;
+
+  /**
    * 用户ID
    */
   userId: string | number;
@@ -8,11 +13,6 @@ export interface DeviceVO {
    * 子用户ID
    */
   subUid: string | number;
-
-  /**
-   * 设备ID
-   */
-  deviceId: string | number;
 
   /**
    * 子设备ID
@@ -50,12 +50,12 @@ export interface DeviceVO {
   firmwareVersion: string;
 
   /**
-   * 设备昵称
+   * 设备位置
    */
   locate: string;
 
   /**
-   * 设备昵称
+   * 设备标签
    */
   tag: string;
 
@@ -80,7 +80,7 @@ export interface DeviceVO {
   thingsModel: string;
 
   /**
-   * 设备摘要，格式[{"name":"device"},{"chip":"esp8266"}]
+   * 设备摘要
    */
   summary: string;
 
@@ -93,6 +93,11 @@ export interface DeviceVO {
 
 export interface DeviceForm extends BaseEntity {
   /**
+   * 设备ID
+   */
+  id?: string | number;
+
+  /**
    * 用户ID
    */
   userId?: string | number;
@@ -101,11 +106,6 @@ export interface DeviceForm extends BaseEntity {
    * 子用户ID
    */
   subUid?: string | number;
-
-  /**
-   * 设备ID
-   */
-  deviceId?: string | number;
 
   /**
    * 子设备ID
@@ -143,12 +143,12 @@ export interface DeviceForm extends BaseEntity {
   firmwareVersion?: string;
 
   /**
-   * 设备昵称
+   * 设备位置
    */
   locate?: string;
 
   /**
-   * 设备昵称
+   * 设备标签
    */
   tag?: string;
 
@@ -173,7 +173,7 @@ export interface DeviceForm extends BaseEntity {
   thingsModel?: string;
 
   /**
-   * 设备摘要，格式[{"name":"device"},{"chip":"esp8266"}]
+   * 设备摘要
    */
   summary?: string;
 
@@ -187,14 +187,14 @@ export interface DeviceForm extends BaseEntity {
 export interface DeviceQuery extends PageQuery {
 
   /**
+   * 用户ID
+   */
+  userId?: string | number;
+
+  /**
    * 子用户ID
    */
   subUid?: string | number;
-
-  /**
-   * 设备ID
-   */
-  deviceId?: string | number;
 
   /**
    * 子设备ID
@@ -232,12 +232,12 @@ export interface DeviceQuery extends PageQuery {
   firmwareVersion?: string;
 
   /**
-   * 设备昵称
+   * 设备位置
    */
   locate?: string;
 
   /**
-   * 设备昵称
+   * 设备标签
    */
   tag?: string;
 
@@ -262,7 +262,7 @@ export interface DeviceQuery extends PageQuery {
   thingsModel?: string;
 
   /**
-   * 设备摘要，格式[{"name":"device"},{"chip":"esp8266"}]
+   * 设备摘要
    */
   summary?: string;
 

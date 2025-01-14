@@ -1,1 +1,1 @@
-com.mz.common.idempotent.config.IdempotentConfig
+org.dromara.common.idempotent.config.IdempotentConfig

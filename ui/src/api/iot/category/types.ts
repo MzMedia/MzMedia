@@ -2,7 +2,7 @@ export interface CategoryVO {
   /**
    * 产品分类ID
    */
-  categoryId: string | number;
+  id: string | number;
 
   /**
    * 产品分类名称
@@ -35,7 +35,7 @@ export interface CategoryForm extends BaseEntity {
   /**
    * 产品分类ID
    */
-  categoryId?: string | number;
+  id?: string | number;
 
   /**
    * 产品分类名称

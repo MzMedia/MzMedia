@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.mz</groupId>
+        <groupId>org.dromara</groupId>
         <artifactId>mz-common</artifactId>
         <version>${revision}</version>
     </parent>
@@ -14,13 +14,13 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.mz</groupId>
+            <groupId>org.dromara</groupId>
             <artifactId>mz-common-core</artifactId>
         </dependency>
 
         <!-- RuoYi Common Redis-->
         <dependency>
-            <groupId>com.mz</groupId>
+            <groupId>org.dromara</groupId>
             <artifactId>mz-common-redis</artifactId>
         </dependency>
 
@@ -34,6 +34,11 @@
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-jwt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
         </dependency>
 
     </dependencies>

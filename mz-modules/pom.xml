@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>MzMedia</artifactId>
-        <groupId>com.mz</groupId>
+        <groupId>org.dromara</groupId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -14,13 +14,14 @@
         <module>mz-generator</module>
         <module>mz-job</module>
         <module>mz-system</module>
+        <module>mz-workflow</module>
     </modules>
 
     <artifactId>mz-modules</artifactId>
     <packaging>pom</packaging>
 
     <description>
-        ruoyi-modules 业务模块
+        mz-modules 业务模块
     </description>
 
 </project>

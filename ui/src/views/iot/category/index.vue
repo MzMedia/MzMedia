@@ -1,25 +1,27 @@
 <template>
   <div class="p-2">
     <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave">
-      <div class="search" v-show="showSearch">
-        <el-form :model="queryParams" ref="queryFormRef" :inline="true" label-width="68px">
-          <el-form-item label="产品分类名称" prop="categoryName">
-            <el-input v-model="queryParams.categoryName" placeholder="请输入产品分类名称" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="是否系统通用" prop="isSys">
-            <el-input v-model="queryParams.isSys" placeholder="请输入是否系统通用" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="父级ID" prop="parentId">
-            <el-input v-model="queryParams.parentId" placeholder="请输入父级ID" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="显示顺序" prop="orderNum">
-            <el-input v-model="queryParams.orderNum" placeholder="请输入显示顺序" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-          </el-form-item>
-        </el-form>
+      <div v-show="showSearch" class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form ref="queryFormRef" :model="queryParams" :inline="true">
+            <el-form-item label="产品分类名称" prop="categoryName">
+              <el-input v-model="queryParams.categoryName" placeholder="请输入产品分类名称" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="是否系统通用" prop="isSys">
+              <el-input v-model="queryParams.isSys" placeholder="请输入是否系统通用" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="父级ID" prop="parentId">
+              <el-input v-model="queryParams.parentId" placeholder="请输入父级ID" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="显示顺序" prop="orderNum">
+              <el-input v-model="queryParams.orderNum" placeholder="请输入显示顺序" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+              <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
       </div>
     </transition>
 
@@ -44,7 +46,7 @@
 
       <el-table v-loading="loading" :data="categoryList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="产品分类ID" align="center" prop="categoryId" v-if="true" />
+        <el-table-column label="产品分类ID" align="center" prop="id" v-if="true" />
         <el-table-column label="产品分类名称" align="center" prop="categoryName" />
         <el-table-column label="是否系统通用" align="center" prop="isSys" />
         <el-table-column label="父级ID" align="center" prop="parentId" />
@@ -62,13 +64,7 @@
         </el-table-column>
       </el-table>
 
-      <pagination
-          v-show="total>0"
-          :total="total"
-          v-model:page="queryParams.pageNum"
-          v-model:limit="queryParams.pageSize"
-          @pagination="getList"
-      />
+      <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
     </el-card>
     <!-- 添加或修改产品分类对话框 -->
     <el-dialog :title="dialog.title" v-model="dialog.visible" width="500px" append-to-body>
@@ -86,7 +82,7 @@
           <el-input v-model="form.orderNum" placeholder="请输入显示顺序" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-            <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -123,7 +119,7 @@ const dialog = reactive<DialogOption>({
 });
 
 const initFormData: CategoryForm = {
-  categoryId: undefined,
+  id: undefined,
   categoryName: undefined,
   isSys: undefined,
   parentId: undefined,
@@ -143,7 +139,7 @@ const data = reactive<PageData<CategoryForm, CategoryQuery>>({
     }
   },
   rules: {
-    categoryId: [
+    id: [
       { required: true, message: "产品分类ID不能为空", trigger: "blur" }
     ],
     categoryName: [
@@ -201,7 +197,7 @@ const resetQuery = () => {
 
 /** 多选框选中数据 */
 const handleSelectionChange = (selection: CategoryVO[]) => {
-  ids.value = selection.map(item => item.categoryId);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -216,8 +212,8 @@ const handleAdd = () => {
 /** 修改按钮操作 */
 const handleUpdate = async (row?: CategoryVO) => {
   reset();
-  const _categoryId = row?.categoryId || ids.value[0]
-  const res = await getCategory(_categoryId);
+  const _id = row?.id || ids.value[0]
+  const res = await getCategory(_id);
   Object.assign(form.value, res.data);
   dialog.visible = true;
   dialog.title = "修改产品分类";
@@ -228,12 +224,12 @@ const submitForm = () => {
   categoryFormRef.value?.validate(async (valid: boolean) => {
     if (valid) {
       buttonLoading.value = true;
-      if (form.value.categoryId) {
+      if (form.value.id) {
         await updateCategory(form.value).finally(() =>  buttonLoading.value = false);
       } else {
         await addCategory(form.value).finally(() =>  buttonLoading.value = false);
       }
-      proxy?.$modal.msgSuccess("修改成功");
+      proxy?.$modal.msgSuccess("操作成功");
       dialog.visible = false;
       await getList();
     }
@@ -242,9 +238,9 @@ const submitForm = () => {
 
 /** 删除按钮操作 */
 const handleDelete = async (row?: CategoryVO) => {
-  const _categoryIds = row?.categoryId || ids.value;
-  await proxy?.$modal.confirm('是否确认删除产品分类编号为"' + _categoryIds + '"的数据项？').finally(() => loading.value = false);
-  await delCategory(_categoryIds);
+  const _ids = row?.id || ids.value;
+  await proxy?.$modal.confirm('是否确认删除产品分类编号为"' + _ids + '"的数据项？').finally(() => loading.value = false);
+  await delCategory(_ids);
   proxy?.$modal.msgSuccess("删除成功");
   await getList();
 }

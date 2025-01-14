@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mz</groupId>
+    <groupId>org.dromara</groupId>
     <artifactId>mz-common-bom</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
@@ -14,161 +14,168 @@
     </description>
 
     <properties>
-        <revision>5.1.0</revision>
+        <revision>5.2.3</revision>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <!-- 核心模块 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-core</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 接口模块 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-doc</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- excel -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-excel</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 幂等 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-idempotent</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 调度模块 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-job</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 日志记录 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-log</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 邮件服务 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-mail</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 数据库服务 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-mybatis</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- OSS -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-oss</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 限流 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-ratelimiter</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 缓存服务 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-redis</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- satoken -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-satoken</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 安全模块 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-security</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 短信模块 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-sms</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-social</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- web服务 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-web</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 翻译模块 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-translation</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 脱敏模块 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-sensitive</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 序列化模块 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-json</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 数据库加解密模块 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-encrypt</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- 租户模块 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-tenant</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <!-- WebSocket模块 -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-websocket</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- SSE模块 -->
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>mz-common-sse</artifactId>
                 <version>${revision}</version>
             </dependency>
 

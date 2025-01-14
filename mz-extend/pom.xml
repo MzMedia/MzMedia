@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>MzMedia</artifactId>
-        <groupId>com.mz</groupId>
+        <groupId>org.dromara</groupId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -13,7 +13,7 @@
 
     <modules>
         <module>mz-monitor-admin</module>
-        <module>mz-powerjob-server</module>
+        <module>mz-snailjob-server</module>
     </modules>
 
 </project>

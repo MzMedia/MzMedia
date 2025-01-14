@@ -18,11 +18,11 @@ export const listGroup = (query?: GroupQuery): AxiosPromise<GroupVO[]> => {
 
 /**
  * 查询设备分组详细
- * @param deviceId
+ * @param id
  */
-export const getGroup = (deviceId: string | number): AxiosPromise<GroupVO> => {
+export const getGroup = (id: string | number): AxiosPromise<GroupVO> => {
   return request({
-    url: '/iot/group/' + deviceId,
+    url: '/iot/group/' + id,
     method: 'get'
   });
 };
@@ -53,11 +53,11 @@ export const updateGroup = (data: GroupForm) => {
 
 /**
  * 删除设备分组
- * @param deviceId
+ * @param id
  */
-export const delGroup = (deviceId: string | number | Array<string | number>) => {
+export const delGroup = (id: string | number | Array<string | number>) => {
   return request({
-    url: '/iot/group/' + deviceId,
+    url: '/iot/group/' + id,
     method: 'delete'
   });
 };

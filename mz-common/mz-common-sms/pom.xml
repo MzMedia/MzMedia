@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.mz</groupId>
+        <groupId>org.dromara</groupId>
         <artifactId>mz-common</artifactId>
         <version>${revision}</version>
     </parent>
@@ -20,13 +20,12 @@
         <dependency>
             <groupId>org.dromara.sms4j</groupId>
             <artifactId>sms4j-spring-boot-starter</artifactId>
-            <exclusions>
-                <!-- 排除京东短信内存在的fastjson等待作者后续修复 -->
-                <exclusion>
-                    <groupId>com.alibaba</groupId>
-                    <artifactId>fastjson</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+
+        <!-- RuoYi Common Redis-->
+        <dependency>
+            <groupId>org.dromara</groupId>
+            <artifactId>mz-common-redis</artifactId>
         </dependency>
 
     </dependencies>

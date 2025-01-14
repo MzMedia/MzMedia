@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.mz</groupId>
+        <groupId>org.dromara</groupId>
         <artifactId>mz-iot-protocol</artifactId>
         <version>${revision}</version>
     </parent>
@@ -12,9 +12,8 @@
     <artifactId>mz-iot-modbus</artifactId>
     <dependencies>
         <dependency>
-            <groupId>com.mz</groupId>
+            <groupId>org.dromara</groupId>
             <artifactId>mz-iot-protocol-core</artifactId>
-            <version>5.1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

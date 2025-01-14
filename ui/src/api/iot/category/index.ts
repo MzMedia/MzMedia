@@ -18,11 +18,11 @@ export const listCategory = (query?: CategoryQuery): AxiosPromise<CategoryVO[]> 
 
 /**
  * 查询产品分类详细
- * @param categoryId
+ * @param id
  */
-export const getCategory = (categoryId: string | number): AxiosPromise<CategoryVO> => {
+export const getCategory = (id: string | number): AxiosPromise<CategoryVO> => {
   return request({
-    url: '/iot/category/' + categoryId,
+    url: '/iot/category/' + id,
     method: 'get'
   });
 };
@@ -53,11 +53,11 @@ export const updateCategory = (data: CategoryForm) => {
 
 /**
  * 删除产品分类
- * @param categoryId
+ * @param id
  */
-export const delCategory = (categoryId: string | number | Array<string | number>) => {
+export const delCategory = (id: string | number | Array<string | number>) => {
   return request({
-    url: '/iot/category/' + categoryId,
+    url: '/iot/category/' + id,
     method: 'delete'
   });
 };

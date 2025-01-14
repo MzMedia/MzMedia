@@ -1,6 +1,6 @@
-com.mz.common.core.config.ApplicationConfig
-com.mz.common.core.config.AsyncConfig
-com.mz.common.core.config.RuoYiConfig
-com.mz.common.core.config.ThreadPoolConfig
-com.mz.common.core.config.ValidatorConfig
-com.mz.common.core.utils.SpringUtils
+org.dromara.common.core.config.ApplicationConfig
+org.dromara.common.core.config.AsyncConfig
+org.dromara.common.core.config.RuoYiConfig
+org.dromara.common.core.config.ThreadPoolConfig
+org.dromara.common.core.config.ValidatorConfig
+org.dromara.common.core.utils.SpringUtils

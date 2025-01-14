@@ -1,30 +1,56 @@
 <template>
   <div class="p-2">
     <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave">
-      <div class="search" v-show="showSearch">
-        <el-form :model="queryParams" ref="queryFormRef" :inline="true" label-width="68px">
-          <el-form-item label="设备ID" prop="deviceId">
-            <el-input v-model="queryParams.deviceId" placeholder="请输入设备ID" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="设备名称" prop="deviceName">
-            <el-input v-model="queryParams.deviceName" placeholder="请输入设备名称" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="设备昵称" prop="tag">
-            <el-input v-model="queryParams.tag" placeholder="请输入设备昵称" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="激活时间" prop="activeTime">
-            <el-date-picker clearable
-              v-model="queryParams.activeTime"
-              type="date"
-              value-format="YYYY-MM-DD"
-              placeholder="请选择激活时间"
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-          </el-form-item>
-        </el-form>
+      <div v-show="showSearch" class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form ref="queryFormRef" :model="queryParams" :inline="true">
+            <el-form-item label="用户ID" prop="userId">
+              <el-input v-model="queryParams.userId" placeholder="请输入用户ID" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="子用户ID" prop="subUid">
+              <el-input v-model="queryParams.subUid" placeholder="请输入子用户ID" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="子设备ID" prop="subDid">
+              <el-input v-model="queryParams.subDid" placeholder="请输入子设备ID" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="设备名称" prop="deviceName">
+              <el-input v-model="queryParams.deviceName" placeholder="请输入设备名称" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="设备昵称" prop="nickName">
+              <el-input v-model="queryParams.nickName" placeholder="请输入设备昵称" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="产品key" prop="productKey">
+              <el-input v-model="queryParams.productKey" placeholder="请输入产品key" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="设备编号" prop="serialNumber">
+              <el-input v-model="queryParams.serialNumber" placeholder="请输入设备编号" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="产品密钥" prop="secret">
+              <el-input v-model="queryParams.secret" placeholder="请输入产品密钥" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="固件版本" prop="firmwareVersion">
+              <el-input v-model="queryParams.firmwareVersion" placeholder="请输入固件版本" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="设备标签" prop="tag">
+              <el-input v-model="queryParams.tag" placeholder="请输入设备标签" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="设备IP" prop="ip">
+              <el-input v-model="queryParams.ip" placeholder="请输入设备IP" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="激活时间" prop="activeTime">
+              <el-date-picker clearable
+                v-model="queryParams.activeTime"
+                type="date"
+                value-format="YYYY-MM-DD"
+                placeholder="请选择激活时间"
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+              <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
       </div>
     </transition>
 
@@ -49,13 +75,18 @@
 
       <el-table v-loading="loading" :data="deviceList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="用户ID" align="center" prop="userId" v-if="true" />
-        <el-table-column label="设备ID" align="center" prop="deviceId" />
+        <el-table-column label="设备ID" align="center" prop="id" v-if="true" />
+        <el-table-column label="用户ID" align="center" prop="userId" />
+        <el-table-column label="子用户ID" align="center" prop="subUid" />
+        <el-table-column label="子设备ID" align="center" prop="subDid" />
         <el-table-column label="设备名称" align="center" prop="deviceName" />
+        <el-table-column label="设备昵称" align="center" prop="nickName" />
         <el-table-column label="产品key" align="center" prop="productKey" />
         <el-table-column label="设备编号" align="center" prop="serialNumber" />
         <el-table-column label="产品密钥" align="center" prop="secret" />
         <el-table-column label="固件版本" align="center" prop="firmwareVersion" />
+        <el-table-column label="设备位置" align="center" prop="locate" />
+        <el-table-column label="设备标签" align="center" prop="tag" />
         <el-table-column label="设备状态" align="center" prop="status" />
         <el-table-column label="设备IP" align="center" prop="ip" />
         <el-table-column label="激活时间" align="center" prop="activeTime" width="180">
@@ -64,7 +95,7 @@
           </template>
         </el-table-column>
         <el-table-column label="物模型值" align="center" prop="thingsModel" />
-        <el-table-column label="设备摘要" />
+        <el-table-column label="设备摘要" align="center" prop="summary" />
         <el-table-column label="备注" align="center" prop="remark" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template #default="scope">
@@ -78,22 +109,16 @@
         </el-table-column>
       </el-table>
 
-      <pagination
-          v-show="total>0"
-          :total="total"
-          v-model:page="queryParams.pageNum"
-          v-model:limit="queryParams.pageSize"
-          @pagination="getList"
-      />
+      <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
     </el-card>
     <!-- 添加或修改设备信息对话框 -->
     <el-dialog :title="dialog.title" v-model="dialog.visible" width="500px" append-to-body>
       <el-form ref="deviceFormRef" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="用户ID" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入用户ID" />
+        </el-form-item>
         <el-form-item label="子用户ID" prop="subUid">
           <el-input v-model="form.subUid" placeholder="请输入子用户ID" />
-        </el-form-item>
-        <el-form-item label="设备ID" prop="deviceId">
-          <el-input v-model="form.deviceId" placeholder="请输入设备ID" />
         </el-form-item>
         <el-form-item label="子设备ID" prop="subDid">
           <el-input v-model="form.subDid" placeholder="请输入子设备ID" />
@@ -116,8 +141,8 @@
         <el-form-item label="固件版本" prop="firmwareVersion">
           <el-input v-model="form.firmwareVersion" placeholder="请输入固件版本" />
         </el-form-item>
-        <el-form-item label="设备昵称" prop="tag">
-          <el-input v-model="form.tag" placeholder="请输入设备昵称" />
+        <el-form-item label="设备标签" prop="tag">
+          <el-input v-model="form.tag" placeholder="请输入设备标签" />
         </el-form-item>
         <el-form-item label="设备IP" prop="ip">
           <el-input v-model="form.ip" placeholder="请输入设备IP" />
@@ -131,7 +156,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-            <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -168,9 +193,9 @@ const dialog = reactive<DialogOption>({
 });
 
 const initFormData: DeviceForm = {
+  id: undefined,
   userId: undefined,
   subUid: undefined,
-  deviceId: undefined,
   subDid: undefined,
   deviceName: undefined,
   nickName: undefined,
@@ -192,8 +217,8 @@ const data = reactive<PageData<DeviceForm, DeviceQuery>>({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
+    userId: undefined,
     subUid: undefined,
-    deviceId: undefined,
     subDid: undefined,
     deviceName: undefined,
     nickName: undefined,
@@ -212,14 +237,14 @@ const data = reactive<PageData<DeviceForm, DeviceQuery>>({
     }
   },
   rules: {
+    id: [
+      { required: true, message: "设备ID不能为空", trigger: "blur" }
+    ],
     userId: [
       { required: true, message: "用户ID不能为空", trigger: "blur" }
     ],
     subUid: [
       { required: true, message: "子用户ID不能为空", trigger: "blur" }
-    ],
-    deviceId: [
-      { required: true, message: "设备ID不能为空", trigger: "blur" }
     ],
     subDid: [
       { required: true, message: "子设备ID不能为空", trigger: "blur" }
@@ -243,10 +268,10 @@ const data = reactive<PageData<DeviceForm, DeviceQuery>>({
       { required: true, message: "固件版本不能为空", trigger: "blur" }
     ],
     locate: [
-      { required: true, message: "设备昵称不能为空", trigger: "blur" }
+      { required: true, message: "设备位置不能为空", trigger: "blur" }
     ],
     tag: [
-      { required: true, message: "设备昵称不能为空", trigger: "blur" }
+      { required: true, message: "设备标签不能为空", trigger: "blur" }
     ],
     status: [
       { required: true, message: "设备状态不能为空", trigger: "change" }
@@ -261,7 +286,7 @@ const data = reactive<PageData<DeviceForm, DeviceQuery>>({
       { required: true, message: "物模型值不能为空", trigger: "blur" }
     ],
     summary: [
-      { required: true, message: "设备摘要", trigger: "blur" }
+      { required: true, message: "设备摘要不能为空", trigger: "blur" }
     ],
     remark: [
       { required: true, message: "备注不能为空", trigger: "blur" }
@@ -306,7 +331,7 @@ const resetQuery = () => {
 
 /** 多选框选中数据 */
 const handleSelectionChange = (selection: DeviceVO[]) => {
-  ids.value = selection.map(item => item.userId);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -321,8 +346,8 @@ const handleAdd = () => {
 /** 修改按钮操作 */
 const handleUpdate = async (row?: DeviceVO) => {
   reset();
-  const _userId = row?.userId || ids.value[0]
-  const res = await getDevice(_userId);
+  const _id = row?.id || ids.value[0]
+  const res = await getDevice(_id);
   Object.assign(form.value, res.data);
   dialog.visible = true;
   dialog.title = "修改设备信息";
@@ -333,12 +358,12 @@ const submitForm = () => {
   deviceFormRef.value?.validate(async (valid: boolean) => {
     if (valid) {
       buttonLoading.value = true;
-      if (form.value.userId) {
+      if (form.value.id) {
         await updateDevice(form.value).finally(() =>  buttonLoading.value = false);
       } else {
         await addDevice(form.value).finally(() =>  buttonLoading.value = false);
       }
-      proxy?.$modal.msgSuccess("修改成功");
+      proxy?.$modal.msgSuccess("操作成功");
       dialog.visible = false;
       await getList();
     }
@@ -347,9 +372,9 @@ const submitForm = () => {
 
 /** 删除按钮操作 */
 const handleDelete = async (row?: DeviceVO) => {
-  const _userIds = row?.userId || ids.value;
-  await proxy?.$modal.confirm('是否确认删除设备信息编号为"' + _userIds + '"的数据项？').finally(() => loading.value = false);
-  await delDevice(_userIds);
+  const _ids = row?.id || ids.value;
+  await proxy?.$modal.confirm('是否确认删除设备信息编号为"' + _ids + '"的数据项？').finally(() => loading.value = false);
+  await delDevice(_ids);
   proxy?.$modal.msgSuccess("删除成功");
   await getList();
 }

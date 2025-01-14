@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mz</groupId>
+    <groupId>org.dromara</groupId>
     <artifactId>MzMedia</artifactId>
     <version>${revision}</version>
 
@@ -12,43 +12,44 @@
     <description>视频物联网系统</description>
 
     <properties>
-        <revision>5.1.0</revision>
-        <spring-boot.version>3.1.4</spring-boot.version>
+        <revision>5.2.3</revision>
+        <spring-boot.version>3.2.11</spring-boot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>17</java.version>
-        <spring-boot.mybatis>3.0.2</spring-boot.mybatis>
-        <springdoc.version>2.2.0</springdoc.version>
+        <mybatis.version>3.5.16</mybatis.version>
+        <springdoc.version>2.6.0</springdoc.version>
         <therapi-javadoc.version>0.15.0</therapi-javadoc.version>
-        <poi.version>5.2.3</poi.version>
-        <easyexcel.version>3.3.2</easyexcel.version>
+        <easyexcel.version>4.0.3</easyexcel.version>
         <velocity.version>2.3</velocity.version>
-        <satoken.version>1.36.0</satoken.version>
-        <mybatis-plus.version>3.5.3.2</mybatis-plus.version>
+        <satoken.version>1.39.0</satoken.version>
+        <mybatis-plus.version>3.5.8</mybatis-plus.version>
         <p6spy.version>3.9.1</p6spy.version>
-        <hutool.version>5.8.22</hutool.version>
-        <okhttp.version>4.10.0</okhttp.version>
-        <spring-boot-admin.version>3.1.6</spring-boot-admin.version>
-        <redisson.version>3.23.4</redisson.version>
-        <lock4j.version>2.2.5</lock4j.version>
-        <dynamic-ds.version>4.1.3</dynamic-ds.version>
-        <alibaba-ttl.version>2.14.2</alibaba-ttl.version>
-        <powerjob.version>4.3.3</powerjob.version>
-        <mapstruct-plus.version>1.3.5</mapstruct-plus.version>
+        <hutool.version>5.8.31</hutool.version>
+        <spring-boot-admin.version>3.2.3</spring-boot-admin.version>
+        <redisson.version>3.37.0</redisson.version>
+        <lock4j.version>2.2.7</lock4j.version>
+        <dynamic-ds.version>4.3.1</dynamic-ds.version>
+        <snailjob.version>1.1.2</snailjob.version>
+        <mapstruct-plus.version>1.4.5</mapstruct-plus.version>
         <mapstruct-plus.lombok.version>0.2.0</mapstruct-plus.lombok.version>
-        <lombok.version>1.18.30</lombok.version>
-        <bouncycastle.version>1.72</bouncycastle.version>
-        <justauth.version>1.16.5</justauth.version>
+        <lombok.version>1.18.34</lombok.version>
+        <bouncycastle.version>1.76</bouncycastle.version>
+        <justauth.version>1.16.6</justauth.version>
         <!-- 离线IP地址定位库 -->
         <ip2region.version>2.7.0</ip2region.version>
 
-        <!-- 临时修复 snakeyaml 漏洞 -->
-        <snakeyaml.version>1.33</snakeyaml.version>
-
         <!-- OSS 配置 -->
-        <aws-java-sdk-s3.version>1.12.540</aws-java-sdk-s3.version>
+        <aws.sdk.version>2.28.22</aws.sdk.version>
+        <aws.crt.version>0.31.3</aws.crt.version>
         <!-- SMS 配置 -->
-        <sms4j.version>2.2.0</sms4j.version>
+        <sms4j.version>3.3.3</sms4j.version>
+        <!-- 限制框架中的fastjson版本 -->
+        <fastjson.version>1.2.83</fastjson.version>
+        <!-- 面向运行时的D-ORM依赖 -->
+        <anyline.version>8.7.2-20241022</anyline.version>
+        <!--工作流配置-->
+        <flowable.version>7.0.1</flowable.version>
 
         <vertx.version>4.2.2</vertx.version>
 
@@ -66,7 +67,9 @@
             <properties>
                 <!-- 环境标识，需要与配置文件的名称相对应 -->
                 <profiles.active>local</profiles.active>
-                <logging.level>debug</logging.level>
+                <logging.level>info</logging.level>
+                <monitor.username>ruoyi</monitor.username>
+                <monitor.password>123456</monitor.password>
             </properties>
         </profile>
         <profile>
@@ -74,7 +77,9 @@
             <properties>
                 <!-- 环境标识，需要与配置文件的名称相对应 -->
                 <profiles.active>dev</profiles.active>
-                <logging.level>debug</logging.level>
+                <logging.level>info</logging.level>
+                <monitor.username>ruoyi</monitor.username>
+                <monitor.password>123456</monitor.password>
             </properties>
             <activation>
                 <!-- 默认环境 -->
@@ -86,6 +91,8 @@
             <properties>
                 <profiles.active>prod</profiles.active>
                 <logging.level>warn</logging.level>
+                <monitor.username>ruoyi</monitor.username>
+                <monitor.password>123456</monitor.password>
             </properties>
         </profile>
     </profiles>
@@ -112,6 +119,14 @@
                 <scope>import</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-bom</artifactId>
+                <version>${flowable.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!-- JustAuth 的依赖配置-->
             <dependency>
                 <groupId>me.zhyd.oauth</groupId>
@@ -121,7 +136,7 @@
 
             <!-- common 的依赖配置-->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-common-bom</artifactId>
                 <version>${revision}</version>
                 <type>pom</type>
@@ -147,25 +162,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi</artifactId>
-                <version>${poi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi-ooxml</artifactId>
-                <version>${poi.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>easyexcel</artifactId>
                 <version>${easyexcel.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.poi</groupId>
-                        <artifactId>poi-ooxml-schemas</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <!-- velocity代码生成使用模板 -->
@@ -207,14 +206,14 @@
             </dependency>
 
             <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${spring-boot.mybatis}</version>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
@@ -231,16 +230,23 @@
                 <version>${p6spy.version}</version>
             </dependency>
 
+            <!--  AWS SDK for Java 2.x  -->
             <dependency>
-                <groupId>com.squareup.okhttp3</groupId>
-                <artifactId>okhttp</artifactId>
-                <version>${okhttp.version}</version>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>s3</artifactId>
+                <version>${aws.sdk.version}</version>
             </dependency>
-
+            <!-- 使用AWS基于 CRT 的 S3 客户端 -->
             <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-s3</artifactId>
-                <version>${aws-java-sdk-s3.version}</version>
+                <groupId>software.amazon.awssdk.crt</groupId>
+                <artifactId>aws-crt</artifactId>
+                <version>${aws.crt.version}</version>
+            </dependency>
+            <!-- 基于 AWS CRT 的 S3 客户端的性能增强的 S3 传输管理器 -->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>s3-transfer-manager</artifactId>
+                <version>${aws.sdk.version}</version>
             </dependency>
             <!--短信sms4j-->
             <dependency>
@@ -273,29 +279,16 @@
                 <version>${lock4j.version}</version>
             </dependency>
 
-            <!-- PowerJob -->
+            <!-- SnailJob Client -->
             <dependency>
-                <groupId>tech.powerjob</groupId>
-                <artifactId>powerjob-worker-spring-boot-starter</artifactId>
-                <version>${powerjob.version}</version>
+                <groupId>com.aizuda</groupId>
+                <artifactId>snail-job-client-starter</artifactId>
+                <version>${snailjob.version}</version>
             </dependency>
             <dependency>
-                <groupId>tech.powerjob</groupId>
-                <artifactId>powerjob-official-processors</artifactId>
-                <version>${powerjob.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>transmittable-thread-local</artifactId>
-                <version>${alibaba-ttl.version}</version>
-            </dependency>
-
-            <!-- 临时修复 snakeyaml 漏洞 -->
-            <dependency>
-                <groupId>org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>${snakeyaml.version}</version>
+                <groupId>com.aizuda</groupId>
+                <artifactId>snail-job-client-job-core</artifactId>
+                <version>${snailjob.version}</version>
             </dependency>
 
             <!-- 加密包引入 -->
@@ -319,31 +312,68 @@
             </dependency>
 
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.15.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-system</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-job</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-generator</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-demo</artifactId>
                 <version>${revision}</version>
             </dependency>
 
+            <!--  工作流模块  -->
             <dependency>
-                <groupId>com.mz</groupId>
+                <groupId>org.dromara</groupId>
+                <artifactId>mz-workflow</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>mz-iot-network</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>mz-iot-protocol-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara</groupId>
+                <artifactId>mz-common-translation</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.dromara</groupId>
                 <artifactId>mz-iot-core</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -438,6 +468,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
                     <!-- 根据打包环境执行对应的@Tag测试方法 -->
                     <groups>${profiles.active}</groups>
                     <!-- 排除标签 -->

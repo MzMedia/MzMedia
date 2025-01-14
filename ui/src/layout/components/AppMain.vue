@@ -1,10 +1,13 @@
 <template>
   <section class="app-main">
     <router-view v-slot="{ Component, route }">
-      <transition :enter-active-class="animante" mode="out-in">
-        <keep-alive :include="tagsViewStore.cachedViews">
-          <component v-if="!route.meta.link" :is="Component" :key="route.path" />
+      <transition v-if="!route.meta.noCache" :enter-active-class="animante" mode="out-in">
+        <keep-alive v-if="!route.meta.noCache" :include="tagsViewStore.cachedViews">
+          <component :is="Component" v-if="!route.meta.link" :key="route.path" />
         </keep-alive>
+      </transition>
+      <transition v-if="route.meta.noCache" :enter-active-class="animante" mode="out-in">
+        <component :is="Component" v-if="!route.meta.link && route.meta.noCache" :key="route.path" />
       </transition>
     </router-view>
     <iframe-toggle />
@@ -12,24 +15,28 @@
 </template>
 
 <script setup name="AppMain" lang="ts">
-import useTagsViewStore from '@/store/modules/tagsView';
 import useSettingsStore from '@/store/modules/settings';
-import IframeToggle  from './IframeToggle/index.vue'
-import { ComponentInternalInstance } from "vue";
+import useTagsViewStore from '@/store/modules/tagsView';
+
+import IframeToggle from './IframeToggle/index.vue';
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const tagsViewStore = useTagsViewStore();
 
 // 随机动画集合
 const animante = ref<string>('');
 const animationEnable = ref(useSettingsStore().animationEnable);
-watch(()=> useSettingsStore().animationEnable, (val) => {
+watch(
+  () => useSettingsStore().animationEnable,
+  (val: boolean) => {
     animationEnable.value = val;
     if (val) {
-        animante.value = proxy?.animate.animateList[Math.round(Math.random() * proxy?.animate.animateList.length)] as string;
+      animante.value = proxy?.animate.animateList[Math.round(Math.random() * proxy?.animate.animateList.length)] as string;
     } else {
-        animante.value = proxy?.animate.defaultAnimate as string;
+      animante.value = proxy?.animate.defaultAnimate as string;
     }
-}, { immediate: true });
+  },
+  { immediate: true }
+);
 </script>
 
 <style lang="scss" scoped>
@@ -41,7 +48,7 @@ watch(()=> useSettingsStore().animationEnable, (val) => {
   overflow: hidden;
 }
 
-.fixed-header+.app-main {
+.fixed-header + .app-main {
   padding-top: 50px;
 }
 
@@ -51,7 +58,7 @@ watch(()=> useSettingsStore().animationEnable, (val) => {
     min-height: calc(100vh - 84px);
   }
 
-  .fixed-header+.app-main {
+  .fixed-header + .app-main {
     padding-top: 84px;
   }
 }

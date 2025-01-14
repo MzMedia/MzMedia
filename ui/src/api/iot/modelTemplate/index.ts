@@ -18,11 +18,11 @@ export const listModelTemplate = (query?: ModelTemplateQuery): AxiosPromise<Mode
 
 /**
  * 查询物模型模板详细
- * @param templateId
+ * @param id
  */
-export const getModelTemplate = (templateId: string | number): AxiosPromise<ModelTemplateVO> => {
+export const getModelTemplate = (id: string | number): AxiosPromise<ModelTemplateVO> => {
   return request({
-    url: '/iot/modelTemplate/' + templateId,
+    url: '/iot/modelTemplate/' + id,
     method: 'get'
   });
 };
@@ -53,11 +53,11 @@ export const updateModelTemplate = (data: ModelTemplateForm) => {
 
 /**
  * 删除物模型模板
- * @param templateId
+ * @param id
  */
-export const delModelTemplate = (templateId: string | number | Array<string | number>) => {
+export const delModelTemplate = (id: string | number | Array<string | number>) => {
   return request({
-    url: '/iot/modelTemplate/' + templateId,
+    url: '/iot/modelTemplate/' + id,
     method: 'delete'
   });
 };

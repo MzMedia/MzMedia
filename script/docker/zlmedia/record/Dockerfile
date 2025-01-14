@@ -1,10 +1,16 @@
-FROM zlmediakit/zlmediakit:master
+FROM zhuangpengli/zlmediakit:webrtc
 
 EXPOSE 18081/tcp
 EXPOSE 80/tcp
+EXPOSE 443/tcp
 EXPOSE 1935/tcp
 EXPOSE 554/tcp
 EXPOSE 554/udp
+EXPOSE 10000/udp
+EXPOSE 10000/tcp
+EXPOSE 8000/udp
+EXPOSE 8000/tcp
+EXPOSE 9000/udp
 EXPOSE 30000-30050/tcp
 EXPOSE 30000-30050/udp
 
@@ -20,7 +26,7 @@ RUN export DEBIAN_FRONTEND=noninteractive &&\
 
 RUN cd /opt/media/bin && \
         echo '#!/bin/bash' > run.sh && \
-        echo 'java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/assist/heapdump/ -jar /record.jar &' >> run.sh && \
+        echo 'java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/assist/heapdump/ -jar /fastbee-record.jar &' >> run.sh && \
         echo '/opt/media/bin/MediaServer -d -m 3 -s default.pem -c ../conf/config.ini' >> run.sh && \
         chmod +x run.sh
 

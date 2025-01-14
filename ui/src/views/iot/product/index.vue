@@ -1,46 +1,48 @@
 <template>
   <div class="p-2">
     <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave">
-      <div class="search" v-show="showSearch">
-        <el-form :model="queryParams" ref="queryFormRef" :inline="true" label-width="68px">
-          <el-form-item label="产品分类ID" prop="categoryId">
-            <el-input v-model="queryParams.categoryId" placeholder="请输入产品分类ID" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="产品名称" prop="productName">
-            <el-input v-model="queryParams.productName" placeholder="请输入产品名称" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="协议编号" prop="protocolCode">
-            <el-input v-model="queryParams.protocolCode" placeholder="请输入协议编号" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="是否系统通用" prop="isSys">
-            <el-input v-model="queryParams.isSys" placeholder="请输入是否系统通用" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="是否启用授权码" prop="isAuthorize">
-            <el-input v-model="queryParams.isAuthorize" placeholder="请输入是否启用授权码" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="mqtt账号" prop="mqttAccount">
-            <el-input v-model="queryParams.mqttAccount" placeholder="请输入mqtt账号" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="mqtt密码" prop="mqttPassword">
-            <el-input v-model="queryParams.mqttPassword" placeholder="请输入mqtt密码" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="产品秘钥" prop="mqttSecret">
-            <el-input v-model="queryParams.mqttSecret" placeholder="请输入产品秘钥" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="联网方式" prop="networkMethod">
-            <el-input v-model="queryParams.networkMethod" placeholder="请输入联网方式" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="认证方式" prop="vertificateMethod">
-            <el-input v-model="queryParams.vertificateMethod" placeholder="请输入认证方式" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item label="图片地址" prop="imgUrl">
-            <el-input v-model="queryParams.imgUrl" placeholder="请输入图片地址" clearable style="width: 240px" @keyup.enter="handleQuery" />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-          </el-form-item>
-        </el-form>
+      <div v-show="showSearch" class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form ref="queryFormRef" :model="queryParams" :inline="true">
+            <el-form-item label="产品分类ID" prop="categoryId">
+              <el-input v-model="queryParams.categoryId" placeholder="请输入产品分类ID" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="产品名称" prop="productName">
+              <el-input v-model="queryParams.productName" placeholder="请输入产品名称" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="协议编号" prop="protocolCode">
+              <el-input v-model="queryParams.protocolCode" placeholder="请输入协议编号" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="是否系统通用" prop="isSys">
+              <el-input v-model="queryParams.isSys" placeholder="请输入是否系统通用" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="是否启用授权码" prop="isAuthorize">
+              <el-input v-model="queryParams.isAuthorize" placeholder="请输入是否启用授权码" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="mqtt账号" prop="mqttAccount">
+              <el-input v-model="queryParams.mqttAccount" placeholder="请输入mqtt账号" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="mqtt密码" prop="mqttPassword">
+              <el-input v-model="queryParams.mqttPassword" placeholder="请输入mqtt密码" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="产品秘钥" prop="mqttSecret">
+              <el-input v-model="queryParams.mqttSecret" placeholder="请输入产品秘钥" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="联网方式" prop="networkMethod">
+              <el-input v-model="queryParams.networkMethod" placeholder="请输入联网方式" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="认证方式" prop="vertificateMethod">
+              <el-input v-model="queryParams.vertificateMethod" placeholder="请输入认证方式" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="图片地址" prop="imgUrl">
+              <el-input v-model="queryParams.imgUrl" placeholder="请输入图片地址" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+              <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
       </div>
     </transition>
 
@@ -65,8 +67,8 @@
 
       <el-table v-loading="loading" :data="productList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="产品ID" align="center" prop="id" v-if="true" />
         <el-table-column label="产品分类ID" align="center" prop="categoryId" />
-        <el-table-column label="产品ID" align="center" prop="productId" v-if="true" />
         <el-table-column label="产品名称" align="center" prop="productName" />
         <el-table-column label="协议编号" align="center" prop="protocolCode" />
         <el-table-column label="是否系统通用" align="center" prop="isSys" />
@@ -93,13 +95,7 @@
         </el-table-column>
       </el-table>
 
-      <pagination
-          v-show="total>0"
-          :total="total"
-          v-model:page="queryParams.pageNum"
-          v-model:limit="queryParams.pageSize"
-          @pagination="getList"
-      />
+      <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
     </el-card>
     <!-- 添加或修改产品对话框 -->
     <el-dialog :title="dialog.title" v-model="dialog.visible" width="500px" append-to-body>
@@ -138,7 +134,7 @@
           <el-input v-model="form.imgUrl" placeholder="请输入图片地址" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-            <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -175,8 +171,8 @@ const dialog = reactive<DialogOption>({
 });
 
 const initFormData: ProductForm = {
+  id: undefined,
   categoryId: undefined,
-  productId: undefined,
   productName: undefined,
   protocolCode: undefined,
   isSys: undefined,
@@ -215,11 +211,11 @@ const data = reactive<PageData<ProductForm, ProductQuery>>({
     }
   },
   rules: {
+    id: [
+      { required: true, message: "产品ID不能为空", trigger: "blur" }
+    ],
     categoryId: [
       { required: true, message: "产品分类ID不能为空", trigger: "blur" }
-    ],
-    productId: [
-      { required: true, message: "产品ID不能为空", trigger: "blur" }
     ],
     productName: [
       { required: true, message: "产品名称不能为空", trigger: "blur" }
@@ -303,7 +299,7 @@ const resetQuery = () => {
 
 /** 多选框选中数据 */
 const handleSelectionChange = (selection: ProductVO[]) => {
-  ids.value = selection.map(item => item.productId);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -318,8 +314,8 @@ const handleAdd = () => {
 /** 修改按钮操作 */
 const handleUpdate = async (row?: ProductVO) => {
   reset();
-  const _productId = row?.productId || ids.value[0]
-  const res = await getProduct(_productId);
+  const _id = row?.id || ids.value[0]
+  const res = await getProduct(_id);
   Object.assign(form.value, res.data);
   dialog.visible = true;
   dialog.title = "修改产品";
@@ -330,12 +326,12 @@ const submitForm = () => {
   productFormRef.value?.validate(async (valid: boolean) => {
     if (valid) {
       buttonLoading.value = true;
-      if (form.value.productId) {
+      if (form.value.id) {
         await updateProduct(form.value).finally(() =>  buttonLoading.value = false);
       } else {
         await addProduct(form.value).finally(() =>  buttonLoading.value = false);
       }
-      proxy?.$modal.msgSuccess("修改成功");
+      proxy?.$modal.msgSuccess("操作成功");
       dialog.visible = false;
       await getList();
     }
@@ -344,9 +340,9 @@ const submitForm = () => {
 
 /** 删除按钮操作 */
 const handleDelete = async (row?: ProductVO) => {
-  const _productIds = row?.productId || ids.value;
-  await proxy?.$modal.confirm('是否确认删除产品编号为"' + _productIds + '"的数据项？').finally(() => loading.value = false);
-  await delProduct(_productIds);
+  const _ids = row?.id || ids.value;
+  await proxy?.$modal.confirm('是否确认删除产品编号为"' + _ids + '"的数据项？').finally(() => loading.value = false);
+  await delProduct(_ids);
   proxy?.$modal.msgSuccess("删除成功");
   await getList();
 }

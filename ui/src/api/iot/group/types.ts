@@ -1,30 +1,75 @@
 export interface GroupVO {
   /**
-   * 设备ID
-   */
-  deviceId: string | number;
-
-  /**
    * 分组ID
    */
-  groupId: string | number;
+  id: string | number;
+
+  /**
+   * 用户ID
+   */
+  userId: string | number;
+
+  /**
+   * 分组名称
+   */
+  groupName: string;
+
+  /**
+   * 分组排序
+   */
+  groupOrder: number;
+
+  /**
+   * 备注
+   */
+  remark: string;
 
 }
 
 export interface GroupForm extends BaseEntity {
   /**
-   * 设备ID
-   */
-  deviceId?: string | number;
-
-  /**
    * 分组ID
    */
-  groupId?: string | number;
+  id?: string | number;
+
+  /**
+   * 用户ID
+   */
+  userId?: string | number;
+
+  /**
+   * 分组名称
+   */
+  groupName?: string;
+
+  /**
+   * 分组排序
+   */
+  groupOrder?: number;
+
+  /**
+   * 备注
+   */
+  remark?: string;
 
 }
 
 export interface GroupQuery extends PageQuery {
+
+  /**
+   * 用户ID
+   */
+  userId?: string | number;
+
+  /**
+   * 分组名称
+   */
+  groupName?: string;
+
+  /**
+   * 分组排序
+   */
+  groupOrder?: number;
 
     /**
      * 日期范围参数

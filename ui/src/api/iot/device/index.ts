@@ -18,11 +18,11 @@ export const listDevice = (query?: DeviceQuery): AxiosPromise<DeviceVO[]> => {
 
 /**
  * 查询设备信息详细
- * @param userId
+ * @param id
  */
-export const getDevice = (userId: string | number): AxiosPromise<DeviceVO> => {
+export const getDevice = (id: string | number): AxiosPromise<DeviceVO> => {
   return request({
-    url: '/iot/device/' + userId,
+    url: '/iot/device/' + id,
     method: 'get'
   });
 };
@@ -53,11 +53,11 @@ export const updateDevice = (data: DeviceForm) => {
 
 /**
  * 删除设备信息
- * @param userId
+ * @param id
  */
-export const delDevice = (userId: string | number | Array<string | number>) => {
+export const delDevice = (id: string | number | Array<string | number>) => {
   return request({
-    url: '/iot/device/' + userId,
+    url: '/iot/device/' + id,
     method: 'delete'
   });
 };

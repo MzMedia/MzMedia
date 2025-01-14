@@ -1,3 +1,2 @@
-com.mz.common.security.handler.GlobalExceptionHandler
-com.mz.common.security.handler.AllUrlHandler
-com.mz.common.security.config.SecurityConfig
+org.dromara.common.security.handler.AllUrlHandler
+org.dromara.common.security.config.SecurityConfig
