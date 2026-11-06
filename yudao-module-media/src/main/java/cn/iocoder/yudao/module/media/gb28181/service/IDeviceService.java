@@ -1,0 +1,209 @@
+package cn.iocoder.yudao.module.media.gb28181.service;
+
+import cn.iocoder.yudao.module.media.common.CommonCallback;
+import cn.iocoder.yudao.module.media.gb28181.bean.*;
+import cn.iocoder.yudao.module.media.service.bean.ErrorCallback;
+import cn.iocoder.yudao.module.media.vmanager.bean.ResourceBaseInfo;
+import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import com.github.pagehelper.PageInfo;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+/**
+ * 设备相关业务处理
+ * @author lin
+ */
+public interface IDeviceService {
+
+    /**
+     * 设备上线
+     * @param device 设备信息
+     */
+    void online(Device device);
+
+    /**
+     * 设备下线
+     */
+    void offline(Device device);
+
+    /**
+     * 添加目录订阅
+     * @param device 设备信息
+     * @return 布尔
+     */
+    boolean addCatalogSubscribe(Device device, SipTransactionInfo transactionInfo);
+
+    /**
+     * 移除目录订阅
+     * @param device 设备信息
+     * @return 布尔
+     */
+    boolean removeCatalogSubscribe(Device device, CommonCallback<Boolean> callback);
+
+    /**
+     * 添加移动位置订阅
+     * @param device 设备信息
+     * @return 布尔
+     */
+    boolean addMobilePositionSubscribe(Device device, SipTransactionInfo transactionInfo);
+
+    /**
+     * 移除移动位置订阅
+     * @param device 设备信息
+     * @return 布尔
+     */
+    boolean removeMobilePositionSubscribe(Device device, CommonCallback<Boolean> callback);
+
+    boolean addAlarmSubscribe(@NotNull Device device, SipTransactionInfo transactionInfo);
+
+    boolean removeAlarmSubscribe(Device device, CommonCallback<Boolean> callback);
+
+    /**
+     * 移除移动位置订阅
+     * @param deviceId 设备ID
+     * @return 同步状态
+     */
+    SyncStatus getChannelSyncStatus(String deviceId);
+
+    /**
+     * 查看是否仍在同步
+     * @param deviceId 设备ID
+     * @return 布尔
+     */
+    Boolean isSyncRunning(String deviceId);
+
+    /**
+     * 通道同步
+     * @param device 设备信息
+     */
+    void sync(Device device);
+
+    /**
+     * 查询设备信息
+     * @param deviceId 设备编号
+     * @return 设备信息
+     */
+    Device getDeviceByDeviceId(String deviceId);
+
+    /**
+     * 获取所有在线设备
+     * @return 设备列表
+     */
+    List<Device> getAllOnlineDevice(String serverId);
+
+    List<Device> getAllByStatus(Boolean status);
+
+    /**
+     * 检查设备状态
+     * @param device 设备信息
+     */
+    Boolean getDeviceStatus(Device device);
+
+    /**
+     * 根据IP和端口获取设备信息
+     * @param host IP
+     * @param port 端口
+     * @return 设备信息
+     */
+    Device getDeviceByHostAndPort(String host, int port);
+
+    /**
+     * 更新设备
+     * @param device 设备信息
+     */
+    void updateDevice(Device device);
+
+    @Transactional
+    void updateDeviceList(List<Device> deviceList);
+
+    /**
+     * 检查设备编号是否已经存在
+     * @param deviceId 设备编号
+     * @return
+     */
+    boolean isExist(String deviceId);
+
+    /**
+     * 添加设备
+     * @param device
+     */
+    void addCustomDevice(Device device);
+
+    /**
+     * 页面表单更新设备信息
+     * @param device
+     */
+    void updateCustomDevice(Device device);
+
+    /**
+     * 删除设备
+     * @param deviceId
+     * @return
+     */
+    boolean delete(String deviceId);
+
+    /**
+     * 获取统计信息
+     * @return
+     */
+    ResourceBaseInfo getOverview();
+
+    /**
+     * 获取所有设备
+     */
+    List<Device> getAll();
+
+    PageInfo<Device> getAll(int page, int count, String query, Boolean status);
+
+    Device getDevice(Integer gbDeviceDbId);
+
+    Device getDeviceByChannelId(Integer channelId);
+
+    Device getDeviceBySourceChannelDeviceId(String requesterId);
+
+    void subscribeCatalog(int id, int cycle);
+
+    void subscribeMobilePosition(int id, int cycle, int interval);
+
+    WVPResult<SyncStatus> devicesSync(Device device);
+
+    void deviceBasicConfig(Device device, BasicParam basicParam, ErrorCallback<String> callback);
+
+    void deviceVideoParamConfig(Device device, VideoParamOpt videoParamOpt, ErrorCallback<String> callback);
+
+    <T extends DeviceConfigAware> void deviceConfigQuery(Device device, String channelId, Class<T> configClass, ErrorCallback<T> callback);
+
+    void teleboot(Device device);
+
+    void record(Device device, String channelId, String recordCmdStr, ErrorCallback<String> callback);
+
+    void guard(Device device, String guardCmdStr, ErrorCallback<String> callback);
+
+    void resetAlarm(Device device, String channelId, String alarmMethod, String alarmType, ErrorCallback<String> callback);
+
+    void iFrame(Device device, String channelId);
+
+    void homePosition(Device device, String channelId, Boolean enabled, Integer resetTime, Integer presetIndex, ErrorCallback<String> callback);
+
+    void dragZoomIn(Device device, String channelId, int length, int width, int midPointX, int midPointY, int lengthX, int lengthY);
+
+    void dragZoomOut(Device device, String channelId, int length, int width, int midPointX, int midPointY, int lengthX, int lengthY);
+
+    void deviceStatus(Device device, ErrorCallback<String> callback);
+
+    void subscribeAlarm(int id, int cycle);
+
+    void updateDeviceHeartInfo(Device device);
+
+    void alarm(Device device, String startPriority, String endPriority, String alarmMethod, String alarmType, String startTime, String endTime, ErrorCallback<Object> callback);
+
+    void deviceInfo(Device device, ErrorCallback<Object> callback);
+
+    void queryPreset(Device device, String channelId, ErrorCallback<List<Preset>> callback);
+
+    List<TimeStatistics> getKeepaliveTimeStatistics(String deviceId, Integer count);
+
+    List<TimeStatistics> getRegisterTimeStatistics(String deviceId, Integer count);
+}

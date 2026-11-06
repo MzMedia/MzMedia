@@ -1,0 +1,99 @@
+package cn.iocoder.yudao.module.media.media.service;
+
+import cn.iocoder.yudao.module.media.common.CommonCallback;
+import cn.iocoder.yudao.module.media.common.StreamInfo;
+import cn.iocoder.yudao.module.media.gb28181.bean.SendRtpInfo;
+import cn.iocoder.yudao.module.media.gb28181.bean.TalkRtpInfo;
+import cn.iocoder.yudao.module.media.media.bean.MediaInfo;
+import cn.iocoder.yudao.module.media.media.bean.MediaServer;
+import cn.iocoder.yudao.module.media.media.bean.RecordInfo;
+import cn.iocoder.yudao.module.media.service.bean.DownloadFileInfo;
+import cn.iocoder.yudao.module.media.service.bean.ErrorCallback;
+import cn.iocoder.yudao.module.media.streamProxy.bean.StreamProxy;
+import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+
+import java.util.List;
+import java.util.Map;
+
+public interface IMediaNodeServerService {
+    int createRTPServer(MediaServer mediaServer, String app, String stream, long ssrc, Integer port, Boolean onlyAuto, Boolean disableAudio, Boolean reUsePort, Integer tcpMode);
+
+    void closeRtpServer(MediaServer mediaServer, String app, String stream, CommonCallback<Boolean> callback);
+
+
+//    int createJTTServer(MediaServer mediaServer, String streamId, Integer port, Boolean disableVideo, Boolean disableAudio, Integer tcpMode);
+//
+//    void closeJTTServer(MediaServer mediaServer, String streamId, CommonCallback<Boolean> callback);
+
+
+    void closeStreams(MediaServer mediaServer, String app, String stream);
+
+    Boolean updateRtpServerSSRC(MediaServer mediaServer, String app, String stream, String ssrc);
+
+    boolean checkNodeId(MediaServer mediaServer);
+
+    void online(MediaServer mediaServer);
+
+    MediaServer checkMediaServer(String ip, int port, String secret);
+
+    boolean stopSendRtp(MediaServer mediaInfo, String app, String stream, String ssrc);
+
+    boolean initStopSendRtp(MediaServer mediaInfo, String app, String stream, String ssrc);
+
+    boolean deleteRecordDirectory(MediaServer mediaServer, String app, String stream, String date, String fileName);
+
+    /**
+     * 获取媒体节点上的流列表。
+     *
+     * @return 流列表；返回 {@code null} 表示查询失败（节点不可达、接口异常等），
+     *         返回空集合表示查询成功但节点上确实没有流。
+     *         调用方必须区分这两种情况，不能在 {@code null} 时按“没有流”处理。
+     */
+    List<StreamInfo> getMediaList(MediaServer mediaServer, String app, String stream, String callId);
+
+    Boolean connectRtpServer(MediaServer mediaServer, String address, int port, String app, String stream);
+
+    byte[] getSnap(MediaServer mediaServer, String app, String stream, int timeoutSec, int expireSec, String path, String fileName);
+
+    MediaInfo getMediaInfo(MediaServer mediaServer, String app, String stream);
+
+    Boolean pauseRtpCheck(MediaServer mediaServer, String streamKey);
+
+    Boolean resumeRtpCheck(MediaServer mediaServer, String streamKey);
+
+    String getFfmpegCmd(MediaServer mediaServer, String cmdKey);
+
+    WVPResult<String> addStreamProxy(MediaServer mediaServer, String app, String stream, String url, boolean enableAudio, boolean enableMp4, String rtpType, Integer timeout);
+
+    Boolean delFFmpegSource(MediaServer mediaServer, String streamKey);
+
+    Boolean delStreamProxy(MediaServer mediaServer, String streamKey);
+
+    Map<String, String> getFFmpegCMDs(MediaServer mediaServer);
+
+    Integer startSendRtpPassive(MediaServer mediaServer, SendRtpInfo sendRtpItem, Integer timeout);
+
+    void startSendRtpStream(MediaServer mediaServer, SendRtpInfo sendRtpItem);
+
+    Integer startSendRtpTalk(MediaServer mediaServer, TalkRtpInfo talkRtpInfo, Integer timeout);
+
+    Long updateDownloadProcess(MediaServer mediaServer, String app, String stream);
+
+    String startProxy(MediaServer mediaServer, StreamProxy streamProxy);
+
+    void stopProxy(MediaServer mediaServer, String streamKey, String type);
+
+    List<String> listRtpServer(MediaServer mediaServer);
+
+    void loadMP4FileForDate(MediaServer mediaServer, String app, String stream, String datePath, String dateDir, ErrorCallback<StreamInfo> callback);
+
+    void seekRecordStamp(MediaServer mediaServer, String app, String stream, Double stamp, String schema);
+
+    void setRecordSpeed(MediaServer mediaServer, String app, String stream, Integer speed, String schema);
+
+    DownloadFileInfo getDownloadFilePath(MediaServer mediaServer, RecordInfo recordInfo);
+
+    StreamInfo getStreamInfoByAppAndStream(MediaServer mediaServer, String app, String stream, MediaInfo mediaInfo, String addr, String callId, boolean isPlay);
+
+    void loadMP4File(MediaServer mediaServer, String app, String stream, String filePath, String fileName, ErrorCallback<StreamInfo> callback);
+}

@@ -1,0 +1,74 @@
+package cn.iocoder.yudao.module.media.gb28181.event;
+
+import cn.iocoder.yudao.module.media.gb28181.event.sip.MessageEvent;
+import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.DelayQueue;
+
+/**
+ * @author lin
+ */
+@Slf4j
+@Component
+public class MessageSubscribe {
+
+    private final Map<String, MessageEvent<?>> subscribes = new ConcurrentHashMap<>();
+
+    private final DelayQueue<MessageEvent<?>> delayQueue = new DelayQueue<>();
+
+    @Scheduled(fixedDelay = 200)   //每200毫秒执行
+    public void execute(){
+        MessageEvent<?> take;
+        while ((take = delayQueue.poll()) != null) {
+            try {
+                // 出现超时异常
+                if(take.getCallback() != null) {
+                    take.getCallback().run(ErrorCode.ERROR486.getCode(), "消息超时未回复", null);
+                }
+            } catch (Exception e) {
+                log.error("[消息订阅到期] 回调处理异常", e);
+            } finally {
+                subscribes.remove(take.getKey(), take);
+            }
+        }
+    }
+
+
+    public void addSubscribe(MessageEvent<?> event) {
+        MessageEvent<?> messageEvent = subscribes.get(event.getKey());
+        if (messageEvent != null) {
+            subscribes.remove(event.getKey());
+            delayQueue.remove(messageEvent);
+        }
+        subscribes.put(event.getKey(), event);
+        delayQueue.offer(event);
+    }
+
+    public MessageEvent<?> getSubscribe(String key) {
+        return subscribes.get(key);
+    }
+
+    public void removeSubscribe(String key) {
+        if(key == null){
+            return;
+        }
+        MessageEvent<?> messageEvent = subscribes.get(key);
+        if (messageEvent != null) {
+            subscribes.remove(key);
+            delayQueue.remove(messageEvent);
+        }
+    }
+
+    public boolean isEmpty(){
+        return subscribes.isEmpty();
+    }
+
+    public Integer size() {
+        return subscribes.size();
+    }
+}

@@ -23,7 +23,8 @@
 <!--        <module>yudao-module-mall</module>-->
 <!--        <module>yudao-module-crm</module>-->
 <!--        <module>yudao-module-erp</module>-->
-<!--        <module>yudao-module-iot</module>-->
+        <module>yudao-module-iot</module>
+        <module>yudao-module-media</module>
 <!--        <module>yudao-module-mes</module>-->
 <!--        <module>yudao-module-wms</module>-->
 <!--        <module>yudao-module-hrm</module>-->
@@ -36,14 +37,14 @@
 <!--        <module>yudao-module-ai1-springai</module>-->
     </modules>
 
-    <name>${project.artifactId}</name>
-    <description>芋道项目基础脚手架</description>
+    <name>mz-media</name>
+    <description>MzMedia 开源视频联动物联网平台</description>
     <url>https://github.com/YunaiV/ruoyi-vue-pro</url>
 
     <properties>
         <revision>2026.10-jdk25-SNAPSHOT</revision>
         <!-- Maven 相关 -->
-        <java.version>25</java.version>
+        <java.version>21</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
@@ -164,6 +165,10 @@
             <id>aliyunmaven</id>
             <name>aliyun</name>
             <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+        <repository>
+            <id>ECC</id>
+            <url>https://maven.ecc.no/releases</url>
         </repository>
     </repositories>
 

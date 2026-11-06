@@ -1,0 +1,333 @@
+import request from '@/utils/request'
+
+// 国标设备API
+
+export function queryDeviceSyncStatus(deviceId) {
+  return request({
+    method: 'get',
+    url: `/api/device/query/sync_status`,
+    params: {
+      deviceId: deviceId
+    }
+  })
+}
+
+export function queryDevices(params) {
+  const { page, count, query, status } = params
+  return request({
+    method: 'get',
+    url: `/api/device/query/devices`,
+    params: {
+      page: page,
+      count: count,
+      query: query,
+      status: status
+    }
+  })
+}
+
+export function deleteDevice(deviceId) {
+  return request({
+    method: 'delete',
+    url: `/api/device/query/devices/${deviceId}/delete`
+  })
+}
+
+export function sync(deviceId) {
+  return request({
+    method: 'get',
+    url: `/api/device/query/devices/${deviceId}/sync`
+  })
+}
+
+export function updateDeviceTransport(deviceId, streamMode) {
+  return request({
+    method: 'post',
+    url: `/api/device/query/transport/${deviceId}/${streamMode}`
+  })
+}
+
+export function setGuard(deviceId) {
+  return request({
+    method: 'get',
+    url: `/api/device/control/guard`,
+    params: {
+      deviceId: deviceId,
+      guardCmd: 'SetGuard'
+    }
+  })
+}
+
+export function resetGuard(deviceId) {
+  return request({
+    method: 'get',
+    url: `/api/device/control/guard`,
+    params: {
+      deviceId: deviceId,
+      guardCmd: 'ResetGuard'
+    }
+  })
+}
+
+export function resetAlarm(data) {
+  return request({
+    method: 'get',
+    url: '/api/device/control/reset_alarm',
+    params: data
+  })
+}
+
+export function homePosition(params) {
+  return request({
+    method: 'get',
+    url: '/api/device/control/home_position',
+    params
+  })
+}
+
+export function subscribeCatalog(params) {
+  const { id, cycle } = params
+  return request({
+    method: 'get',
+    url: `/api/device/query/subscribe/catalog`,
+    params: {
+      id: id,
+      cycle: cycle
+    }
+  })
+}
+
+export function subscribeMobilePosition(params) {
+  const { id, cycle, interval } = params
+  return request({
+    method: 'get',
+    url: `/api/device/query/subscribe/mobile-position`,
+    params: {
+      id: id,
+      cycle: cycle,
+      interval: interval
+    }
+  })
+}
+export function subscribeForAlarm(params) {
+  const { id, cycle } = params
+  return request({
+    method: 'get',
+    url: '/api/device/query/subscribe/alarm',
+    params: {
+      id: id,
+      cycle: cycle
+    }
+  })
+}
+
+export function queryBasicParam(params) {
+  return request({
+    method: 'get',
+    url: '/api/device/config/query/basicParam',
+    params: params
+  })
+}
+
+export function setBasicParam(params) {
+  return request({
+    method: 'get',
+    url: '/api/device/config/set/basicParam',
+    params
+  })
+}
+
+export function setVideoParamOpt(params) {
+  return request({
+    method: 'get',
+    url: '/api/device/config/set/videoParamOpt',
+    params
+  })
+}
+
+export function queryChannelOne(params) {
+  const { deviceId, channelDeviceId } = params
+  return request({
+    method: 'get',
+    url: '/api/device/query/channel/one',
+    params: {
+      deviceId: deviceId,
+      channelDeviceId: channelDeviceId
+    }
+  })
+}
+
+export function queryChannels(deviceId, params) {
+  const { page, count, query, online, channelType, catalogUnderDevice } = params
+  return request({
+    method: 'get',
+    url: `/api/device/query/devices/${deviceId}/channels`,
+    params: {
+      page: page,
+      count: count,
+      query: query,
+      online: online,
+      channelType: channelType,
+      catalogUnderDevice: catalogUnderDevice
+    }
+  })
+}
+
+export function queryHasStreamChannels(params) {
+  const {page, count, query} = params
+  return request({
+    method: 'get',
+    url: `/api/device/query/streams`,
+    params: {
+      page: page,
+      count: count,
+      query: query
+    }
+  })
+}
+
+export function deviceRecord(params) {
+  const { deviceId, channelId, recordCmdStr } = params
+  return request({
+    method: 'get',
+    url: `/api/device/control/record`,
+    params: {
+      deviceId: deviceId,
+      channelId: channelId,
+      recordCmdStr: recordCmdStr
+    }
+  })
+}
+
+export function querySubChannels(params, deviceId, parentChannelId) {
+  const { page, count, query, online, channelType } = params
+  return request({
+    method: 'get',
+    url: `/api/device/query/sub_channels/${deviceId}/${parentChannelId}/channels`,
+    params: {
+      page: page,
+      count: count,
+      query: query,
+      online: online,
+      channelType: channelType
+    }
+  })
+}
+
+export function queryChannelTree(params) {
+  const { parentId, page, count } = params
+  return request({
+    method: 'get',
+    url: `/api/device/query/tree/channel/${this.deviceId}`,
+    params: {
+      parentId: parentId,
+      page: page,
+      count: count
+    }
+  })
+}
+
+export function changeChannelAudio(params) {
+  const { channelId, audio } = params
+  return request({
+    method: 'post',
+    url: `/api/device/query/channel/audio`,
+    params: {
+      channelId: channelId,
+      audio: audio
+    }
+  })
+}
+
+export function updateChannelStreamIdentification(params) {
+  const { deviceDbId, streamIdentification, id } = params
+  return request({
+    method: 'post',
+    url: `/api/device/query/channel/stream/identification/update/`,
+    params: {
+      deviceDbId: deviceDbId,
+      id: id,
+      streamIdentification: streamIdentification
+    }
+  })
+}
+
+export function update(data) {
+  return request({
+    method: 'post',
+    url: `/api/device/query/device/update`,
+    data: data
+  })
+}
+export function add(data) {
+  return request({
+    method: 'post',
+    url: `/api/device/query/device/add`,
+    data: data
+  })
+}
+
+export function queryDeviceOne(deviceId) {
+  return request({
+    method: 'get',
+    url: `/api/device/query/devices/${deviceId}`
+  })
+}
+
+export function queryDeviceTree(params, deviceId) {
+  const { page, count, parentId, onlyCatalog } = params
+  return request({
+    method: 'get',
+    url: `/api/device/query/tree/${deviceId}`,
+    params: {
+      page: page,
+      count: count,
+      parentId: parentId,
+      onlyCatalog: onlyCatalog
+    }
+  })
+}
+export function getKeepaliveTimeStatistics({ deviceId, count }) {
+  return request({
+    method: 'get',
+    url: '/api/device/query/statistics/keepalive',
+    params: {
+      deviceId: deviceId,
+      count: count
+    }
+  })
+}
+export function getRegisterTimeStatistics({ deviceId, count }) {
+  return request({
+    method: 'get',
+    url: '/api/device/query/statistics/register',
+    params: {
+      deviceId: deviceId,
+      count: count
+    }
+  })
+}
+
+export function dragZoomIn(params) {
+  return request({
+    method: 'get',
+    url: '/api/device/control/drag_zoom/zoom_in',
+    params
+  })
+}
+
+export function dragZoomOut(params) {
+  return request({
+    method: 'get',
+    url: '/api/device/control/drag_zoom/zoom_out',
+    params
+  })
+}
+
+export function teleboot(deviceId) {
+  return request({
+    method: 'get',
+    url: `/api/device/control/teleboot/${deviceId}`
+  })
+}
+

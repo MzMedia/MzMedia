@@ -1,0 +1,32 @@
+package cn.iocoder.yudao.module.media.media.event.mediaServer;
+
+import cn.iocoder.yudao.module.media.media.bean.MediaServer;
+import lombok.Getter;
+import org.springframework.context.ApplicationEvent;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+@Getter
+public class MediaServerChangeEvent extends ApplicationEvent {
+
+    public MediaServerChangeEvent(Object source) {
+        super(source);
+    }
+
+    private List<MediaServer> mediaServerItemList;
+
+    public void setMediaServerItemList(List<MediaServer> mediaServerItemList) {
+        this.mediaServerItemList = mediaServerItemList;
+    }
+
+    public void setMediaServerItemList(MediaServer... mediaServerItemArray) {
+        this.mediaServerItemList = new ArrayList<>();
+        this.mediaServerItemList.addAll(Arrays.asList(mediaServerItemArray));
+    }
+
+    public void setMediaServerItem(List<MediaServer> mediaServerItemList) {
+        this.mediaServerItemList = mediaServerItemList;
+    }
+}

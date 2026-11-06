@@ -1,0 +1,123 @@
+package cn.iocoder.yudao.module.media.gb28181.transmit.event.request.impl.message.notify.cmd;
+
+import cn.iocoder.yudao.module.media.common.RemoteAddressInfo;
+import cn.iocoder.yudao.module.media.conf.UserSetting;
+import cn.iocoder.yudao.module.media.gb28181.bean.Device;
+import cn.iocoder.yudao.module.media.gb28181.bean.Platform;
+import cn.iocoder.yudao.module.media.gb28181.service.IDeviceService;
+import cn.iocoder.yudao.module.media.gb28181.task.deviceStatus.DeviceStatusManager;
+import cn.iocoder.yudao.module.media.gb28181.transmit.event.request.SIPRequestProcessorParent;
+import cn.iocoder.yudao.module.media.gb28181.transmit.event.request.impl.message.IMessageHandler;
+import cn.iocoder.yudao.module.media.gb28181.transmit.event.request.impl.message.notify.NotifyMessageHandler;
+import cn.iocoder.yudao.module.media.gb28181.utils.SipUtils;
+import cn.iocoder.yudao.module.media.storager.IRedisCatchStorage;
+import cn.iocoder.yudao.module.media.utils.IpPortUtil;
+import gov.nist.javax.sip.message.SIPRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.dom4j.Element;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import javax.sip.InvalidArgumentException;
+import javax.sip.RequestEvent;
+import javax.sip.SipException;
+import javax.sip.message.Response;
+import java.text.ParseException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * 状态信息(心跳)报送
+ */
+@Slf4j
+@Component
+public class KeepaliveNotifyMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
+
+
+    private final static String cmdType = "Keepalive";
+
+    private final BlockingQueue<Device> taskQueue = new LinkedBlockingQueue<>();
+
+    @Autowired
+    private NotifyMessageHandler notifyMessageHandler;
+
+    @Autowired
+    private IDeviceService deviceService;
+
+    @Autowired
+    private DeviceStatusManager deviceStatusManager;
+
+    @Autowired
+    private UserSetting userSetting;
+
+    @Autowired
+    private IRedisCatchStorage redisCatchStorage;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        notifyMessageHandler.addHandler(cmdType, this);
+    }
+
+    @Override
+    public void handForDevice(RequestEvent evt, Device device, Element rootElement) {
+        // 回复200 OK
+        try {
+            responseAckAsync((SIPRequest) evt.getRequest(), Response.OK);
+        } catch (SipException | InvalidArgumentException | ParseException e) {
+            log.error("[命令发送失败] 心跳回复: {}", e.getMessage());
+        }
+        taskQueue.add(device);
+        SIPRequest request = (SIPRequest) evt.getRequest();
+
+        RemoteAddressInfo remoteAddressInfo = SipUtils.getRemoteAddressFromRequest(request, userSetting.getSipUseSourceIpAsRemoteAddress());
+        boolean addressChanged = device.getIp() == null || !device.getIp().equalsIgnoreCase(remoteAddressInfo.getIp()) || device.getPort() != remoteAddressInfo.getPort();
+        if (addressChanged) {
+            log.info("[收到心跳] 地址变化, {}({}), {}:{}->{}:{}", device.getName(), device.getDeviceId(), device.getIp(), device.getPort(), remoteAddressInfo.getIp(), remoteAddressInfo.getPort());
+            device.setPort(remoteAddressInfo.getPort());
+            device.setHostAddress(IpPortUtil.concatenateIpAndPort(remoteAddressInfo.getIp(), String.valueOf(remoteAddressInfo.getPort())));
+            device.setIp(remoteAddressInfo.getIp());
+            device.setLocalIp(request.getLocalAddress().getHostAddress());
+        }
+        device.setKeepaliveTimeStamp(System.currentTimeMillis());
+
+        if (device.isOnLine()) {
+            if (addressChanged) {
+                // 在线设备不会走 online()，不落库则缓存和数据库中仍是旧地址，后续命令会发往旧端口
+                deviceService.updateDevice(device);
+            }
+            long expiresTime = Math.min(device.getExpires(), device.getHeartBeatInterval() * device.getHeartBeatCount()) * 1000L;
+            deviceStatusManager.add(device.getDeviceId(), expiresTime + System.currentTimeMillis());
+        } else {
+            if (userSetting.getGbDeviceOnline() == 1) {
+                // 对于已经离线的设备判断他的注册是否已经过期
+                deviceService.online(device);
+            }
+        }
+    }
+    @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
+    public void executeUpdateDeviceList() {
+        log.debug("[定时任务] 更新心跳记录，待处理设备数量: {}", taskQueue.size());
+        try {
+            if (!taskQueue.isEmpty()) {
+                redisCatchStorage.updateDeviceKeepaliveTimeStamp(taskQueue.stream().toList());
+                taskQueue.clear();
+            }
+        } catch (Exception e) {
+            log.error("[定时任务] 更新心跳记录 执行异常", e);
+        }
+    }
+
+    @Override
+    public void handForPlatform(RequestEvent evt, Platform parentPlatform, Element element) {
+        // 个别平台保活不回复200OK会判定离线
+        // 回复200 OK
+        try {
+            responseAckAsync((SIPRequest) evt.getRequest(), Response.OK);
+        } catch (SipException | InvalidArgumentException | ParseException e) {
+            log.error("[命令发送失败] 报警通知回复: {}", e.getMessage());
+        }
+    }
+}

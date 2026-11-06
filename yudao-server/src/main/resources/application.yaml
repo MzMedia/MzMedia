@@ -242,10 +242,6 @@ yudao:
       enable: false
       api-key: ${STEPFUN_API_KEY:sk-xxxx}
       model: step-3.7-flash
-    mimo: # 小米 MiMo
-      enable: false
-      api-key: ${MIMO_API_KEY:sk-xxxx}
-      model: mimo-v2.6-flash
     grok: # Grok
       enable: false
       api-key: ${GROK_API_KEY:sk-xxxx}
@@ -361,5 +357,33 @@ yudao:
       type: redis # 消息总线的类型
     storage:
       type: tdengine # 时序存储的类型：tdengine、iotdb，需要配置同名的 spring.datasource.dynamic.datasource 数据源
+
+# GB28181 国标 SIP 服务端配置
+sip:
+  ip: 0.0.0.0
+  port: 5060
+  domain: 3402000000
+  id: 34020000002000000001
+  password: admin
+  alarm: true
+  ptz-speed: 50
+
+# ZLMediaKit 流媒体服务集群默认节点
+media:
+  id: default
+  ip: 127.0.0.1
+  http-port: 80
+  secret: 035c73f7-bb6b-4889-a715-d9eb2d1925cc
+  rtp:
+    enable: true
+    port-range: 30000,30500
+    send-port-range: 30501,31000
+
+# 用户视频业务配置
+user-settings:
+  play-timeout: 18000
+  save-position-history: true
+  record-push: true
+  record-s-length: 120
 
 debug: false

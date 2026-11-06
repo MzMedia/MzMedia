@@ -1,0 +1,853 @@
+package cn.iocoder.yudao.module.media.gb28181.transmit.cmd.impl;
+
+import com.alibaba.fastjson2.JSON;
+import cn.iocoder.yudao.module.media.common.InviteSessionType;
+import cn.iocoder.yudao.module.media.conf.DynamicTask;
+import cn.iocoder.yudao.module.media.conf.UserSetting;
+import cn.iocoder.yudao.module.media.conf.exception.SsrcTransactionNotFoundException;
+import cn.iocoder.yudao.module.media.gb28181.SipLayer;
+import cn.iocoder.yudao.module.media.gb28181.bean.*;
+import cn.iocoder.yudao.module.media.gb28181.event.SipSubscribe;
+import cn.iocoder.yudao.module.media.gb28181.session.SipInviteSessionManager;
+import cn.iocoder.yudao.module.media.gb28181.transmit.SIPSender;
+import cn.iocoder.yudao.module.media.gb28181.transmit.cmd.ISIPCommanderForPlatform;
+import cn.iocoder.yudao.module.media.gb28181.transmit.cmd.SIPRequestHeaderPlarformProvider;
+import cn.iocoder.yudao.module.media.gb28181.utils.SipUtils;
+import cn.iocoder.yudao.module.media.media.bean.MediaServer;
+import cn.iocoder.yudao.module.media.media.event.hook.HookSubscribe;
+import cn.iocoder.yudao.module.media.media.service.IMediaServerService;
+import cn.iocoder.yudao.module.media.service.IReceiveRtpServerService;
+import cn.iocoder.yudao.module.media.service.bean.GPSMsgInfo;
+import cn.iocoder.yudao.module.media.service.bean.SSRCInfo;
+import cn.iocoder.yudao.module.media.storager.IRedisCatchStorage;
+import cn.iocoder.yudao.module.media.utils.DateUtil;
+import cn.iocoder.yudao.module.media.utils.GitUtil;
+import gov.nist.javax.sip.message.MessageFactoryImpl;
+import gov.nist.javax.sip.message.SIPRequest;
+import gov.nist.javax.sip.message.SIPResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
+
+import javax.sip.InvalidArgumentException;
+import javax.sip.ResponseEvent;
+import javax.sip.SipException;
+import javax.sip.SipFactory;
+import javax.sip.header.CallIdHeader;
+import javax.sip.header.WWWAuthenticateHeader;
+import javax.sip.message.Request;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+@Slf4j
+@Component
+@DependsOn("sipLayer")
+public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
+
+    @Autowired
+    private SIPRequestHeaderPlarformProvider headerProviderPlatformProvider;
+
+    @Autowired
+    private IRedisCatchStorage redisCatchStorage;
+
+    @Autowired
+    private IMediaServerService mediaServerService;
+
+    @Autowired
+    private IReceiveRtpServerService receiveRtpServerService;
+
+    @Autowired
+    private SipLayer sipLayer;
+
+    @Autowired
+    private SIPSender sipSender;
+
+    @Autowired
+    private HookSubscribe subscribe;
+
+    @Autowired
+    private UserSetting userSetting;
+
+
+    @Autowired
+    private SipInviteSessionManager sessionManager;
+
+    @Autowired
+    private DynamicTask dynamicTask;
+
+    @Autowired
+    private GitUtil gitUtil;
+
+    @Override
+    public void register(Platform parentPlatform, SipSubscribe.Event errorEvent , SipSubscribe.Event okEvent) throws InvalidArgumentException, ParseException, SipException {
+        register(parentPlatform, null, null, errorEvent, okEvent, true);
+    }
+
+    @Override
+    public void register(Platform parentPlatform, SipTransactionInfo sipTransactionInfo, SipSubscribe.Event errorEvent , SipSubscribe.Event okEvent) throws InvalidArgumentException, ParseException, SipException {
+
+        register(parentPlatform, sipTransactionInfo, null, errorEvent, okEvent, true);
+    }
+
+    @Override
+    public void unregister(Platform parentPlatform, SipTransactionInfo sipTransactionInfo, SipSubscribe.Event errorEvent , SipSubscribe.Event okEvent) throws InvalidArgumentException, ParseException, SipException {
+        register(parentPlatform, sipTransactionInfo, null, errorEvent, okEvent, false);
+    }
+
+    @Override
+    public void register(Platform parentPlatform, @Nullable SipTransactionInfo sipTransactionInfo, @Nullable WWWAuthenticateHeader www,
+                         SipSubscribe.Event errorEvent , SipSubscribe.Event okEvent, boolean isRegister) throws SipException, InvalidArgumentException, ParseException {
+            Request request;
+
+            CallIdHeader callIdHeader = sipSender.getNewCallIdHeader(parentPlatform.getDeviceIp(),parentPlatform.getTransport());
+            String fromTag = SipUtils.getNewFromTag();
+            String toTag = null;
+            if (sipTransactionInfo != null ) {
+                if (sipTransactionInfo.getCallId() != null) {
+                    callIdHeader.setCallId(sipTransactionInfo.getCallId());
+                }
+                if (sipTransactionInfo.getFromTag() != null) {
+                    fromTag = sipTransactionInfo.getFromTag();
+                }
+                if (sipTransactionInfo.getToTag() != null) {
+                    toTag = sipTransactionInfo.getToTag();
+                }
+            }
+
+            if (www == null ) {
+                request = headerProviderPlatformProvider.createRegisterRequest(parentPlatform,
+                        redisCatchStorage.getCSEQ(), fromTag,
+                        toTag, callIdHeader, isRegister? parentPlatform.getExpires() : 0);
+            }else {
+                request = headerProviderPlatformProvider.createRegisterRequest(parentPlatform, fromTag, toTag, www, callIdHeader, isRegister? parentPlatform.getExpires() : 0);
+            }
+
+            sipSender.transmitRequest(parentPlatform.getDeviceIp(), request, (event)->{
+                if (event != null) {
+                    log.info("[国标级联]：{},  注册失败: {} ", parentPlatform.getServerGBId(), event.msg);
+                }
+                if (errorEvent != null ) {
+                    errorEvent.response(event);
+                }
+            }, okEvent, 2000L);
+    }
+
+    @Override
+    public String keepalive(Platform parentPlatform, SipSubscribe.Event errorEvent , SipSubscribe.Event okEvent) throws SipException, InvalidArgumentException, ParseException {
+        log.info("[国标级联] 发送心跳， 上级平台： {}/{}", parentPlatform.getName(), parentPlatform.getServerGBId());
+        String characterSet = parentPlatform.getCharacterSet();
+        StringBuffer keepaliveXml = new StringBuffer(200);
+        keepaliveXml.append("<?xml version=\"1.0\" encoding=\"")
+                .append(characterSet).append("\"?>\r\n")
+                .append("<Notify>\r\n")
+                .append("<CmdType>Keepalive</CmdType>\r\n")
+                .append("<SN>" + (int)((Math.random()*9+1)*100000) + "</SN>\r\n")
+                .append("<DeviceID>" + parentPlatform.getDeviceGBId() + "</DeviceID>\r\n")
+                .append("<Status>OK</Status>\r\n")
+                .append("</Notify>\r\n");
+
+        CallIdHeader callIdHeader = sipSender.getNewCallIdHeader(parentPlatform.getDeviceIp(),parentPlatform.getTransport());
+
+        Request request = headerProviderPlatformProvider.createMessageRequest(
+                parentPlatform,
+                keepaliveXml.toString(),
+                SipUtils.getNewFromTag(),
+                SipUtils.getNewViaTag(),
+                callIdHeader);
+
+        sipSender.transmitRequest(parentPlatform.getDeviceIp(), request, errorEvent, okEvent);
+        return callIdHeader.getCallId();
+    }
+
+    /**
+     * 向上级回复通道信息
+     * @param channel 通道信息
+     * @param parentPlatform 平台信息
+     */
+    @Override
+    public void catalogQuery(CommonGBChannel channel, Platform parentPlatform, String sn, String fromTag, int size) throws SipException, InvalidArgumentException, ParseException {
+
+        if ( parentPlatform ==null) {
+            return ;
+        }
+        List<CommonGBChannel> channels = new ArrayList<>();
+        if (channel != null) {
+            channels.add(channel);
+        }
+        String catalogXml = getCatalogXml(channels, sn, parentPlatform, size);
+
+        // callid
+        CallIdHeader callIdHeader = sipSender.getNewCallIdHeader(parentPlatform.getDeviceIp(),parentPlatform.getTransport());
+
+        Request request = headerProviderPlatformProvider.createMessageRequest(parentPlatform, catalogXml.toString(), fromTag, SipUtils.getNewViaTag(), callIdHeader);
+        sipSender.transmitRequest(parentPlatform.getDeviceIp(), request);
+
+    }
+
+    @Override
+    public void catalogQuery(List<CommonGBChannel> channels, Platform parentPlatform, String sn, String fromTag) throws InvalidArgumentException, ParseException, SipException {
+        if ( parentPlatform ==null) {
+            return ;
+        }
+        sendCatalogResponse(channels, parentPlatform, sn, fromTag, 0, true);
+    }
+    private String getCatalogXml(List<CommonGBChannel> channels, String sn, Platform platform, int size) {
+        String characterSet = platform.getCharacterSet();
+        StringBuffer catalogXml = new StringBuffer(600);
+        catalogXml.append("<?xml version=\"1.0\" encoding=\"" + characterSet +"\"?>\r\n")
+                .append("<Response>\r\n")
+                .append("<CmdType>Catalog</CmdType>\r\n")
+                .append("<SN>" +sn + "</SN>\r\n")
+                .append("<DeviceID>" + platform.getDeviceGBId() + "</DeviceID>\r\n")
+                .append("<SumNum>" + size + "</SumNum>\r\n")
+                .append("<DeviceList Num=\"" + channels.size() +"\">\r\n");
+        if (!channels.isEmpty()) {
+            for (CommonGBChannel channel : channels) {
+                catalogXml.append(channel.encode(platform.getDeviceGBId()));
+            }
+        }
+
+        catalogXml.append("</DeviceList>\r\n");
+        catalogXml.append("</Response>\r\n");
+        return catalogXml.toString();
+    }
+
+    private void sendCatalogResponse(List<CommonGBChannel> channels, Platform parentPlatform, String sn, String fromTag, int index, boolean sendAfterResponse) throws SipException, InvalidArgumentException, ParseException {
+        if (index > channels.size()) {
+            return;
+        }
+        String catalogXml;
+        if (channels.isEmpty()) {
+            catalogXml = getCatalogXml(Collections.emptyList(), sn, parentPlatform, 0);
+        }else {
+            List<CommonGBChannel> subChannelList;
+            if (index + parentPlatform.getCatalogGroup() < channels.size()) {
+                subChannelList = channels.subList(index, index + parentPlatform.getCatalogGroup());
+            }else {
+                subChannelList = channels.subList(index, channels.size());
+            }
+            catalogXml = getCatalogXml(subChannelList, sn, parentPlatform, channels.size());
+        }
+        // callid
+        CallIdHeader callIdHeader = sipSender.getNewCallIdHeader(parentPlatform.getDeviceIp(),parentPlatform.getTransport());
+
+        SIPRequest request = (SIPRequest)headerProviderPlatformProvider.createMessageRequest(parentPlatform, catalogXml, fromTag, SipUtils.getNewViaTag(), callIdHeader);
+
+        String timeoutTaskKey = "catalog_task_" + parentPlatform.getServerGBId() + sn;
+
+        String callId = request.getCallIdHeader().getCallId();
+
+        log.info("[命令发送] 国标级联{} 目录查询回复: 共{}条，已发送{}条", parentPlatform.getServerGBId(),
+                channels.size(), Math.min(index + parentPlatform.getCatalogGroup(), channels.size()));
+        log.debug(catalogXml);
+        if (sendAfterResponse) {
+            // 默认按照收到200回复后发送下一条， 如果超时收不到回复，就以30毫秒的间隔直接发送。
+            sipSender.transmitRequest(parentPlatform.getDeviceIp(), request, eventResult -> {
+                if (eventResult.statusCode == -1024) {
+                    // 消息发送超时, 以30毫秒的间隔直接发送
+                    int indexNext = index + parentPlatform.getCatalogGroup();
+                    try {
+                        sendCatalogResponse(channels, parentPlatform, sn, fromTag, indexNext, false);
+                    } catch (SipException | InvalidArgumentException | ParseException e) {
+                        log.error("[命令发送失败] 国标级联 目录查询回复: {}", e.getMessage());
+                    }
+                    return;
+                }
+                log.error("[目录推送失败] 国标级联 platform : {}, code: {}, msg: {}, 停止发送", parentPlatform.getServerGBId(), eventResult.statusCode, eventResult.msg);
+                dynamicTask.stop(timeoutTaskKey);
+            }, eventResult -> {
+                dynamicTask.stop(timeoutTaskKey);
+                int indexNext = index + parentPlatform.getCatalogGroup();
+                try {
+                    sendCatalogResponse(channels, parentPlatform, sn, fromTag, indexNext, true);
+                } catch (SipException | InvalidArgumentException | ParseException e) {
+                    log.error("[命令发送失败] 国标级联 目录查询回复: {}", e.getMessage());
+                }
+            });
+        }else {
+            sipSender.transmitRequest(parentPlatform.getDeviceIp(), request, eventResult -> {
+                log.error("[目录推送失败] 国标级联 platform : {}, code: {}, msg: {}", parentPlatform.getServerGBId(), eventResult.statusCode, eventResult.msg);
+            }, null);
+            dynamicTask.startDelay(timeoutTaskKey, ()->{
+                int indexNext = index + parentPlatform.getCatalogGroup();
+                try {
+                    sendCatalogResponse(channels, parentPlatform, sn, fromTag, indexNext, false);
+                } catch (SipException | InvalidArgumentException | ParseException e) {
+                    log.error("[命令发送失败] 国标级联 目录查询回复: {}", e.getMessage());
+                }
+            }, 100);
+        }
+    }
+
+    /**
+     * 向上级回复DeviceInfo查询信息
+     * @param parentPlatform 平台信息
+     * @param sn
+     * @param fromTag
+     * @return
+     */
+    @Override
+    public void deviceInfoResponse(Platform parentPlatform, Device device, String sn, String fromTag) throws SipException, InvalidArgumentException, ParseException {
+        if (parentPlatform == null) {
+            return;
+        }
+        String deviceId = device == null ? parentPlatform.getDeviceGBId() : device.getDeviceId();
+        String deviceName = device == null ? parentPlatform.getName() : device.getName();
+        String manufacturer = device == null ? "WVP-28181-PRO" : device.getManufacturer();
+        String model = device == null ? "platform" : device.getModel();
+        String firmware = device == null ? gitUtil.getBuildVersion() : device.getFirmware();
+        String characterSet = parentPlatform.getCharacterSet();
+        StringBuffer deviceInfoXml = new StringBuffer(600);
+        deviceInfoXml.append("<?xml version=\"1.0\" encoding=\"" + characterSet + "\"?>\r\n");
+        deviceInfoXml.append("<Response>\r\n");
+        deviceInfoXml.append("<CmdType>DeviceInfo</CmdType>\r\n");
+        deviceInfoXml.append("<SN>" +sn + "</SN>\r\n");
+        deviceInfoXml.append("<DeviceID>" + deviceId + "</DeviceID>\r\n");
+        deviceInfoXml.append("<DeviceName>" + deviceName + "</DeviceName>\r\n");
+        deviceInfoXml.append("<Manufacturer>" + manufacturer + "</Manufacturer>\r\n");
+        deviceInfoXml.append("<Model>" + model + "</Model>\r\n");
+        deviceInfoXml.append("<Firmware>" + firmware + "</Firmware>\r\n");
+        deviceInfoXml.append("<Result>OK</Result>\r\n");
+        deviceInfoXml.append("</Response>\r\n");
+
+        CallIdHeader callIdHeader = sipSender.getNewCallIdHeader(parentPlatform.getDeviceIp(),parentPlatform.getTransport());
+
+        Request request = headerProviderPlatformProvider.createMessageRequest(parentPlatform, deviceInfoXml.toString(), fromTag, SipUtils.getNewViaTag(), callIdHeader);
+        sipSender.transmitRequest(parentPlatform.getDeviceIp(), request);
+    }
+
+
+    /**
+     * 向上级回复DeviceStatus查询信息
+     * @param parentPlatform 平台信息
+     * @param sn
+     * @param fromTag
+     * @return
+     */
+    @Override
+    public void deviceStatusResponse(Platform parentPlatform, String channelId, String sn, String fromTag, Boolean status) throws SipException, InvalidArgumentException, ParseException {
+        if (parentPlatform == null) {
+            return ;
+        }
+        String statusStr = null;
+        if (status != null) {
+            statusStr = (status)?"ONLINE":"OFFLINE";
+        }
+        String characterSet = parentPlatform.getCharacterSet();
+        StringBuffer deviceStatusXml = new StringBuffer(600);
+        deviceStatusXml.append("<?xml version=\"1.0\" encoding=\"" + characterSet + "\"?>\r\n")
+                .append("<Response>\r\n")
+                .append("<CmdType>DeviceStatus</CmdType>\r\n")
+                .append("<SN>" +sn + "</SN>\r\n")
+                .append("<DeviceID>" + channelId + "</DeviceID>\r\n");
+        if (statusStr == null) {
+            deviceStatusXml.append("<Result>ERROR</Result>\r\n");
+        }else {
+            deviceStatusXml.append("<Result>OK</Result>\r\n")
+                    .append("<Online>"+statusStr+"</Online>\r\n")
+                    .append("<Status>OK</Status>\r\n");
+        }
+        deviceStatusXml.append("</Response>\r\n");
+
+        CallIdHeader callIdHeader = sipSender.getNewCallIdHeader(parentPlatform.getDeviceIp(),parentPlatform.getTransport());
+
+        Request request = headerProviderPlatformProvider.createMessageRequest(parentPlatform, deviceStatusXml.toString(), fromTag, SipUtils.getNewViaTag(), callIdHeader);
+        sipSender.transmitRequest(parentPlatform.getDeviceIp(), request);
+    }
+
+    @Override
+    public void sendNotifyMobilePosition(Platform parentPlatform, GPSMsgInfo gpsMsgInfo, CommonGBChannel channel, SubscribeInfo subscribeInfo) throws InvalidArgumentException, ParseException, NoSuchFieldException, SipException, IllegalAccessException {
+        if (parentPlatform == null) {
+            return;
+        }
+        log.info("[发送 移动位置订阅] {}/{}->{},{}", parentPlatform.getServerGBId(), gpsMsgInfo.getId(), gpsMsgInfo.getLng(), gpsMsgInfo.getLat());
+        if (log.isDebugEnabled()) {
+            log.debug("[发送 移动位置订阅] {}/{}->{},{}", parentPlatform.getServerGBId(), gpsMsgInfo.getId(), gpsMsgInfo.getLng(), gpsMsgInfo.getLat());
+        }
+
+        String characterSet = parentPlatform.getCharacterSet();
+        StringBuffer deviceStatusXml = new StringBuffer(600);
+        deviceStatusXml.append("<?xml version=\"1.0\" encoding=\"" + characterSet + "\"?>\r\n")
+                .append("<Notify>\r\n")
+                .append("<CmdType>MobilePosition</CmdType>\r\n")
+                .append("<SN>" + (int)((Math.random()*9+1)*100000) + "</SN>\r\n")
+                .append("<DeviceID>" + channel.getGbDeviceId() + "</DeviceID>\r\n")
+                .append("<Time>" + DateUtil.yyyy_MM_dd_HH_mm_ssToISO8601(gpsMsgInfo.getTime()) + "</Time>\r\n")
+                .append("<Longitude>" + gpsMsgInfo.getLng() + "</Longitude>\r\n")
+                .append("<Latitude>" + gpsMsgInfo.getLat() + "</Latitude>\r\n")
+                .append("<Speed>" + gpsMsgInfo.getSpeed() + "</Speed>\r\n")
+                .append("<Direction>" + gpsMsgInfo.getDirection() + "</Direction>\r\n")
+                .append("<Altitude>" + gpsMsgInfo.getAltitude() + "</Altitude>\r\n")
+                .append("</Notify>\r\n");
+
+       sendNotify(parentPlatform, deviceStatusXml.toString(), subscribeInfo, eventResult -> {
+            log.error("发送NOTIFY通知消息失败。错误：{} {}", eventResult.statusCode, eventResult.msg);
+        }, null);
+
+    }
+
+    @Override
+    public void sendAlarmMessage(Platform parentPlatform, DeviceAlarmNotify deviceAlarm) throws SipException, InvalidArgumentException, ParseException {
+        if (parentPlatform == null) {
+            return;
+        }
+        log.info("[发送报警通知]平台： {}/{}->{},{}: {}", parentPlatform.getServerGBId(), deviceAlarm.getChannelId(),
+                deviceAlarm.getLongitude(), deviceAlarm.getLatitude(), JSON.toJSONString(deviceAlarm));
+        String characterSet = parentPlatform.getCharacterSet();
+        StringBuffer deviceStatusXml = new StringBuffer(600);
+        deviceStatusXml.append("<?xml version=\"1.0\" encoding=\"" + characterSet + "\"?>\r\n")
+                .append("<Notify>\r\n")
+                .append("<CmdType>Alarm</CmdType>\r\n")
+                .append("<SN>" + (int)((Math.random()*9+1)*100000) + "</SN>\r\n")
+                .append("<DeviceID>" + deviceAlarm.getChannelId() + "</DeviceID>\r\n")
+                .append("<AlarmPriority>" + deviceAlarm.getAlarmPriority() + "</AlarmPriority>\r\n")
+                .append("<AlarmMethod>" + deviceAlarm.getAlarmMethod() + "</AlarmMethod>\r\n")
+                .append("<AlarmTime>" + DateUtil.yyyy_MM_dd_HH_mm_ssToISO8601(deviceAlarm.getAlarmTime()) + "</AlarmTime>\r\n")
+                .append("<AlarmDescription>" + deviceAlarm.getAlarmDescription() + "</AlarmDescription>\r\n")
+                .append("<Longitude>" + deviceAlarm.getLongitude() + "</Longitude>\r\n")
+                .append("<Latitude>" + deviceAlarm.getLatitude() + "</Latitude>\r\n")
+                .append("<info>\r\n")
+                .append("<AlarmType>" + deviceAlarm.getAlarmType() + "</AlarmType>\r\n")
+                .append("</info>\r\n")
+                .append("</Notify>\r\n");
+
+        CallIdHeader callIdHeader = sipSender.getNewCallIdHeader(parentPlatform.getDeviceIp(),parentPlatform.getTransport());
+
+        Request request = headerProviderPlatformProvider.createMessageRequest(parentPlatform, deviceStatusXml.toString(), SipUtils.getNewFromTag(), SipUtils.getNewViaTag(), callIdHeader);
+        sipSender.transmitRequest(parentPlatform.getDeviceIp(), request);
+
+    }
+
+    @Override
+    public void sendNotifyForCatalogAddOrUpdate(String type, Platform parentPlatform, List<CommonGBChannel> deviceChannels, SubscribeInfo subscribeInfo, Integer index) throws InvalidArgumentException, ParseException, NoSuchFieldException, SipException, IllegalAccessException {
+        if (parentPlatform == null || deviceChannels == null || deviceChannels.isEmpty() || subscribeInfo == null) {
+            return;
+        }
+        if (index == null) {
+            index = 0;
+        }
+        if (index >= deviceChannels.size()) {
+            return;
+        }
+        List<CommonGBChannel> channels;
+        if (index + parentPlatform.getCatalogGroup() < deviceChannels.size()) {
+            channels = deviceChannels.subList(index, index + parentPlatform.getCatalogGroup());
+        }else {
+            channels = deviceChannels.subList(index, deviceChannels.size());
+        }
+        Integer finalIndex = index;
+        String catalogXmlContent = getCatalogXmlContentForCatalogAddOrUpdate(parentPlatform, channels,
+                deviceChannels.size(), type, subscribeInfo);
+        String channelDeviceIds = channels.stream().map(CommonGBChannel::getGbDeviceId).collect(Collectors.joining(","));
+        log.info("[发送NOTIFY通知]类型： {}，通道： {}", type, channelDeviceIds);
+        sendNotify(parentPlatform, catalogXmlContent, subscribeInfo, eventResult -> {
+            log.error("发送NOTIFY通知消息失败。错误：{} {}", eventResult.statusCode, eventResult.msg);
+            log.error(catalogXmlContent);
+        }, (eventResult -> {
+            try {
+                sendNotifyForCatalogAddOrUpdate(type, parentPlatform, deviceChannels, subscribeInfo,
+                        finalIndex + parentPlatform.getCatalogGroup());
+            } catch (InvalidArgumentException | ParseException | NoSuchFieldException | SipException |
+                     IllegalAccessException e) {
+                log.error("[命令发送失败] 国标级联 NOTIFY通知: {}", e.getMessage());
+            }
+        }));
+    }
+
+    private void sendNotify(Platform parentPlatform, String catalogXmlContent,
+                            SubscribeInfo subscribeInfo, SipSubscribe.Event errorEvent, SipSubscribe.Event okEvent )
+            throws SipException, ParseException, InvalidArgumentException {
+        MessageFactoryImpl messageFactory = (MessageFactoryImpl) SipFactory.getInstance().createMessageFactory();
+        String characterSet = parentPlatform.getCharacterSet();
+        // 设置编码， 防止中文乱码
+        messageFactory.setDefaultContentEncodingCharset(characterSet);
+
+        SIPRequest notifyRequest = headerProviderPlatformProvider.createNotifyRequest(parentPlatform, catalogXmlContent, subscribeInfo);
+
+        sipSender.transmitRequest(parentPlatform.getDeviceIp(), notifyRequest, errorEvent, okEvent);
+    }
+
+    private  String getCatalogXmlContentForCatalogAddOrUpdate(Platform platform, List<CommonGBChannel> channels, int sumNum, String type, SubscribeInfo subscribeInfo) {
+        StringBuffer catalogXml = new StringBuffer(600);
+        String characterSet = platform.getCharacterSet();
+        catalogXml.append("<?xml version=\"1.0\" encoding=\"" + characterSet + "\"?>\r\n")
+                .append("<Notify>\r\n")
+                .append("<CmdType>Catalog</CmdType>\r\n")
+                .append("<SN>" + (int) ((Math.random() * 9 + 1) * 100000) + "</SN>\r\n")
+                .append("<DeviceID>" + platform.getDeviceGBId() + "</DeviceID>\r\n")
+                .append("<SumNum>"+ sumNum +"</SumNum>\r\n")
+                .append("<DeviceList Num=\"" + channels.size() + "\">\r\n");
+        if (!channels.isEmpty()) {
+            for (CommonGBChannel channel : channels) {
+                catalogXml.append(channel.encode(type, platform.getDeviceGBId()));
+            }
+        }
+        catalogXml.append("</DeviceList>\r\n")
+                .append("</Notify>\r\n");
+        return catalogXml.toString();
+    }
+
+    @Override
+    public void sendNotifyForCatalogOther(String type, Platform parentPlatform, List<CommonGBChannel> deviceChannels,
+                                          SubscribeInfo subscribeInfo, Integer index) throws InvalidArgumentException, ParseException, NoSuchFieldException, SipException, IllegalAccessException {
+        if (parentPlatform == null
+                || deviceChannels == null
+                || deviceChannels.size() == 0
+                || subscribeInfo == null) {
+            log.warn("[缺少必要参数]");
+            return;
+        }
+
+        if (index == null) {
+            index = 0;
+        }
+        if (index >= deviceChannels.size()) {
+            return;
+        }
+        List<CommonGBChannel> channels;
+        if (index + parentPlatform.getCatalogGroup() < deviceChannels.size()) {
+            channels = deviceChannels.subList(index, index + parentPlatform.getCatalogGroup());
+        }else {
+            channels = deviceChannels.subList(index, deviceChannels.size());
+        }
+        log.info("[发送NOTIFY通知]类型： {}，发送数量： {}", type, channels.size());
+        Integer finalIndex = index;
+        String catalogXmlContent = getCatalogXmlContentForCatalogOther(parentPlatform, channels, type);
+        sendNotify(parentPlatform, catalogXmlContent, subscribeInfo, eventResult -> {
+            log.error("发送NOTIFY通知消息失败。错误：{} {}", eventResult.statusCode, eventResult.msg);
+        }, eventResult -> {
+            try {
+                sendNotifyForCatalogOther(type, parentPlatform, deviceChannels, subscribeInfo,
+                        finalIndex + parentPlatform.getCatalogGroup());
+            } catch (InvalidArgumentException | ParseException | NoSuchFieldException | SipException |
+                     IllegalAccessException e) {
+                log.error("[命令发送失败] 国标级联 NOTIFY通知: {}", e.getMessage());
+            }
+        });
+    }
+
+    private String getCatalogXmlContentForCatalogOther(Platform platform, List<CommonGBChannel> channels, String type) {
+
+        String characterSet = platform.getCharacterSet();
+        StringBuffer catalogXml = new StringBuffer(600);
+        catalogXml.append("<?xml version=\"1.0\" encoding=\"" + characterSet + "\"?>\r\n")
+                .append("<Notify>\r\n")
+                .append("<CmdType>Catalog</CmdType>\r\n")
+                .append("<SN>" + (int) ((Math.random() * 9 + 1) * 100000) + "</SN>\r\n")
+                .append("<DeviceID>" + platform.getDeviceGBId() + "</DeviceID>\r\n")
+                .append("<SumNum>1</SumNum>\r\n")
+                .append("<DeviceList Num=\" " + channels.size() + " \">\r\n");
+        if (!channels.isEmpty()) {
+            for (CommonGBChannel channel : channels) {
+               catalogXml.append(channel.encode(type, platform.getDeviceGBId()));
+            }
+        }
+        catalogXml.append("</DeviceList>\r\n")
+                .append("</Notify>\r\n");
+        return catalogXml.toString();
+    }
+    @Override
+    public void recordInfo(CommonGBChannel deviceChannel, Platform parentPlatform, String fromTag, RecordInfo recordInfo) throws SipException, InvalidArgumentException, ParseException {
+        if (parentPlatform ==null || deviceChannel == null || ObjectUtils.isEmpty(deviceChannel.getGbDeviceId())) {
+            log.warn("[国标级联] 录像查询回复缺少平台/通道信息, 无法回复, platform: {}, channelId: {}",
+                    parentPlatform != null ? parentPlatform.getServerGBId(): null, recordInfo.getChannelId());
+            return;
+        }
+        log.info("[国标级联] 发送录像数据通道： {}", recordInfo.getChannelId());
+        String characterSet = parentPlatform.getCharacterSet();
+        String gbDeviceId = deviceChannel.getGbDeviceId();
+        List<RecordItem> recordList = recordInfo.getRecordList() == null ? new ArrayList<>() : recordInfo.getRecordList();
+        // SumNum 取实际发送条数, 保证与各页 RecordList Num 之和一致, 避免上级按 SumNum 聚合时提前结束或超时
+        int sumNum = recordList.size();
+        // 按"每页数量"切分: 配置小于等于 0 时不分页
+        List<List<RecordItem>> pages = partitionRecordItems(recordList, userSetting.getRecordInfoPageSize());
+        for (int i = 0; i < pages.size(); i++) {
+            String recordXml = buildRecordInfoXml(characterSet, recordInfo.getSn(), gbDeviceId, sumNum, pages.get(i));
+            log.debug("[国标级联] 发送录像数据通道：{}, 第 {}/{} 页, 内容： {}",
+                    recordInfo.getChannelId(), i + 1, pages.size(), recordXml);
+            // callid
+            CallIdHeader callIdHeader = sipSender.getNewCallIdHeader(parentPlatform.getDeviceIp(),parentPlatform.getTransport());
+
+            Request request = headerProviderPlatformProvider.createMessageRequest(parentPlatform, recordXml, fromTag, SipUtils.getNewViaTag(), callIdHeader);
+            int pageNo = i + 1;
+            int pageCount = pages.size();
+            try {
+                sipSender.transmitRequest(parentPlatform.getDeviceIp(), request,
+                        errorEvent -> log.warn("[国标级联] 发送录像数据通道：{}, 第 {}/{} 页发送失败, 状态码: {}, 原因: {}, 类型: {}",
+                                recordInfo.getChannelId(), pageNo, pageCount, errorEvent.statusCode, errorEvent.msg, errorEvent.type),
+                        eventResult -> log.info("[国标级联] 发送录像数据通道：{}, 第 {}/{} 页发送成功",
+                                recordInfo.getChannelId(), pageNo, pageCount));
+            } catch (SipException e) {
+                // 单页发送异常不中断后续页的发送
+                log.warn("[国标级联] 发送录像数据通道：{}, 第 {}/{} 页发送异常: {}",
+                        recordInfo.getChannelId(), pageNo, pageCount, e.getMessage(), e);
+            }
+        }
+    }
+
+    /**
+     * 按每页数量切分录像记录。
+     *
+     * @param recordList 全部录像记录, 允许为 null
+     * @param pageSize   每页数量, 小于等于 0 表示不分页(整批作为一页)
+     * @return 至少一页; 记录为空时返回一个空页, 保证调用方仍会回复一个 Num=0 的响应
+     */
+    static List<List<RecordItem>> partitionRecordItems(List<RecordItem> recordList, Integer pageSize) {
+        List<List<RecordItem>> pages = new ArrayList<>();
+        if (recordList == null || recordList.isEmpty()) {
+            pages.add(new ArrayList<>());
+            return pages;
+        }
+        int size = pageSize == null ? 0 : pageSize;
+        if (size <= 0 || recordList.size() <= size) {
+            pages.add(recordList);
+            return pages;
+        }
+        for (int start = 0; start < recordList.size(); start += size) {
+            pages.add(new ArrayList<>(recordList.subList(start, Math.min(start + size, recordList.size()))));
+        }
+        return pages;
+    }
+
+    /**
+     * 生成一页 RecordInfo 响应 XML。SumNum 始终为总条数, RecordList 的 Num 为本页条数,
+     * 便于上级平台按 SN 聚合多页结果。
+     */
+    static String buildRecordInfoXml(String characterSet, String sn, String gbDeviceId, int sumNum,
+                                     List<RecordItem> pageItems) {
+        List<RecordItem> items = pageItems == null ? new ArrayList<>() : pageItems;
+        StringBuffer recordXml = new StringBuffer(600);
+        recordXml.append("<?xml version=\"1.0\" encoding=\"" + characterSet + "\"?>\r\n")
+                .append("<Response>\r\n")
+                .append("<CmdType>RecordInfo</CmdType>\r\n")
+                .append("<SN>" + sn + "</SN>\r\n")
+                .append("<DeviceID>" + gbDeviceId + "</DeviceID>\r\n")
+                .append("<SumNum>" + sumNum + "</SumNum>\r\n")
+                .append("<RecordList Num=\"" + items.size() + "\">\r\n");
+        for (RecordItem recordItem : items) {
+            recordXml.append("<Item>\r\n");
+            if (gbDeviceId != null) {
+                recordXml.append("<DeviceID>" + gbDeviceId + "</DeviceID>\r\n")
+                        .append("<Name>" + recordItem.getName() + "</Name>\r\n")
+                        .append("<StartTime>" + DateUtil.yyyy_MM_dd_HH_mm_ssToISO8601(recordItem.getStartTime()) + "</StartTime>\r\n")
+                        .append("<EndTime>" + DateUtil.yyyy_MM_dd_HH_mm_ssToISO8601(recordItem.getEndTime()) + "</EndTime>\r\n")
+                        .append("<Secrecy>" + recordItem.getSecrecy() + "</Secrecy>\r\n")
+                        .append("<Type>" + recordItem.getType() + "</Type>\r\n");
+                if (!ObjectUtils.isEmpty(recordItem.getFileSize())) {
+                    recordXml.append("<FileSize>" + recordItem.getFileSize() + "</FileSize>\r\n");
+                }
+                if (!ObjectUtils.isEmpty(recordItem.getFilePath())) {
+                    recordXml.append("<FilePath>" + recordItem.getFilePath() + "</FilePath>\r\n");
+                }
+            }
+            recordXml.append("</Item>\r\n");
+        }
+        recordXml.append("</RecordList>\r\n")
+                .append("</Response>\r\n");
+        return recordXml.toString();
+    }
+
+    @Override
+    public void sendMediaStatusNotify(Platform parentPlatform, SendRtpInfo sendRtpInfo, CommonGBChannel channel) throws SipException, InvalidArgumentException, ParseException {
+        if (channel == null || parentPlatform == null) {
+            return;
+        }
+
+        String characterSet = parentPlatform.getCharacterSet();
+        StringBuffer mediaStatusXml = new StringBuffer(200);
+        mediaStatusXml.append("<?xml version=\"1.0\" encoding=\"" + characterSet + "\"?>\r\n")
+                .append("<Notify>\r\n")
+                .append("<CmdType>MediaStatus</CmdType>\r\n")
+                .append("<SN>" + (int)((Math.random()*9+1)*100000) + "</SN>\r\n")
+                .append("<DeviceID>" + channel.getGbDeviceId() + "</DeviceID>\r\n")
+                .append("<NotifyType>121</NotifyType>\r\n")
+                .append("</Notify>\r\n");
+
+        SIPRequest messageRequest = (SIPRequest)headerProviderPlatformProvider.createMessageRequest(parentPlatform, mediaStatusXml.toString(),
+                sendRtpInfo);
+
+        sipSender.transmitRequest(parentPlatform.getDeviceIp(),messageRequest);
+
+    }
+
+    @Override
+    public synchronized void streamByeCmd(Platform platform, SendRtpInfo sendRtpItem, CommonGBChannel channel) throws SipException, InvalidArgumentException, ParseException {
+        if (sendRtpItem == null ) {
+            log.info("[向上级发送BYE]， sendRtpItem 为NULL");
+            return;
+        }
+        if (platform == null) {
+            log.info("[向上级发送BYE]， platform 为NULL");
+            return;
+        }
+        log.info("[向上级发送BYE]， {}/{}", platform.getServerGBId(), sendRtpItem.getChannelId());
+        String mediaServerId = sendRtpItem.getMediaServerId();
+        MediaServer mediaServerItem = mediaServerService.getOne(mediaServerId);
+        if (mediaServerItem != null) {
+            receiveRtpServerService.closeRTPServer(mediaServerItem, sendRtpItem.getApp(), sendRtpItem.getStream());
+        }
+        SIPRequest byeRequest = headerProviderPlatformProvider.createByeRequest(platform, sendRtpItem, channel);
+        if (byeRequest == null) {
+            log.warn("[向上级发送bye]：无法创建 byeRequest");
+        }
+        sipSender.transmitRequest(platform.getDeviceIp(),byeRequest);
+    }
+
+    private void registerPlatformTransaction(Platform platform, CommonGBChannel channel,
+                                              SsrcTransaction newTransaction) {
+        if (newTransaction == null) {
+            return;
+        }
+        SsrcTransaction oldTransaction = sessionManager.getSsrcTransactionByStream(
+                newTransaction.getApp(), newTransaction.getStream());
+        if (oldTransaction != null && oldTransaction.getPlatformId() != null
+                && !sameDialog(oldTransaction, newTransaction)) {
+            if (oldTransaction.getSipTransactionInfo() != null) {
+                try {
+                    streamByeCmd(platform, channel, oldTransaction.getSipTransactionInfo(), null);
+                    sessionManager.removeByCallId(oldTransaction.getCallId());
+                } catch (Exception e) {
+                    log.warn("[注册平台SIP事务] 旧 Dialog BYE 失败，保留事务等待后续清理, callId={}",
+                            oldTransaction.getCallId(), e);
+                }
+            } else {
+                log.warn("[注册平台SIP事务] 旧事务缺少 SipTransactionInfo，无法主动 BYE, callId={}",
+                        oldTransaction.getCallId());
+            }
+        }
+        sessionManager.put(newTransaction);
+    }
+
+    private boolean sameDialog(SsrcTransaction left, SsrcTransaction right) {
+        String leftCallId = left.getSipTransactionInfo() != null
+                ? left.getSipTransactionInfo().getCallId() : left.getCallId();
+        String rightCallId = right.getSipTransactionInfo() != null
+                ? right.getSipTransactionInfo().getCallId() : right.getCallId();
+        return Objects.equals(leftCallId, rightCallId);
+    }
+
+    @Override
+    public void streamByeCmd(Platform platform, CommonGBChannel channel, String app, String stream, String callId, SipSubscribe.Event okEvent) throws InvalidArgumentException, SipException, ParseException, SsrcTransactionNotFoundException {
+
+        SsrcTransaction ssrcTransaction = null;
+        if (callId != null) {
+            ssrcTransaction = sessionManager.getSsrcTransactionByCallId(callId);
+        }else if (stream != null) {
+            ssrcTransaction = sessionManager.getSsrcTransactionByStream(app, stream);
+        }
+        if (ssrcTransaction == null) {
+            throw new SsrcTransactionNotFoundException(platform.getServerGBId(), channel.getGbDeviceId(), callId, stream);
+        }
+
+        Request byteRequest = headerProviderPlatformProvider.createByteRequest(platform, channel.getGbDeviceId(), ssrcTransaction.getSipTransactionInfo());
+        sipSender.transmitRequest(sipLayer.getLocalIp(platform.getDeviceIp()), byteRequest, null, okEvent);
+        String removeCallId = ssrcTransaction.getCallId();
+        if (removeCallId == null && ssrcTransaction.getSipTransactionInfo() != null) {
+            removeCallId = ssrcTransaction.getSipTransactionInfo().getCallId();
+        }
+        sessionManager.removeByCallId(removeCallId);
+    }
+
+    @Override
+    public void streamByeCmd(Platform platform, CommonGBChannel channel,
+                             SipTransactionInfo sipTransactionInfo, SipSubscribe.Event okEvent)
+            throws InvalidArgumentException, SipException, ParseException {
+        if (platform == null || channel == null || sipTransactionInfo == null) {
+            return;
+        }
+        Request byteRequest = headerProviderPlatformProvider.createByteRequest(
+                platform, channel.getGbDeviceId(), sipTransactionInfo);
+        sipSender.transmitRequest(sipLayer.getLocalIp(platform.getDeviceIp()), byteRequest, null, okEvent);
+    }
+
+    @Override
+    public void broadcastResultCmd(Platform platform, CommonGBChannel deviceChannel, String sn, boolean result, SipSubscribe.Event errorEvent, SipSubscribe.Event okEvent) throws InvalidArgumentException, SipException, ParseException {
+        if (platform == null || deviceChannel == null) {
+            return;
+        }
+        String characterSet = platform.getCharacterSet();
+        StringBuffer mediaStatusXml = new StringBuffer(200);
+        mediaStatusXml.append("<?xml version=\"1.0\" encoding=\"" + characterSet + "\"?>\r\n")
+                      .append("<Response>\r\n")
+                      .append("<CmdType>Broadcast</CmdType>\r\n")
+                      .append("<SN>" + sn + "</SN>\r\n")
+                      .append("<DeviceID>" + deviceChannel.getGbDeviceId() + "</DeviceID>\r\n")
+                      .append("<Result>" + (result?"OK":"ERROR") + "</Result>\r\n")
+                      .append("</Response>\r\n");
+
+        CallIdHeader callIdHeader = sipSender.getNewCallIdHeader(platform.getDeviceIp(), platform.getTransport());
+
+        SIPRequest messageRequest = (SIPRequest)headerProviderPlatformProvider.createMessageRequest(platform, mediaStatusXml.toString(),
+               SipUtils.getNewFromTag(), SipUtils.getNewViaTag(), callIdHeader);
+
+        sipSender.transmitRequest(platform.getDeviceIp(),messageRequest, errorEvent, okEvent);
+    }
+
+    @Override
+    public void broadcastInviteCmd(Platform platform, CommonGBChannel channel,String sourceId, MediaServer mediaServer,
+                                   SSRCInfo ssrcInfo, SipSubscribe.Event okEvent,
+                                   SipSubscribe.Event errorEvent) throws ParseException, SipException, InvalidArgumentException {
+        String stream = ssrcInfo.getStream();
+
+        if (platform == null) {
+            return;
+        }
+
+        log.info("{} 分配的ZLM为: {} [{}:{}]", stream, mediaServer.getId(), mediaServer.getIp(), ssrcInfo.getPort());
+        String sdpIp = mediaServer.getSdpIp();
+
+        StringBuffer content = new StringBuffer(200);
+        content.append("v=0\r\n");
+        content.append("o=" + platform.getDeviceGBId() + " 0 0 IN IP4 " + sdpIp + "\r\n");
+        content.append("s=Play\r\n");
+        content.append("u=" + channel.getGbDeviceId() + ":0\r\n");
+        content.append("c=IN IP4 " + sdpIp + "\r\n");
+        content.append("t=0 0\r\n");
+
+        if ("TCP-PASSIVE".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
+            content.append("m=audio " + ssrcInfo.getPort() + " TCP/RTP/AVP 8 96\r\n");
+        } else if ("TCP-ACTIVE".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
+            content.append("m=audio " + ssrcInfo.getPort() + " TCP/RTP/AVP 8 96\r\n");
+        } else if ("UDP".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
+            content.append("m=audio " + ssrcInfo.getPort() + " RTP/AVP 8 96\r\n");
+        }
+
+        content.append("a=recvonly\r\n");
+        content.append("a=rtpmap:8 PCMA/8000\r\n");
+        content.append("a=rtpmap:96 PS/90000\r\n");
+        if ("TCP-PASSIVE".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
+            content.append("a=setup:passive\r\n");
+            content.append("a=connection:new\r\n");
+        }else if ("TCP-ACTIVE".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
+            content.append("a=setup:active\r\n");
+            content.append("a=connection:new\r\n");
+        }
+
+        content.append("y=" + ssrcInfo.getSsrc() + "\r\n");//ssrc
+        // f字段:f= v/编码格式/分辨率/帧率/码率类型/码率大小a/编码格式/码率大小/采样率
+        content.append("f=v/2/5/25/1/4096a/1/8/1\r\n");
+        CallIdHeader callIdHeader = sipSender.getNewCallIdHeader(sipLayer.getLocalIp(platform.getDeviceIp()), platform.getTransport());
+
+        Request request = headerProviderPlatformProvider.createInviteRequest(platform, sourceId, channel.getGbDeviceId(),
+                content.toString(), SipUtils.getNewViaTag(), SipUtils.getNewFromTag(),  ssrcInfo.getSsrc(),
+                callIdHeader);
+        sipSender.transmitRequest(sipLayer.getLocalIp(platform.getDeviceIp()), request, (e -> {
+            sessionManager.removeByStreamIfSsrc(ssrcInfo.getApp(), ssrcInfo.getStream(), ssrcInfo.getSsrc());
+            errorEvent.response(e);
+        }), e -> {
+            ResponseEvent responseEvent = (ResponseEvent) e.event;
+            SIPResponse response = (SIPResponse) responseEvent.getResponse();
+            SsrcTransaction ssrcTransaction = SsrcTransaction.buildForPlatform(platform.getServerGBId(), channel.getGbId(),
+                    callIdHeader.getCallId(), ssrcInfo.getApp(),  stream, ssrcInfo.getSsrc(), mediaServer.getId(), response, InviteSessionType.BROADCAST);
+            registerPlatformTransaction(platform, channel, ssrcTransaction);
+            okEvent.response(e);
+        });
+    }
+}
