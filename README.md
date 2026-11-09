@@ -1,6 +1,6 @@
 <p align="center">
- <img src="https://img.shields.io/badge/Spring%20Boot-4.1.0-blue.svg" alt="Downloads">
- <img src="https://img.shields.io/badge/Vue-3.2-blue.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Boot-4.1.2-blue.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Vue-3.4-blue.svg" alt="Downloads">
  <img src="https://img.shields.io/github/license/YunaiV/ruoyi-vue-pro" alt="Downloads" />
 </p>
 
@@ -28,8 +28,8 @@
 | 【完整版】[ruoyi-vue-pro](https://gitee.com/zhijiantianya/ruoyi-vue-pro) | [`master`](https://gitee.com/zhijiantianya/ruoyi-vue-pro/tree/master/) 分支 | [`master-jdk17`](https://gitee.com/zhijiantianya/ruoyi-vue-pro/tree/master-jdk17/) 分支 | [`master-jdk25`](https://gitee.com/zhijiantianya/ruoyi-vue-pro/tree/master-jdk25/) 分支 |
 | 【精简版】[yudao-boot-mini](https://gitee.com/yudaocode/yudao-boot-mini) | [`master`](https://gitee.com/yudaocode/yudao-boot-mini/tree/master/) 分支   | [`master-jdk17`](https://gitee.com/yudaocode/yudao-boot-mini/tree/master-jdk17/) 分支   | [`master-jdk25`](https://gitee.com/yudaocode/yudao-boot-mini/tree/master-jdk25/) 分支   |
 
-* 【完整版】：包括系统功能、基础设施、工作流程、支付系统、数据报表、微信公众号、商城系统、会员中心、ERP、WMS、CRM、MES、HRM、FMS、PMS、OA 协同办公、AI 大模型、IoT 物联网、IM 即时通讯等功能
-* 【精简版】：只包括系统功能、基础设施功能，不包括工作流程、支付系统、数据报表、微信公众号、商城系统、会员中心、ERP、WMS、CRM、MES、HRM、FMS、PMS、OA 协同办公、AI 大模型、IoT 物联网、IM 即时通讯等功能
+* 【完整版】：包括系统功能、基础设施、视频监控 (GB28181/Media)、IoT 物联网、AI 大模型与智能体 (AI/Spring AI Agent)、支付系统、数据报表、微信公众号、MES 执行制造系统、WMS 仓库管理、PMS 项目管理等功能
+* 【精简版】：只包括系统功能、基础设施功能，不包括视频监控、IoT 物联网、AI 大模型与智能体、支付系统、数据报表、微信公众号、MES、WMS、PMS 等业务扩展功能
 
 可参考 [《迁移文档》](https://doc.iocoder.cn/migrate-module/) ，只需要 5-10 分钟，即可将【完整版】按需迁移到【精简版】
 
@@ -52,7 +52,9 @@
 * 权限认证使用 Spring Security & Token & Redis，支持多终端、多种用户的认证系统，支持 SSO 单点登录
 * 支持加载动态权限菜单，按钮级别权限控制，Redis 缓存提升性能
 * 支持 SaaS 多租户，可自定义每个租户的权限，提供透明化的多租户底层封装
-* 工作流使用 Flowable，支持动态表单、在线设计流程、会签 / 或签、多种任务分配方式
+* 视频监控深度融合 WVP-GB28181-Pro 与 ZLMediaKit，支持 GB28181 国标协议接入、云台控制 (PTZ)、语音对讲、多分屏实时点播与录像回放
+* 物联网支持设备管理、物模型定义、规则引擎及视频监控设备联动
+* AI 模块支持主流大模型接入、流式对话、思维导图、多模态以及基于 Spring AI 的 Agent 智能体编排与 RAG 知识库检索
 * 高效率开发，使用代码生成器可以一键生成 Java、Vue 前后端代码、SQL 脚本、接口文档，支持单表、树表、主子表
 * 实时通信，采用 Spring WebSocket 实现，内置 Token 身份校验，支持 WebSocket 集群
 * 集成微信小程序、微信公众号、企业微信、钉钉等三方登陆，集成支付宝、微信等支付与退款
@@ -86,16 +88,16 @@
 | 项目                                                              | Star                                                                                                                                                                                                                                                                                             | 简介                          |
 |-----------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------|
 | [ruoyi-vue-pro](https://gitee.com/zhijiantianya/ruoyi-vue-pro)  | [![Gitee star](https://gitee.com/zhijiantianya/ruoyi-vue-pro/badge/star.svg?theme=white)](https://gitee.com/zhijiantianya/ruoyi-vue-pro) [![GitHub stars](https://img.shields.io/github/stars/YunaiV/ruoyi-vue-pro.svg?style=social&label=Stars)](https://github.com/YunaiV/ruoyi-vue-pro)       | 基于 Spring Boot 多模块架构        |
-| [yudao-cloud](https://gitee.com/zhijiantianya/yudao-cloud)      | [![Gitee star](https://gitee.com/zhijiantianya/yudao-cloud/badge/star.svg?theme=white)](https://gitee.com/zhijiantianya/yudao-cloud) [![GitHub stars](https://img.shields.io/github/stars/YunaiV/yudao-cloud.svg?style=social&label=Stars)](https://github.com/YunaiV/yudao-cloud)               | 基于 Spring Cloud 微服务架构       |
+| [yudao-cloud](https://gitee.com/zhijiantianya/yudao-cloud)      | [![Gitee star](https://gitee.com/zhijiantianya/ruoyi-vue-pro/badge/star.svg?theme=white)](https://gitee.com/zhijiantianya/yudao-cloud) [![GitHub stars](https://img.shields.io/github/stars/YunaiV/yudao-cloud.svg?style=social&label=Stars)](https://github.com/YunaiV/yudao-cloud)               | 基于 Spring Cloud 微服务架构       |
 | [Spring-Boot-Labs](https://gitee.com/yudaocode/SpringBoot-Labs) | [![Gitee star](https://gitee.com/yudaocode/SpringBoot-Labs/badge/star.svg?theme=white)](https://gitee.com/zhijiantianya/yudao-cloud) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/SpringBoot-Labs.svg?style=social&label=Stars)](https://github.com/yudaocode/SpringBoot-Labs) | 系统学习 Spring Boot & Cloud 专栏 |
 
 ### 前端项目
 
 | 项目                                                                         | Star                                                                                                                                                                                                                                                                                                                     | 简介                                     |
 |----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------|
+| [ui (MzMedia UI)](ui/)                                                     | -                                                                                                                                                                                                                                                                                                                        | 基于 Vue3 + Element Plus 实现的视频联动物联网平台前端 |
 | [yudao-ui-admin-vue3](https://gitee.com/yudaocode/yudao-ui-admin-vue3)     | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-vue3/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-vue3) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-vue3.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-vue3)         | 基于 Vue3 + element-plus 实现的管理后台         |
 | [yudao-ui-admin-vben](https://gitee.com/yudaocode/yudao-ui-admin-vben)     | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-vben/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-vben) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-vben.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-vben)         | 基于 Vue3 + vben(ant-design-vue) 实现的管理后台 |
-| [yudao-mall-uniapp](https://gitee.com/yudaocode/yudao-mall-uniapp)         | [![Gitee star](https://gitee.com/yudaocode/yudao-mall-uniapp/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-mall-uniapp) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-mall-uniapp.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-mall-uniapp)                 | 基于 uni-app 实现的商城小程序                    |
 | [yudao-ui-admin-vue2](https://gitee.com/yudaocode/yudao-ui-admin-vue2)     | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-vue2/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-vue2) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-vue2.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-vue2)         | 基于 Vue2 + element-ui 实现的管理后台           |
 | [yudao-ui-admin-uniapp](https://gitee.com/yudaocode/yudao-ui-admin-uniapp) | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-admin-uniapp/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-admin-uniapp) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-admin-uniapp.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-admin-uniapp) | 基于 Vue2 + element-ui 实现的管理后台           |
 | [yudao-ui-go-view](https://gitee.com/yudaocode/yudao-ui-go-view)           | [![Gitee star](https://gitee.com/yudaocode/yudao-ui-go-view/badge/star.svg?theme=white)](https://gitee.com/yudaocode/yudao-ui-go-view) [![GitHub stars](https://img.shields.io/github/stars/yudaocode/yudao-ui-go-view.svg?style=social&label=Stars)](https://github.com/yudaocode/yudao-ui-go-view)                     | 基于 Vue3 + naive-ui 实现的大屏报表             |
@@ -118,17 +120,17 @@
 
 团队包含专业的项目经理、架构师、前端工程师、后端工程师、测试工程师、运维工程师，可以提供全流程的外包服务。
 
-项目可以是商城、SCRM 系统、OA 系统、物流系统、ERP 系统、HRM 人力资源系统、FMS 财务系统、PMS 项目管理系统、CMS 系统、HIS 系统、支付系统、IM 即时通讯、微信公众号、微信小程序等等。
+项目可以是视频监控平台、IoT 物联网系统、MES 制造执行系统、WMS 仓库管理系统、PMS 项目管理系统、AI 智能体平台、数据大屏、支付系统、微信公众号等等。
 
 ## 🐼 内置功能
 
-系统内置多种多种业务功能，可以用于快速你的业务系统：
+系统内置多种业务功能，可以用于快速搭建你的业务系统：
 
 ![功能分层](/.image/common/ruoyi-vue-pro-biz.png)
 
 * 通用模块（必选）：系统功能、基础设施
-* 通用模块（可选）：工作流程、支付系统、数据报表、会员中心
-* 业务系统（按需）：Mall 电子商城、ERP 企业资源计划系统、WMS 仓库管理系统、CRM 客户关系管理、CMS 内容管理系统、MES 执行制造系统、HRM 人力资源管理、FMS 财务管理、PMS 项目管理、OA 办公自动化、AI 大模型平台、IoT 物联网系统、IM 即时通讯系统、Mobile 手机移动端、Report 数据大屏
+* 通用模块（可选）：支付系统、数据报表、微信公众号
+* 业务系统（按需）：视频监控系统 (Media / GB28181)、IoT 物联网系统、AI 大模型与智能体 (AI / Spring AI Agent)、MES 制造执行系统、WMS 仓库管理系统、PMS 项目管理系统、Mobile 手机移动端
 
 > 友情提示：本项目基于 RuoYi-Vue 修改，**重构优化**后端的代码，**美化**前端的界面。
 >
@@ -188,46 +190,78 @@
 
 ![功能图](/.image/common/infra-feature.png)
 
-### 工作流程
+### 视频监控系统
 
-![功能图](/.image/common/bpm-feature.png)
+深度融合 WVP-GB28181-Pro 视频监控能力与 ZLMediaKit 高性能流媒体服务器：
 
-基于 Flowable 构建，可支持信创（国产）数据库，满足中国特色流程操作：
+|     | 功能        | 描述                                                                                |
+|-----|-----------|-----------------------------------------------------------------------------------|
+| 🚀  | 国标设备接入 | 基于 JAIN-SIP 协议栈实现 GB28181-2016 标准设备注册、心跳保活、目录检索与通道同步                  |
+| 🚀  | 流媒体集群   | 深度集成 ZLMediaKit 高性能流媒体服务器，支持流媒体节点集群管理与 Webhook 事件回调处理            |
+| 🚀  | 实时视频点播 | 支持单路与多分屏实时视频播放，自适应 RTSP、RTMP、FLV、HLS、WebRTC 等多种流协议                   |
+| 🚀  | 云台 PTZ 控制| 支持云台方向控制（上/下/左/右）、变焦、聚焦、光圈以及预置位设置、调用与巡航                        |
+| 🚀  | 录像回放下载 | 支持国标设备端历史录像检索、点播回放与倍速播放，支持录像流下载保存                                |
+| 🚀  | 云端录像计划 | 支持服务端录像计划配置、云端全天/报警录像存储、切片与时间轴回放                                   |
+| 🚀  | 拉流代理推流 | 支持 RTSP/RTMP 等第三方流地址拉流代理转换，支持自定义推流管理与鉴权                               |
+| 🚀  | 国标平台级联 | 支持作为下级向上级国标平台注册推送设备与通道，实现多平台跨网级联共享                              |
+| 🚀  | 物联设备联动 | 接收 IoT 物联网联动事件（IotMediaLinkageEvent），快速响应预置位转向与应急录像                     |
 
-| BPMN 设计器                     | 钉钉/飞书设计器                       |
-|------------------------------|--------------------------------|
-| ![](/.image/工作流设计器-bpmn.jpg) | ![](/.image/工作流设计器-simple.jpg) |
+### IoT 物联网
 
-> 历经头部企业生产验证，工作流引擎须标配仿钉钉/飞书 + BPMN 双设计器！！！
->
-> 前者支持轻量配置简单流程，后者实现复杂场景深度编排
+演示地址：<https://doc.iocoder.cn/iot/build>
 
-| 功能列表       | 功能描述                                                                                | 是否完成 |
-|------------|-------------------------------------------------------------------------------------|------|
-| SIMPLE 设计器 | 仿钉钉/飞书设计器，支持拖拽搭建表单流程，10 分钟快速完成审批流程配置                                                | ✅    |
-| BPMN 设计器   | 基于 BPMN 标准开发，适配复杂业务场景，满足多层级审批及流程自动化需求                                               | ✅    |
-| 会签         | 同一个审批节点设置多个人（如 A、B、C 三人，三人会同时收到待办任务），需全部同意之后，审批才可到下一审批节点                            | ✅    |
-| 或签         | 同一个审批节点设置多个人，任意一个人处理后，就能进入下一个节点                                                     | ✅    |
-| 依次审批       | （顺序会签）同一个审批节点设置多个人（如 A、B、C 三人），三人按顺序依次收到待办，即 A 先审批，A 提交后 B 才能审批，需全部同意之后，审批才可到下一审批节点 | ✅    |
-| 抄送         | 将审批结果通知给抄送人，同一个审批默认排重，不重复抄送给同一人                                                     | ✅    |
-| 驳回         | （退回）将审批重置发送给某节点，重新审批。可驳回至发起人、上一节点、任意节点                                              | ✅    |
-| 转办         | A 转给其 B 审批，B 审批后，进入下一节点                                                             | ✅    |
-| 委派         | A 转给其 B 审批，B 审批后，转给 A，A 继续审批后进入下一节点                                                 | ✅    |
-| 加签         | 允许当前审批人根据需要，自行增加当前节点的审批人，支持向前、向后加签                                                  | ✅    |
-| 减签         | （取消加签）在当前审批人操作之前，减少审批人                                                              | ✅    |
-| 撤销         | （取消流程）流程发起人，可以对流程进行撤销处理                                                             | ✅    |
-| 终止         | 系统管理员，在任意节点终止流程实例                                                                   | ✅    |
-| 表单权限       | 支持拖拉拽配置表单，每个审批节点可配置只读、编辑、隐藏权限                                                       | ✅    |
-| 超时审批       | 配置超时审批时间，超时后自动触发审批通过、不通过、驳回等操作                                                      | ✅    |
-| 自动提醒       | 配置提醒时间，到达时间后自动触发短信、邮箱、站内信等通知提醒，支持自定义重复提醒频次                                          | ✅    |
-| 父子流程       | 主流程设置子流程节点，子流程节点会自动触发子流程。子流程结束后，主流程才会执行（继续往下下执行），支持同步子流程、异步子流程                      | ✅    |
-| 条件分支       | （排它分支）用于在流程中实现决策，即根据条件选择一个分支执行                                                      | ✅    |
-| 并行分支       | 允许将流程分成多条分支，不进行条件判断，所有分支都会执行                                                        | ✅    |
-| 包容分支       | （条件分支 + 并行分支的结合体）允许基于条件选择多条分支执行，但如果没有任何一个分支满足条件，则可以选择默认分支                           | ✅    |
-| 路由分支       | 根据条件选择一个分支执行（重定向到指定配置节点），也可以选择默认分支执行（继续往下执行）                                        | ✅    |
-| 触发节点       | 执行到该节点，触发 HTTP 请求、HTTP 回调、更新数据、删除数据等                                                | ✅    |
-| 延迟节点       | 执行到该节点，审批等待一段时间再执行，支持固定时长、固定日期等                                                     | ✅    |
-| 拓展设置       | 流程前置/后置通知，节点（任务）前置、后置通知，流程报表，自动审批去重，自定流程编号、标题、摘要，流程报表等                              | ✅    |
+![功能图](/.image/common/iot-feature.png)
+
+![预览图](/.image/common/iot-preview.png)
+
+|     | 功能        | 描述                                                                                |
+|-----|-----------|-----------------------------------------------------------------------------------|
+| 🚀  | 产品物模型   | 支持产品分类、物模型（属性、事件、服务）自定义与模板继承                                           |
+| 🚀  | 设备管理     | 设备注册认证、生命周期管理、设备分组、子设备关联与实时状态监控                                    |
+| 🚀  | 协议与编解码 | 支持 MQTT、Modbus 等多种协议接入，提供灵活的编解码脚本与点播调度                                  |
+| 🚀  | 场景规则引擎 | 可视化规则引擎，支持触发条件、执行动作配置及告警通知                                              |
+| 🚀  | 监控联动     | 物联网设备告警与状态变化联动视频监控，自动调用云台预置位、触发抓拍与视频录像                      |
+
+### AI 大模型与智能体
+
+演示地址：<https://doc.iocoder.cn/ai-preview/>
+
+![功能图](/.image/common/ai-feature.png)
+
+![功能图](/.image/common/ai-preview.gif)
+
+|     | 功能        | 描述                                                                                |
+|-----|-----------|-----------------------------------------------------------------------------------|
+| 🚀  | 大模型对话   | 对接 OpenAI、通义千问、文心一言、DeepSeek、MiMo 等主流大模型，支持多轮对话与流式输出              |
+| 🚀  | AI 绘画与多模态 | 支持 Midjourney、Stable Diffusion、DALL-E 等图像生成，支持图像理解与多模态视觉传参              |
+| 🚀  | 音乐与思维导图 | 支持 Suno 音乐创作，支持一键生成思维导图并导出                                                    |
+| 🚀  | Agent 智能体编排 | 基于 Spring AI 构建，组合模型、系统指令、技能与知识库，打造多场景专属 Agent                       |
+| 🚀  | 工具与 MCP/SKILL | 支持 MCP 协议、SKILL 工具调用，让大模型具备主动获取信息和执行任务的能力                           |
+| 🚀  | RAG 知识库检索 | 集成 Milvus 向量数据库，支持私有文档切片、向量化存储及对话精准增强检索                            |
+
+### WMS 仓库管理系统
+
+演示地址：<https://doc.iocoder.cn/wms-preview/>
+
+![功能图](/.image/common/wms-feature.png)
+
+![功能图](/.image/common/wms-preview.png)
+
+### MES 制造执行系统
+
+演示地址：<https://doc.iocoder.cn/mes-preview/>
+
+![功能图](/.image/common/mes-feature.png)
+
+![功能图](/.image/common/mes-preview.png)
+
+### PMS 项目管理系统
+
+演示地址：<https://doc.iocoder.cn/pms-preview/>
+
+![功能图](/.image/common/pms-feature.png)
+
+![预览图](/.image/common/pms-preview.png)
 
 ### 支付系统
 
@@ -262,147 +296,33 @@
 | 🚀 | 图文草稿箱  | 新增常用的图文素材到草稿箱，可发布到公众号         |
 | 🚀 | 图文发表记录 | 查看已发布成功的图文素材，支持删除操作           |
 
-### 商城系统
-
-演示地址：<https://doc.iocoder.cn/mall-preview/>
-
-![功能图](/.image/common/mall-feature.png)
-
-![功能图](/.image/common/mall-preview.png)
-
-### 会员中心
-
-|     | 功能   | 描述                               |
-|-----|------|----------------------------------|
-| 🚀  | 会员管理 | 会员是 C 端的消费者，该功能用于会员的搜索与管理        |
-| 🚀  | 会员标签 | 对会员的标签进行创建、查询、修改、删除等操作           |
-| 🚀  | 会员等级 | 对会员的等级、成长值进行管理，可用于订单折扣等会员权益      |
-| 🚀  | 会员分组 | 对会员进行分组，用于用户画像、内容推送等运营手段         |
-| 🚀  | 积分签到 | 回馈给签到、消费等行为的积分，会员可订单抵现、积分兑换等途径消耗 |
-
-### ERP 系统
-
-演示地址：<https://doc.iocoder.cn/erp-preview/>
-
-![功能图](/.image/common/erp-feature.png)
-
-### WMS 系统
-
-演示地址：<https://doc.iocoder.cn/wms-preview/>
-
-![功能图](/.image/common/wms-feature.png)
-
-![功能图](/.image/common/wms-preview.png)
-
-### CRM 系统
-
-演示地址：<https://doc.iocoder.cn/crm-preview/>
-
-![功能图](/.image/common/crm-feature.png)
-
-### MES 系统
-
-演示地址：<https://doc.iocoder.cn/mes-preview/>
-
-![功能图](/.image/common/mes-feature.png)
-
-![功能图](/.image/common/mes-preview.png)
-
-### HRM 人力资源管理系统
-
-演示地址：<https://doc.iocoder.cn/hrm-preview/>
-
-![功能图](/.image/common/hrm-feature.png)
-
-![预览图](/.image/common/hrm-preview.png)
-
-### FMS 财务管理系统
-
-演示地址：<https://doc.iocoder.cn/fms-preview/>
-
-![功能图](/.image/common/fms-feature.png)
-
-![预览图](/.image/common/fms-preview.png)
-
-### PMS 项目管理系统
-
-演示地址：<https://doc.iocoder.cn/pms-preview/>
-
-![功能图](/.image/common/pms-feature.png)
-
-![预览图](/.image/common/pms-preview.png)
-
-### OA 协同办公
-
-演示地址：<https://doc.iocoder.cn/oa-preview/>
-
-![功能图](/.image/common/oa-feature.png)
-
-![预览图](/.image/common/oa-preview.png)
-
-### AI 大模型
-
-演示地址：<https://doc.iocoder.cn/ai-preview/>
-
-![功能图](/.image/common/ai-feature.png)
-
-![功能图](/.image/common/ai-preview.gif)
-
-### IoT 物联网
-
-演示地址：<https://doc.iocoder.cn/iot/build>
-
-![功能图](/.image/common/iot-feature.png)
-
-![预览图](/.image/common/iot-preview.png)
-
-### IM 即时通讯
-
-演示地址（Boot）：<https://doc.iocoder.cn/im-preview/>
-
-演示地址（Vue3 + Element Plus）：<http://dashboard-vue3.yudao.iocoder.cn>
-
-
-![功能图](/.image/common/im-feature.png)
-
-| 聊天界面 | 聊天管理 |
-| --- | --- |
-| ![聊天界面](/.image/common/im-preview-home.png) | ![聊天管理](/.image/common/im-preview-manager.png) |
-
 ## 🐨 技术栈
 
 ### 模块
 
-| 项目                    | 说明                 |
-|-----------------------|--------------------|
-| `yudao-dependencies`  | Maven 依赖版本管理       |
-| `yudao-framework`     | Java 框架拓展          |
-| `yudao-server`        | 管理后台 + 用户 APP 的服务端 |
-| `yudao-module-system` | 系统功能的 Module 模块    |
-| `yudao-module-infra`  | 基础设施的 Module 模块    |
-| `yudao-module-bpm`    | 工作流程的 Module 模块    |
-| `yudao-module-pay`    | 支付系统的 Module 模块    |
-| `yudao-module-report` | 大屏报表 Module 模块     |
-| `yudao-module-mp`     | 微信公众号的 Module 模块   |
-| `yudao-module-mall`   | 商城系统的 Module 模块    |
-| `yudao-module-member` | 会员中心的 Module 模块    |
-| `yudao-module-erp`    | ERP 系统的 Module 模块  |
-| `yudao-module-wms`    | WMS 系统的 Module 模块  |
-| `yudao-module-crm`    | CRM 系统的 Module 模块  |
-| `yudao-module-mes`    | MES 系统的 Module 模块  |
-| `yudao-module-hrm`    | HRM 人力资源管理的 Module 模块 |
-| `yudao-module-fms`    | FMS 财务管理的 Module 模块 |
-| `yudao-module-pms`    | PMS 项目管理的 Module 模块 |
-| `yudao-module-oa`     | OA 协同办公的 Module 模块 |
-| `yudao-module-ai`     | AI 大模型的 Module 模块  |
-| `yudao-module-iot`    | IoT 物联网的 Module 模块 |
-| `yudao-module-im`     | IM 即时通讯的 Module 模块 |
+| 项目                    | 说明                                                     |
+|-----------------------|--------------------------------------------------------|
+| `yudao-dependencies`  | Maven 依赖版本管理                                       |
+| `yudao-framework`     | Java 核心框架拓展（Web、Security、MyBatis、Redis、WebSocket 等） |
+| `yudao-server`        | 管理后台服务端（Spring Boot 核心启动入口）                  |
+| `yudao-module-system` | 系统管理 Module 模块（用户、角色、租户、权限、短信、日志等）      |
+| `yudao-module-infra`  | 基础设施 Module 模块（代码生成、接口文档、定时任务、文件存储等）  |
+| `yudao-module-media`  | 视频监控流媒体 Module 模块（WVP-GB28181 + ZLMediaKit）    |
+| `yudao-module-iot`    | IoT 物联网 Module 模块（设备接入、物模型、规则引擎、监控联动）    |
+| `yudao-module-ai`     | AI 大模型 Module 模块（对话、绘画、音乐、思维导图、多模态）      |
+| `yudao-module-ai1-springai` | AI Agent 智能体编排 Module 模块（Spring AI、MCP、SKILL、RAG） |
+| `yudao-module-pay`    | 支付系统 Module 模块（微信、支付宝支付与退款）               |
+| `yudao-module-report` | 数据报表与大屏 Module 模块（积木报表、UReport2、GoView）    |
+| `yudao-module-mp`     | 微信公众号 Module 模块                                   |
+| `yudao-module-mes`    | MES 执行制造系统 Module 模块                             |
+| `yudao-module-wms`    | WMS 仓库管理 Module 模块                                 |
+| `yudao-module-pms`    | PMS 项目管理 Module 模块                                 |
 
 ### 框架
 
 | 框架                                                                                          | 说明               | 版本             | 学习指南                                                           |
 |---------------------------------------------------------------------------------------------|------------------|----------------|----------------------------------------------------------------|
-| [Spring Boot](https://spring.io/projects/spring-boot)                                       | 应用开发框架           | 4.1.0          | [文档](https://github.com/YunaiV/SpringBoot-Labs)                |
+| [Spring Boot](https://spring.io/projects/spring-boot)                                       | 应用开发框架           | 4.1.2          | [文档](https://github.com/YunaiV/SpringBoot-Labs)                |
 | [MySQL](https://www.mysql.com/cn/)                                                          | 数据库服务器           | 5.7 / 8.0+     |                                                                |
 | [Druid](https://github.com/alibaba/druid)                                                   | JDBC 连接池、监控组件    | 1.2.28         | [文档](http://www.iocoder.cn/Spring-Boot/datasource-pool/?yudao) |
 | [MyBatis Plus](https://mp.baomidou.com/)                                                    | MyBatis 增强工具包    | 3.5.16         | [文档](http://www.iocoder.cn/Spring-Boot/MyBatis/?yudao)         |
@@ -412,14 +332,16 @@
 | [Spring MVC](https://github.com/spring-projects/spring-framework/tree/master/spring-webmvc) | MVC 框架           | 7.0.8          | [文档](http://www.iocoder.cn/SpringMVC/MVC/?yudao)               |
 | [Spring Security](https://github.com/spring-projects/spring-security)                       | Spring 安全框架      | 7.1.0          | [文档](http://www.iocoder.cn/Spring-Boot/Spring-Security/?yudao) |
 | [Hibernate Validator](https://github.com/hibernate/hibernate-validator)                     | 参数校验组件           | 9.1.0          | [文档](http://www.iocoder.cn/Spring-Boot/Validation/?yudao)      |
-| [Flowable](https://github.com/flowable/flowable-engine)                                     | 工作流引擎            | 8.0.0          | [文档](https://doc.iocoder.cn/bpm/)                              |
 | [Quartz](https://github.com/quartz-scheduler)                                               | 任务调度组件           | 2.5.2          | [文档](http://www.iocoder.cn/Spring-Boot/Job/?yudao)             |
 | [Springdoc](https://springdoc.org/)                                                         | Swagger 文档       | 3.0.3          | [文档](http://www.iocoder.cn/Spring-Boot/Swagger/?yudao)         |
 | [SkyWalking](https://skywalking.apache.org/)                                                | 分布式应用追踪系统        | 9.6.0          | [文档](http://www.iocoder.cn/Spring-Boot/SkyWalking/?yudao)      |
 | [Spring Boot Admin](https://github.com/codecentric/spring-boot-admin)                       | Spring Boot 监控平台 | 4.0.4          | [文档](http://www.iocoder.cn/Spring-Boot/Admin/?yudao)           |
+| [ZLMediaKit](https://github.com/ZLMediaKit/ZLMediaKit)                                     | 高性能流媒体服务器        | -              | [文档](https://docs.zlmediakit.com/)                           |
+| [JAIN-SIP](https://github.com/usnistgov/jsip)                                               | SIP 国标协议栈        | 1.2.327        | -                                                              |
+| [Spring AI](https://spring.io/projects/spring-ai)                                           | AI Agent 智能体框架   | 1.1.0-M5       | [文档](https://docs.spring.io/spring-ai/reference/)              |
 | [Jackson](https://github.com/FasterXML/jackson)                                             | JSON 工具库         | 3.1.4          |                                                                |
-| [MapStruct](https://mapstruct.org/)                                                         | Java Bean 转换     | 1.6.3          | [文档](http://www.iocoder.cn/Spring-Boot/MapStruct/?yudao)       |
-| [Lombok](https://projectlombok.org/)                                                        | 消除冗长的 Java 代码    | 1.18.46        | [文档](http://www.iocoder.cn/Spring-Boot/Lombok/?yudao)          |
+| [MapStruct](https://mapstruct.org/)                                                         | Java Bean 转换     | 1.7.0.Beta2    | [文档](http://www.iocoder.cn/Spring-Boot/MapStruct/?yudao)       |
+| [Lombok](https://projectlombok.org/)                                                        | 消除冗长的 Java 代码    | 1.18.48        | [文档](http://www.iocoder.cn/Spring-Boot/Lombok/?yudao)          |
 | [JUnit](https://junit.org/junit5/)                                                          | Java 单元测试框架      | 6.0.3          | -                                                              |
 | [Mockito](https://github.com/mockito/mockito)                                               | Java Mock 框架     | 5.23.0         | -                                                              |
 
@@ -439,16 +361,6 @@
 | 字典 & 敏感词 | ![字典类型](/.image/字典类型.jpg)   | ![字典数据](/.image/字典数据.jpg) | ![敏感词](/.image/敏感词.jpg)   |
 | 错误码 & 通知 | ![错误码管理](/.image/错误码管理.jpg) | ![通知公告](/.image/通知公告.jpg) | -                         |
 
-### 工作流程
-
-| 模块      | biu                             | biu                             | biu                             |
-|---------|---------------------------------|---------------------------------|---------------------------------|
-| 流程模型    | ![流程模型-列表](/.image/流程模型-列表.jpg) | ![流程模型-设计](/.image/流程模型-设计.jpg) | ![流程模型-定义](/.image/流程模型-定义.jpg) |
-| 表单 & 分组 | ![流程表单](/.image/流程表单.jpg)       | ![用户分组](/.image/用户分组.jpg)       | -                               |
-| 我的流程    | ![我的流程-列表](/.image/我的流程-列表.jpg) | ![我的流程-发起](/.image/我的流程-发起.jpg) | ![我的流程-详情](/.image/我的流程-详情.jpg) |
-| 待办 & 已办 | ![任务列表-审批](/.image/任务列表-审批.jpg) | ![任务列表-待办](/.image/任务列表-待办.jpg) | ![任务列表-已办](/.image/任务列表-已办.jpg) |
-| OA 请假   | ![OA请假-列表](/.image/OA请假-列表.jpg) | ![OA请假-发起](/.image/OA请假-发起.jpg) | ![OA请假-详情](/.image/OA请假-详情.jpg) |
-
 ### 基础设施
 
 | 模块            | biu                           | biu                         | biu                       |
@@ -467,6 +379,7 @@
 |---------|---------------------------|---------------------------------|---------------------------------|
 | 商家 & 应用 | ![商户信息](/.image/商户信息.jpg) | ![应用信息-列表](/.image/应用信息-列表.jpg) | ![应用信息-编辑](/.image/应用信息-编辑.jpg) |
 | 支付 & 退款 | ![支付订单](/.image/支付订单.jpg) | ![退款订单](/.image/退款订单.jpg)       | ---                             |
+
 ### 数据报表
 
 | 模块    | biu                             | biu                             | biu                                   |
