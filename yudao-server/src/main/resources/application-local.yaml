@@ -197,7 +197,6 @@ logging:
     name: ${user.home}/logs/${spring.application.name}.log # 日志文件名，全路径
   level:
     # 配置自己写的 MyBatis Mapper 打印日志
-    cn.iocoder.yudao.module.bpm.dal.mysql: debug
     cn.iocoder.yudao.module.infra.dal.mysql: debug
     cn.iocoder.yudao.module.infra.dal.mysql.logger.ApiErrorLogMapper: INFO # 配置 ApiErrorLogMapper 的日志级别为 info，避免和 GlobalExceptionHandler 重复打印
     cn.iocoder.yudao.module.infra.dal.mysql.job.JobLogMapper: INFO # 配置 JobLogMapper 的日志级别为 info
@@ -207,19 +206,15 @@ logging:
     cn.iocoder.yudao.module.system.dal.mysql: debug
     cn.iocoder.yudao.module.system.dal.mysql.sms.SmsChannelMapper: INFO # 配置 SmsChannelMapper 的日志级别为 info
     cn.iocoder.yudao.module.tool.dal.mysql: debug
-    cn.iocoder.yudao.module.member.dal.mysql: debug
-    cn.iocoder.yudao.module.trade.dal.mysql: debug
-    cn.iocoder.yudao.module.promotion.dal.mysql: debug
-    cn.iocoder.yudao.module.statistics.dal.mysql: debug
-    cn.iocoder.yudao.module.crm.dal.mysql: debug
-    cn.iocoder.yudao.module.erp.dal.mysql: debug
     cn.iocoder.yudao.module.mes.dal.mysql: debug
     cn.iocoder.yudao.module.wms.dal.mysql: debug
+    cn.iocoder.yudao.module.pms.dal.mysql: debug
+    cn.iocoder.yudao.module.report.dal.mysql: debug
     cn.iocoder.yudao.module.iot.dal.mysql: debug
     cn.iocoder.yudao.module.iot.dal.tdengine: DEBUG
     cn.iocoder.yudao.module.iot.service.rule: debug
     cn.iocoder.yudao.module.ai.dal.mysql: debug
-    cn.iocoder.yudao.module.im.dal.mysql: debug
+    cn.iocoder.yudao.module.ai1.dal.mysql: debug
     org.springframework.context.support.PostProcessorRegistrationDelegate: ERROR # TODO 芋艿：先禁用，Spring Boot 3.X 存在部分错误的 WARN 提示
 
 debug: false

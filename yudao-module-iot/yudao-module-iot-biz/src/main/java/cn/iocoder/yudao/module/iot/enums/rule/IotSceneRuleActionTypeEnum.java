@@ -38,6 +38,11 @@ public enum IotSceneRuleActionTypeEnum implements ArrayValuable<Integer> {
      */
     ALERT_RECOVER(101),
 
+    /**
+     * 视频监控联动（如球机转预置位、录像触发等）
+     */
+    MEDIA_LINKAGE(200),
+
     ;
 
     private final Integer type;
