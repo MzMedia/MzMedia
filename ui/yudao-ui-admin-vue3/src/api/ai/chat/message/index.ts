@@ -1,0 +1,111 @@
+import request from '@/config/axios'
+import { fetchEventSource } from '@microsoft/fetch-event-source'
+import { getAccessToken } from '@/utils/auth'
+import { config } from '@/config/axios/config'
+
+// DONE @AI：这个是否必要？感觉可以去掉？（已删除思考档位专用的 onopen 校验：后端档位错误改走 SSE 错误帧，由页面已有的 code !== 0 分支展示）
+
+// 聊天VO
+export interface ChatMessageVO {
+  id: number // 编号
+  conversationId: number // 对话编号
+  type: string // 消息类型
+  userId: string // 用户编号
+  roleId: string // 角色编号
+  model: number // 模型标志
+  modelId: number // 模型编号
+  content: string // 聊天内容
+  reasoningContent?: string // 推理内容
+  attachmentUrls?: string[] // 附件 URL 数组
+  tokens: number // 消耗 Token 数量
+  inputTokens?: number | null // 输入 Token，未知为 null
+  outputTokens?: number | null // 输出 Token，未知为 null
+  totalTokens?: number | null // 合计 Token，未知为 null
+  segmentIds?: number[] // 段落编号
+  segments?: {
+    id: number // 段落编号
+    content: string // 段落内容
+    documentId: number // 文档编号
+    documentName: string // 文档名称
+  }[]
+  webSearchPages?: {
+    name: string // 名称
+    icon: string // 图标
+    title: string // 标题
+    url: string // URL
+    snippet: string // 内容的简短描述
+    summary: string // 内容的文本摘要
+  }[]
+  createTime: Date // 创建时间
+  roleAvatar: string // 角色头像
+  userAvatar: string // 用户头像
+}
+
+// AI chat 聊天
+export const ChatMessageApi = {
+  // 消息列表
+  getChatMessageListByConversationId: async (conversationId: number | null) => {
+    return await request.get({
+      url: `/ai/chat/message/list-by-conversation-id?conversationId=${conversationId}`
+    })
+  },
+
+  // 发送 Stream 消息
+  // 为什么不用 axios 呢？因为它不支持 SSE 调用
+  sendChatMessageStream: async (
+    conversationId: number,
+    content: string,
+    ctrl,
+    enableContext: boolean,
+    enableWebSearch: boolean,
+    onMessage,
+    onError,
+    onClose,
+    attachmentUrls?: string[],
+    reasoningLevel?: string
+  ) => {
+    const token = getAccessToken()
+    return fetchEventSource(`${config.base_url}/ai/chat/message/send-stream`, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      openWhenHidden: true,
+      body: JSON.stringify({
+        conversationId,
+        content,
+        useContext: enableContext,
+        useSearch: enableWebSearch,
+        attachmentUrls: attachmentUrls || [],
+        reasoningLevel
+      }),
+      onmessage: onMessage,
+      onerror: onError,
+      onclose: onClose,
+      signal: ctrl.signal
+    })
+  },
+
+  // 删除消息
+  deleteChatMessage: async (id: string) => {
+    return await request.delete({ url: `/ai/chat/message/delete?id=${id}` })
+  },
+
+  // 删除指定对话的消息
+  deleteByConversationId: async (conversationId: number) => {
+    return await request.delete({
+      url: `/ai/chat/message/delete-by-conversation-id?conversationId=${conversationId}`
+    })
+  },
+
+  // 获得消息分页
+  getChatMessagePage: async (params: any) => {
+    return await request.get({ url: '/ai/chat/message/page', params })
+  },
+
+  // 管理员删除消息
+  deleteChatMessageByAdmin: async (id: number) => {
+    return await request.delete({ url: `/ai/chat/message/delete-by-admin?id=${id}` })
+  }
+}

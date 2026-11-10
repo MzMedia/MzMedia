@@ -1,0 +1,27 @@
+import request from '@/config/axios'
+
+/** FMS 财务参数信息 */
+export interface FmsFinanceParameterVO {
+  accountSetId: number // 账套编号
+  standard?: number // 会计制度
+  level: number // 科目层级
+  subjectCodeRule: string // 科目编码规则
+  ledgerBalanceMode: number // 账簿余额方向模式
+  voucherReviewRequired: boolean // 结账前是否要求凭证审核
+}
+
+// FMS 财务参数 API
+export const FmsFinanceParameterApi = {
+  // 查询财务参数
+  getFinanceParameter: async (accountSetId: number) => {
+    return await request.get<FmsFinanceParameterVO | null>({
+      url: '/fms/config/finance-parameter/get',
+      params: { accountSetId }
+    })
+  },
+
+  // 修改财务参数
+  updateFinanceParameter: async (data: FmsFinanceParameterVO) => {
+    return await request.put({ url: '/fms/config/finance-parameter/update', data })
+  }
+}

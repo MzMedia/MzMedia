@@ -1,0 +1,7 @@
+/dist/*
+/public/*
+public/*
+/dist*
+/src/types/env.d.ts
+/src/components/Tinyflow/ui/**
+/docs/**/*

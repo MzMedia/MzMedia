@@ -1,0 +1,230 @@
+import { compareId } from '@/utils/id'
+// IM 本地数据库：App SQLite 适配层
+// 使用 HTML5+ plus.sqlite，统一表保存各业务 store 的 JSON 记录
+// noinspection SqlNoDataSourceInspection
+
+import type { ImDbClient, MessageDOPageResult } from './client'
+import type { DbStoreName, MessageDO, SettingDO } from './types'
+import { STORE_SCHEMA } from './types'
+
+declare const plus: any
+
+interface SqliteRow {
+  value: string
+}
+
+export class SqliteDbClient implements ImDbClient {
+  userId = 0
+  private opened = false
+  private settingMaxQueue: Promise<void> = Promise.resolve()
+
+  async open(userId: number): Promise<void> {
+    if (this.opened && this.userId === userId) {
+      return
+    }
+    await this.close()
+    this.userId = userId
+    const name = this.getName()
+    const path = this.getPath()
+    if (!plus.sqlite.isOpenDatabase({ name, path })) {
+      await new Promise<void>((resolve, reject) => {
+        plus.sqlite.openDatabase({
+          name,
+          path,
+          success: resolve,
+          fail: reject,
+        })
+      })
+    }
+    this.opened = true
+    try {
+      await this.execute(`
+        CREATE TABLE IF NOT EXISTS im_records (
+          store_name TEXT NOT NULL,
+          record_key TEXT NOT NULL,
+          conversation_id TEXT,
+          send_time INTEGER NOT NULL DEFAULT 0,
+          value TEXT NOT NULL,
+          PRIMARY KEY (store_name, record_key)
+        )
+      `)
+      await this.execute('CREATE INDEX IF NOT EXISTS idx_im_message_conversation_time ON im_records(store_name, conversation_id, send_time)')
+    } catch (error) {
+      await this.close()
+      throw error
+    }
+  }
+
+  async close(): Promise<void> {
+    const name = this.getName()
+    const path = this.getPath()
+    try {
+      if (this.opened && plus.sqlite.isOpenDatabase({ name, path })) {
+        await new Promise<void>((resolve, reject) => {
+          plus.sqlite.closeDatabase({ name, success: resolve, fail: reject })
+        })
+      }
+    } finally {
+      this.opened = false
+      this.userId = 0
+    }
+  }
+
+  /** 获取当前用户数据库名称 */
+  private getName(): string {
+    return `im_user_${this.userId}`
+  }
+
+  /** 获取当前用户数据库路径 */
+  private getPath(): string {
+    return `_doc/${this.getName()}.db`
+  }
+
+  /** SQL 字符串安全转义 */
+  private sqlValue(value: unknown): string {
+    return `'${String(value ?? '').replace(/'/g, '\'\'')}'`
+  }
+
+  /** 执行 SQL */
+  private execute(sql: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      plus.sqlite.executeSql({ name: this.getName(), sql, success: () => resolve(), fail: reject })
+    })
+  }
+
+  /** 查询 SQL */
+  private select<T>(sql: string): Promise<T[]> {
+    return new Promise((resolve, reject) => {
+      plus.sqlite.selectSql({ name: this.getName(), sql, success: resolve, fail: reject })
+    })
+  }
+
+  /** 事务操作 */
+  private transaction(operation: 'begin' | 'commit' | 'rollback'): Promise<void> {
+    return new Promise((resolve, reject) => {
+      plus.sqlite.transaction({ name: this.getName(), operation, success: resolve, fail: reject })
+    })
+  }
+
+  /** 构造 upsert SQL */
+  private putSql<T>(store: DbStoreName, value: T): string {
+    const record = value as Record<string, any>
+    const key = record[STORE_SCHEMA[store].keyPath]
+    const conversationId = store === 'messages' ? record.clientConversationId : ''
+    const sendTime = store === 'messages' ? Number(record.sendTime || 0) : 0
+    return `INSERT OR REPLACE INTO im_records(store_name, record_key, conversation_id, send_time, value) VALUES (`
+      + `${this.sqlValue(store)}, ${this.sqlValue(key)}, ${this.sqlValue(conversationId)}, ${sendTime}, ${this.sqlValue(JSON.stringify(value))})`
+  }
+
+  async get<T>(store: DbStoreName, key: string | number): Promise<T | undefined> {
+    const rows = await this.select<SqliteRow>(
+      `SELECT value FROM im_records WHERE store_name = ${this.sqlValue(store)} AND record_key = ${this.sqlValue(key)} LIMIT 1`,
+    )
+    return rows[0] ? JSON.parse(rows[0].value) as T : undefined
+  }
+
+  async getAll<T>(store: DbStoreName): Promise<T[]> {
+    const rows = await this.select<SqliteRow>(
+      `SELECT value FROM im_records WHERE store_name = ${this.sqlValue(store)}`,
+    )
+    return rows.map(row => JSON.parse(row.value) as T)
+  }
+
+  async put<T>(store: DbStoreName, value: T): Promise<void> {
+    await this.execute(this.putSql(store, value))
+  }
+
+  async bulkPut<T>(store: DbStoreName, values: T[]): Promise<void> {
+    if (!values.length) {
+      return
+    }
+    await this.transaction('begin')
+    try {
+      for (const value of values) {
+        await this.execute(this.putSql(store, value))
+      }
+      await this.transaction('commit')
+    } catch (error) {
+      await this.transaction('rollback').catch(() => undefined)
+      throw error
+    }
+  }
+
+  async delete(store: DbStoreName, key: string | number): Promise<void> {
+    await this.execute(
+      `DELETE FROM im_records WHERE store_name = ${this.sqlValue(store)} AND record_key = ${this.sqlValue(key)}`,
+    )
+  }
+
+  async clearStore(store: DbStoreName): Promise<void> {
+    await this.execute(`DELETE FROM im_records WHERE store_name = ${this.sqlValue(store)}`)
+  }
+
+  async filter<T>(store: DbStoreName, predicate: (record: T) => boolean): Promise<T[]> {
+    return (await this.getAll<T>(store)).filter(predicate)
+  }
+
+  async removeWhere<T>(store: DbStoreName, predicate: (record: T) => boolean): Promise<void> {
+    const keyPath = STORE_SCHEMA[store].keyPath
+    const matched = await this.filter<T>(store, predicate)
+    if (!matched.length) {
+      return
+    }
+    await this.transaction('begin')
+    try {
+      for (const record of matched) {
+        await this.execute(
+          `DELETE FROM im_records WHERE store_name = ${this.sqlValue(store)} AND record_key = ${this.sqlValue((record as Record<string, any>)[keyPath])}`,
+        )
+      }
+      await this.transaction('commit')
+    } catch (error) {
+      await this.transaction('rollback').catch(() => undefined)
+      throw error
+    }
+  }
+
+  async getMessageListByConversation(
+    clientConversationId: string,
+    options?: Parameters<ImDbClient['getMessageListByConversation']>[1],
+  ): Promise<MessageDOPageResult> {
+    const before = options?.before
+    const limit = Math.max(1, Number(options?.limit ?? 50))
+    const cursorSql = before
+      ? ` AND (send_time < ${Number(before.sendTime)} OR (send_time = ${Number(before.sendTime)} AND record_key < ${this.sqlValue(before.messageKey)}))`
+      : ''
+    const rows = await this.select<SqliteRow>(
+      `SELECT value FROM im_records WHERE store_name = 'messages'`
+      + ` AND conversation_id = ${this.sqlValue(clientConversationId)}${cursorSql}`
+      + ` ORDER BY send_time DESC, record_key DESC LIMIT ${limit + 1}`,
+    )
+    return {
+      list: rows.slice(0, limit).map(row => JSON.parse(row.value) as MessageDO).reverse(),
+      hasMore: rows.length > limit,
+    }
+  }
+
+  async getSetting<T>(key: string): Promise<T | undefined> {
+    return (await this.get<SettingDO<T>>('settings', key))?.value
+  }
+
+  async setSetting<T>(key: string, value: T): Promise<void> {
+    await this.put<SettingDO<T>>('settings', { key, value, updateTime: Date.now() })
+  }
+
+  setSettingMax(key: string, value: number): Promise<void> {
+    const expectedUserId = this.userId
+    const operation = this.settingMaxQueue.catch(() => undefined).then(async () => {
+      if (!this.opened || this.userId !== expectedUserId) {
+        return
+      }
+      const current = await this.getSetting<number>(key)
+      if (!this.opened || this.userId !== expectedUserId || compareId(value, current) <= 0) {
+        return
+      }
+      await this.setSetting(key, value)
+    })
+    this.settingMaxQueue = operation.catch(() => undefined)
+    return operation
+  }
+}

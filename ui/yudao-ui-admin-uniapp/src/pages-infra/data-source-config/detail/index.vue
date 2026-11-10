@@ -1,0 +1,141 @@
+<template>
+  <view class="yd-page-container">
+    <!-- 顶部导航栏 -->
+    <wd-navbar
+      title="数据源配置详情"
+      left-arrow placeholder safe-area-inset-top fixed
+      @click-left="handleBack"
+    />
+
+    <!-- 详情内容 -->
+    <view>
+      <wd-cell-group border>
+        <wd-cell title="主键编号" :value="formData?.id" />
+        <wd-cell title="数据源名称" :value="formData?.name" />
+        <wd-cell title="数据源连接" is-link @click="handleCopyText(formData?.url, '数据源连接')">
+          <view class="max-w-400rpx truncate text-right">
+            {{ formData?.url }}
+          </view>
+        </wd-cell>
+        <wd-cell title="用户名" :value="formData?.username" />
+        <wd-cell title="创建时间" :value="formatDateTime(formData?.createTime)" />
+      </wd-cell-group>
+    </view>
+
+    <!-- 底部操作按钮（主数据源不可编辑/删除） -->
+    <view v-if="formData && formData.id !== 0" class="yd-detail-footer">
+      <view class="yd-detail-footer-actions">
+        <wd-button
+          v-if="hasAccessByCodes(['infra:data-source-config:update'])"
+          class="flex-1" type="warning" @click="handleEdit"
+        >
+          编辑
+        </wd-button>
+        <wd-button
+          v-if="hasAccessByCodes(['infra:data-source-config:delete'])"
+          class="flex-1" type="danger" :loading="deleting" @click="handleDelete"
+        >
+          删除
+        </wd-button>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script lang="ts" setup>
+import type { DataSourceConfig } from '@/api/infra/data-source-config'
+import { useDialog } from '@wot-ui/ui/components/wd-dialog'
+import { useToast } from '@wot-ui/ui/components/wd-toast'
+import { onShow } from '@dcloudio/uni-app'
+import { ref } from 'vue'
+import { deleteDataSourceConfig, getDataSourceConfig } from '@/api/infra/data-source-config'
+import { useAccess } from '@/hooks/useAccess'
+import { delay, navigateBackPlus } from '@/utils'
+import { formatDateTime } from '@/utils/date'
+
+const props = defineProps<{
+  id?: number | any
+}>()
+
+definePage({
+  style: {
+    navigationBarTitleText: '',
+    navigationStyle: 'custom',
+  },
+})
+
+const { hasAccessByCodes } = useAccess()
+const toast = useToast()
+const dialog = useDialog()
+const formData = ref<DataSourceConfig>() // 详情数据
+const deleting = ref(false) // 删除状态
+
+/** 返回上一页 */
+function handleBack() {
+  navigateBackPlus('/pages-infra/data-source-config/index')
+}
+
+/** 复制文本并提示 */
+function handleCopyText(text?: string, title?: string) {
+  if (!text || text === '-') {
+    return
+  }
+  uni.setClipboardData({
+    data: text,
+    success: () => {
+      uni.hideToast()
+      toast.success(`${title || '内容'}已复制`)
+    },
+  })
+}
+
+/** 加载数据源配置详情 */
+async function getDetail() {
+  if (!props.id) {
+    return
+  }
+  try {
+    toast.loading('加载中...')
+    formData.value = await getDataSourceConfig(props.id)
+  } finally {
+    toast.close()
+  }
+}
+
+/** 编辑数据源配置 */
+function handleEdit() {
+  uni.navigateTo({
+    url: `/pages-infra/data-source-config/form/index?id=${props.id}`,
+  })
+}
+
+/** 删除数据源配置 */
+async function handleDelete() {
+  if (!props.id) {
+    return
+  }
+  try {
+    await dialog.confirm({
+      title: '提示',
+      msg: '确定要删除该数据源配置吗？',
+    })
+  } catch {
+    return
+  }
+  // 执行删除
+  deleting.value = true
+  try {
+    await deleteDataSourceConfig(props.id)
+    toast.success('删除成功')
+    uni.$emit('infra:data-source-config:reload')
+    delay(handleBack)
+  } finally {
+    deleting.value = false
+  }
+}
+
+/** 初始化 */
+onShow(() => {
+  getDetail()
+})
+</script>
