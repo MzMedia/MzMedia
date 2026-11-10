@@ -15,7 +15,7 @@
 
 **MzMedia** 是一款专为**中小企业量身打造的企业级 AI 驱动物联网与视频融合平台**。平台基于成熟的 `ruoyi-vue-pro` 企业级底座深度重构与孵化，深度融合 **物联网（IoT）**、**安防音视频（GB28181 / WebRTC）** 与 **生成式 AI（Spring AI / MCP）** 技术。
 
-针对中小企业在数字化升级中普遍面临的**“协议碎片化、系统各自为政、数据烟囱林立、商业套件成本高昂”**等核心痛点，MzMedia 提供了从**设备立项、物模型配置、低成本协议接入、多设备联动、实时监控大屏、到智能运维工单闭环**的全生命周期管理能力，实现**设备接入低成本、跨协议集成智能化、业务系统无缝打通**的新一代 AIoT 解决方案。
+针对中小企业在数字化升级中普遍面临的 **“协议碎片化、系统各自为政、数据烟囱林立、商业套件成本高昂”**等核心痛点，MzMedia 提供了从**设备立项、物模型配置、低成本协议接入、多设备联动、实时监控大屏、到智能运维工单闭环**的全生命周期管理能力，实现**设备接入低成本、跨协议集成智能化、业务系统无缝打通**的新一代 AIoT 解决方案。
 
 > 🌐 **代码仓库**：
 > - Gitee：[https://gitee.com/mzmedia/mz-media.git](https://gitee.com/mzmedia/mz-media.git)
@@ -124,16 +124,17 @@ MzMedia 拒绝做功能单一的“管道式”IoT，而是依托 `ruoyi-vue-pro
  └───────────────────────────────────────────────────────────────────┘
 ```
 
-| 模块名称 | 对应工程目录 | 在 MzMedia 中的关键赋能与协同价值 |
-| :--- | :--- | :--- |
-| **IoT 物联网核心** | `yudao-module-iot` | 设备全生命周期、物模型（TSL）、网关与拓扑子设备、时序上报、在线调试与 OTA 升级。 |
-| **视频监控流媒体** | `yudao-module-media` | 深度集成 ZLMediaKit 与 GB/T 28181，提供实时点播、云台 PTZ 控制、语音对讲、录像回放与视频 AI 切片。 |
-| **项目管理系统** | `yudao-module-pms` | **工程项目落地抓手**：从物联网立项、设备采购调拨、现场施工勘测到调试验收，全流程看板跟踪。 |
-| **AI 智能中枢** | `yudao-module-ai1-springai` | Spring AI 框架集成、18+ 大模型支持、MCP 协议工具暴露、RAG 故障排查知识库、Prompt 规则编排。 |
-| **数字大屏驾驶舱** | `yudao-module-report` | 预置 GoView 拖拽式大屏设计器与积木报表，内置丰富的工业、园区、农业等可视化大屏模板。 |
-| **智能仓储管理** | `yudao-module-wms` | 设备出入库管理、传感器备件库存告警、维保耗材领用与设备资产条码扫码绑定。 |
-| **生产制造执行** | `yudao-module-mes` | 工单与设备产线联动，设备停机告警自动关联生产工序异常，赋能工业车间数字化。 |
-| **流程与系统底座** | `yudao-module-infra` / `system` | 基于 Flowable 的仿钉钉/BPMN 审批流、SaaS 多租户数据强隔离、RBAC 细粒度权限控制与分布式任务调度。 |
+| 模块名称 | 对应工程目录 | 在 MzMedia 中的关键赋能与协同价值 | 专属文档 |
+| :--- | :--- | :--- | :--- |
+| **IoT 物联网核心** | `yudao-module-iot` | 设备全生命周期、物模型（TSL）、网关与拓扑子设备、时序上报、在线调试与 OTA 升级。 | [📖 IoT 开发手册](./yudao-module-iot/README.md) |
+| **视频监控流媒体** | `yudao-module-media` | 深度集成 ZLMediaKit 与 GB/T 28181，提供实时点播、云台 PTZ 控制、语音对讲、录像回放与视频 AI 切片。 | [📖 视频中心手册](./yudao-module-media/README.md) |
+| **项目管理系统** | `yudao-module-pms` | **工程项目落地抓手**：从物联网立项、设备采购调拨、现场施工勘测到调试验收，全流程看板跟踪。 | [📖 PMS 项目手册](./yudao-module-pms/README.md) |
+| **AI 智能中枢** | `yudao-module-ai1-springai` | Spring AI 框架集成、18+ 大模型支持、MCP 协议工具暴露、RAG 故障排查知识库、Prompt 规则编排。 | [📖 Spring AI 手册](./yudao-module-ai1-springai/README.md) |
+| **数字大屏驾驶舱** | `yudao-module-report` | 预置 GoView 拖拽式大屏设计器与积木报表，内置丰富的工业、园区、农业等可视化大屏模板。 | 详见官方文档 |
+| **智能仓储管理** | `yudao-module-wms` | 设备出入库管理、传感器备件库存告警、维保耗材领用与设备资产条码扫码绑定。 | [📖 WMS 仓储手册](./yudao-module-wms/README.md) |
+| **生产制造执行** | `yudao-module-mes` | 工单与设备产线联动，设备停机告警自动关联生产工序异常，赋能工业车间数字化。 | [📖 MES 制造手册](./yudao-module-mes/README.md) |
+| **流程与系统底座** | `yudao-module-infra` / `system` | 基于 Flowable 的仿钉钉/BPMN 审批流、SaaS 多租户数据强隔离、RBAC 细粒度权限控制与分布式任务调度。 | [📖 Agent 开发规范](./AGENT.md) |
+| **前端管理中心** | `ui` | 基于 Vue 3.4 + Vite 5 + Jessibuca，集成视频多分屏点播、物模型设计器与场景联动。 | [📖 前端开发手册](./ui/README.md) |
 
 ---
 
