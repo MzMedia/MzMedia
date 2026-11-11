@@ -1,4 +1,4 @@
-# 芋道 Boot 单体版 Docker Compose 入门部署：yudao-server + 前端 Nginx + MySQL + Redis
+# 芋道 Boot 单体版 Docker Compose 入门部署：yudao-server + 前端 Nginx + MySQL + Redis + TDengine
 # 使用说明见同目录 README.md；需 Docker Compose V2.20.2 及以上（docker compose 命令）
 # 本文件中的相对路径，均相对于本文件所在目录，与执行命令时的当前目录无关
 
@@ -60,6 +60,36 @@ services:
       timeout: 5s
       retries: 10
 
+  tdengine:
+    image: tdengine/tdengine:3.3.4.8
+    restart: unless-stopped
+    hostname: tdengine
+    environment:
+      TZ: Asia/Shanghai
+      TAOS_ROOT_PASSWORD: ${TDENGINE_PASSWORD:-taosdata}
+      TDENGINE_DATABASE: ${TDENGINE_DATABASE:-ruoyi_vue_pro}
+    volumes:
+      - tdengine-data:/var/lib/taos
+      - tdengine-log:/var/log/taos
+    # 默认不对宿主机开放；需要本机客户端（如 TDengine CLI / 数据库工具）连接时，取消注释
+    # ports:
+    #   - "127.0.0.1:6041:6041"
+    #   - "127.0.0.1:6030:6030"
+    healthcheck:
+      test: ["CMD-SHELL", "taos-check service && taos -s \"CREATE DATABASE IF NOT EXISTS $${TDENGINE_DATABASE:-ruoyi_vue_pro};\""]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 15s
+
+  tdengine-init:
+    image: tdengine/tdengine:3.3.4.8
+    restart: "no"
+    depends_on:
+      tdengine:
+        condition: service_healthy
+    entrypoint: ["/bin/echo", "TDengine database initialization completed in tdengine service."]
+
   yudao-server:
     # 使用模块自带的 Dockerfile，需先在源码根目录执行 mvn 打包，生成 yudao-server/target/yudao-server.jar
     build:
@@ -76,6 +106,12 @@ services:
       SPRING_DATASOURCE_DYNAMIC_DATASOURCE_SLAVE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-ruoyi-vue-pro}?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true
       SPRING_DATASOURCE_DYNAMIC_DATASOURCE_SLAVE_USERNAME: ${MYSQL_USER:-yudao}
       SPRING_DATASOURCE_DYNAMIC_DATASOURCE_SLAVE_PASSWORD: ${MYSQL_PASSWORD}
+      # TDengine（IoT 物联网时序数据库）
+      SPRING_DATASOURCE_DYNAMIC_DATASOURCE_TDENGINE_URL: jdbc:TAOS-WS://tdengine:6041/${TDENGINE_DATABASE:-ruoyi_vue_pro}?varcharAsString=true&enableAutoReconnect=true
+      SPRING_DATASOURCE_DYNAMIC_DATASOURCE_TDENGINE_DRIVER_CLASS_NAME: com.taosdata.jdbc.ws.WebSocketDriver
+      SPRING_DATASOURCE_DYNAMIC_DATASOURCE_TDENGINE_USERNAME: ${TDENGINE_USER:-root}
+      SPRING_DATASOURCE_DYNAMIC_DATASOURCE_TDENGINE_PASSWORD: ${TDENGINE_PASSWORD:-taosdata}
+      SPRING_DATASOURCE_DYNAMIC_DATASOURCE_TDENGINE_LAZY: "true"
       # Redis：Spring Boot 4.x 使用 spring.data.redis.*
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
@@ -87,6 +123,8 @@ services:
       mysql:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      tdengine:
         condition: service_healthy
     # 默认只通过 web 的 Nginx 访问；需要直连后端排查时，取消注释
     # ports:
@@ -112,3 +150,5 @@ services:
 volumes:
   mysql-data:
   redis-data:
+  tdengine-data:
+  tdengine-log:

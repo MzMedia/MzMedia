@@ -4,7 +4,7 @@
 # 全部服务使用 host 网络：Ingress / Egress 作为 WebRTC 客户端连接 LiveKit 广播的 node_ip（127.0.0.1），
 # 端口映射模式下容器内的 127.0.0.1 不是 LiveKit；macOS 需 Docker Desktop 4.34+ 并开启 Settings → Resources → Network → Enable host networking
 #
-# 凭据通过同目录 .env 提供（参考 .env.example），必须与后端 yudao.im.rtc.api-key / api-secret 一致
+# 凭据通过同目录 .env 提供（参考 .env），必须与后端 yudao.im.rtc.api-key / api-secret 一致
 name: yudao-livekit-mp-gateway
 
 services:

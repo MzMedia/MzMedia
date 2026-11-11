@@ -13,6 +13,7 @@ volumes:
     tidb_pd: { }
     tidb_tikv: { }
     mogdb: { }
+    tdengine: { }
 
 services:
     mysql:
@@ -293,3 +294,26 @@ services:
             - ../opengauss/quartz.sql:/tmp/quartz.sql:ro
             - ../opengauss/ruoyi-vue-pro.sql:/tmp/schema.sql:ro
             - ./mogdb/create_schema.sh:/tmp/create_schema.sh:ro
+
+    # TDengine 测试库：官方容器镜像（IoT 时序数据），属于 tdengine profile，默认不启动
+    # 启动：docker compose --profile tdengine up -d
+    tdengine:
+        image: tdengine/tdengine:3.3.4.8
+        profiles: ["tdengine"]
+        hostname: tdengine
+        restart: unless-stopped
+        environment:
+            TZ: Asia/Shanghai
+            TAOS_ROOT_PASSWORD: taosdata
+        ports:
+            # 6041 为 taosAdapter RESTful/WebSocket 端口，6030 为原生客户端端口
+            - "127.0.0.1:6041:6041"
+            - "127.0.0.1:6030:6030"
+        volumes:
+            - tdengine:/var/lib/taos
+        healthcheck:
+            test: ["CMD-SHELL", "taos-check service"]
+            interval: 10s
+            timeout: 5s
+            start_period: 15s
+            retries: 15

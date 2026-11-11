@@ -22,10 +22,12 @@ script/docker-compose
 | --- | --- | --- |
 | `mysql` | `mysql:8.4` | 首次启动导入 `sql/mysql/ruoyi-vue-pro.sql`、`sql/mysql/quartz.sql`，数据卷 `yudao-boot_mysql-data` |
 | `redis` | `redis:7.4-alpine` | 开启密码与 AOF，数据卷 `yudao-boot_redis-data` |
+| `tdengine` | `tdengine/tdengine:3.3.4.8` | IoT 时序数据库，数据卷 `yudao-boot_tdengine-data` 与 `tdengine-log` |
+| `tdengine-init` | `tdengine/tdengine:3.3.4.8` | 一次性初始化服务，首次启动自动创建 `ruoyi_vue_pro` 数据库 |
 | `yudao-server` | `yudao-server:${IMAGE_TAG}` | 由 `yudao-server/Dockerfile` 构建，端口 48080，只在 Compose 网络内访问 |
 | `web` | `nginx:1.28-alpine` | 对宿主机开放 `${WEB_PORT}`（默认 8080） |
 
-容器之间通过服务名（`mysql`、`redis`、`yudao-server`）访问。MySQL、Redis、后端默认不映射到宿主机，不会与本机已有的 3306、6379、48080 冲突；需要时取消 `docker-compose.yml` 中对应 `ports` 的注释。
+容器之间通过服务名（`mysql`、`redis`、`tdengine`、`yudao-server`）访问。MySQL、Redis、TDengine、后端默认不映射到宿主机，不会与本机已有的 3306、6379、6041、48080 冲突；需要时取消 `docker-compose.yml` 中对应 `ports` 的注释。
 
 ## 前置条件
 
@@ -64,7 +66,7 @@ cp -R /path/to/前端打包产物目录/. script/docker-compose/web/dist/
 
 ```shell
 cd script/docker-compose
-cp .env.example .env
+cp .env .env
 ```
 
 按需修改 `.env`，至少替换 `MYSQL_ROOT_PASSWORD`、`MYSQL_PASSWORD`、`REDIS_PASSWORD` 三个示例密码。
@@ -77,11 +79,13 @@ cp .env.example .env
 | `MYSQL_ROOT_PASSWORD` | 示例值 | MySQL root 密码，仅供初始化与运维使用 |
 | `MYSQL_USER` / `MYSQL_PASSWORD` | `yudao` / 示例值 | 应用使用的账号，只拥有 `MYSQL_DATABASE` 库权限 |
 | `REDIS_PASSWORD` | 示例值 | Redis 密码 |
+| `TDENGINE_DATABASE` | `ruoyi_vue_pro` | TDengine 时序数据库名（注意：不能带中划线 `-`） |
+| `TDENGINE_USER` / `TDENGINE_PASSWORD` | `root` / `taosdata` | TDengine 账号与密码 |
 | `SPRING_PROFILES_ACTIVE` | `dev` | 后端 profile |
 | `JAVA_OPTS` | `-Xms512m -Xmx512m ...` | JVM 参数 |
 | `YUDAO_CAPTCHA_ENABLE` | `true` | 是否开启登录验证码 |
 
-后端的数据库（主库 `master`、从库 `slave`）、Redis 连接，由 `docker-compose.yml` 通过环境变量覆盖 `application-dev.yaml` 中的 `127.0.0.1` 等地址；其余配置仍使用 `application.yaml`、`application-dev.yaml`。
+后端的数据库（主库 `master`、从库 `slave`）、时序库（`tdengine`）、Redis 连接，由 `docker-compose.yml` 通过环境变量覆盖 `application-dev.yaml` 中的 `127.0.0.1` 等地址；其余配置仍使用 `application.yaml`、`application-dev.yaml`。
 
 ## 4. 构建并启动
 

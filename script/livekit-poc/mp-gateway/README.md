@@ -40,7 +40,7 @@
 ```bash
 cd script/livekit-poc/mp-gateway
 docker compose -f ../docker-compose.yml down   # 停掉 LiveKit-only PoC
-cp .env.example .env                           # 填写与后端 yudao.im.rtc.api-key / api-secret 一致的凭据，MP_GATEWAY_ENABLED=true
+cp .env .env                           # 填写与后端 yudao.im.rtc.api-key / api-secret 一致的凭据，MP_GATEWAY_ENABLED=true
 docker compose up -d
 docker compose logs -f mp-gateway              # 看到「小程序网关已启动（试验功能）」
 curl -s http://127.0.0.1:8090/healthz          # {"status":"ok"}
