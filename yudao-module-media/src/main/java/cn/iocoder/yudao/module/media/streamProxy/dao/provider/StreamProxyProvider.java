@@ -13,8 +13,8 @@ public class StreamProxyProvider {
                 " st.id as data_device_id, " +
                 " wdc.*, " +
                 " wdc.id as gb_id" +
-                " FROM wvp_stream_proxy st " +
-                " LEFT join wvp_device_channel wdc " +
+                " FROM mz_stream_proxy st " +
+                " LEFT join mz_device_channel wdc " +
                 " on wdc.data_type = 3 and st.id = wdc.data_device_id ";
     }
 

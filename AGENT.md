@@ -122,22 +122,23 @@ flowchart TD
 
 ### 4.1 视频监控与流媒体中心 (`yudao-module-media`)
 
-#### 4.1.1 核心数据库实体 (`sql/module/media-2026-11-05.sql`)
-- `wvp_device`：国标设备表（国标 ID `deviceId`、SIP 域 `domain`、IP 端口、传输协议 TCP/UDP、注册时间、心跳时间、状态）。
-- `wvp_device_channel`：国标通道表（通道 ID `channelId`、通道名称、PTZ 类型、经纬度、子通道列表、在线状态、推流地址）。
-- `wvp_media_server`：ZLMediaKit 流媒体服务器节点（ID、HTTP 端口、RTMP/RTSP 端口、RTP 端口范围、REST Secret、Hook 回调配置）。
-- `wvp_platform` / `wvp_platform_channel`：上级国标平台级联表，支撑向上级公安或集团平台级联推送目录与视频流。
-- `wvp_stream_proxy`：外部 RTSP/RTMP/HTTP 拉流代理任务表（自动拉流并转协议分发）。
-- `wvp_stream_push`：自主推流管理表。
-- `wvp_cloud_record` / `wvp_record_plan`：云端录像记录与定时录像计划表。
+#### 4.1.1 核心数据库实体 (`sql/module/media-2026-11-12.sql`)
+- `mz_device`：国标/监控设备主表（国标 ID `deviceId`、SIP 域 `domain`、IP 端口、传输协议 TCP/UDP、注册时间、心跳时间、状态）。
+- `mz_device_channel`：设备通道表（通道 ID `channelId`、通道名称、PTZ 类型、经纬度、子通道列表、在线状态、推流地址）。
+- `mz_media_server`：ZLMediaKit 流媒体服务器节点（ID、HTTP 端口、RTMP/RTSP 端口、RTP 端口范围、REST Secret、Hook 回调配置）。
+- `mz_platform` / `mz_platform_channel`：上级国标平台级联表，支撑向上级公安或集团平台级联推送目录与视频流。
+- `mz_stream_proxy`：外部 RTSP/RTMP/HTTP 拉流代理任务表（自动拉流并转协议分发）。
+- `mz_stream_push`：自主推流管理表。
+- `mz_cloud_record` / `mz_record_plan`：云端录像记录与定时录像计划表。
+- `mz_device_onvif` / `mz_device_hik` / `mz_device_dahua` / `mz_device_ezviz` / `mz_device_jt1078`：多协议泛接入设备配置表。
 
 #### 4.1.2 GB/T 28181 信令交互全链路
 1. **设备注册与鉴权**：
-   - 设备发送 `REGISTER` -> 本地 SIP Stack 响应 `401 Unauthorized` 携带 `nonce` -> 设备使用 MD5 密码重新发送 `REGISTER` -> 校验通过，存储/刷新 Redis 会话，写入 `wvp_device`。
+   - 设备发送 `REGISTER` -> 本地 SIP Stack 响应 `401 Unauthorized` 携带 `nonce` -> 设备使用 MD5 密码重新发送 `REGISTER` -> 校验通过，存储/刷新 Redis 会话，写入 `mz_device`。
 2. **设备保活 (Keepalive)**：
    - 监听设备的 `MESSAGE` 请求，解析 XML 内容中的 `<CmdType>Keepalive</CmdType>`，更新设备最新心跳时间，心跳超时触发离线事件。
 3. **通道目录检索与订阅 (Catalog)**：
-   - 系统主动发送 `Catalog` 查询请求，接收设备分批上报的通道列表 XML 响应，解析通道国标编码规则（第 11-13 位代表类型：132 摄像机、131 报警通道、200 网络视频服务器等），入库 `wvp_device_channel`。
+   - 系统主动发送 `Catalog` 查询请求，接收设备分批上报的通道列表 XML 响应，解析通道国标编码规则（第 11-13 位代表类型：132 摄像机、131 报警通道、200 网络视频服务器等），入库 `mz_device_channel`。
 4. **实时点播 (Live Playback)**：
    ```text
    前端请求 Play -> MediaServer 分配本地动态 RTP 接收端口 -> 发送 SIP INVITE (携带 SDP)
@@ -482,7 +483,7 @@ git stash pop # 恢复暂存
    - 检查超级表（STable）与子表自动创建机制，子表表名合法性过滤（禁止包含特殊字符）。
 3. **场景规则联动视频无响应**：
    - 检查 `IotMediaLinkageEvent` 监听器是否生效；
-   - 检查绑定的 `deviceId` 和 `channelId` 在 `wvp_device_channel` 中是否存在且当前设备处于 `online=true` 状态。
+   - 检查绑定的 `deviceId` 和 `channelId` 在 `mz_device_channel` 中是否存在且当前设备处于 `online=true` 状态。
 
 ### 8.3 AI 与 MCP 模块常见问题
 1. **启动时提示 `ChatClient.Builder` 重复定义报错**：

@@ -11,12 +11,12 @@ import java.util.List;
 @Mapper
 public interface MobilePositionMapper {
 
-    @Insert("INSERT INTO wvp_mobile_position (channel_id, timestamp, longitude, latitude, altitude, speed, direction, create_time)"+
+    @Insert("INSERT INTO mz_mobile_position (channel_id, timestamp, longitude, latitude, altitude, speed, direction, create_time)"+
             "VALUES (#{channelId}, #{timestamp}, #{longitude}, #{latitude}, #{altitude}, #{speed}, #{direction}, #{createTime})")
     int insertNewPosition(MobilePosition mobilePosition);
 
     @Select(value = {" <script>" +
-    "SELECT * FROM wvp_mobile_position" +
+    "SELECT * FROM mz_mobile_position" +
     " WHERE channel_id = #{channelId}" +
     "<if test=\"startTime != null\"> AND timestamp&gt;=#{startTime}</if>" +
     "<if test=\"endTime != null\"> AND timestamp&lt;=#{endTime}</if>" +
@@ -24,13 +24,13 @@ public interface MobilePositionMapper {
     " </script>"})
     List<MobilePosition> queryPositionByDeviceIdAndTime(@Param("channelId") Integer channelId, @Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
-    @Select("SELECT * FROM wvp_mobile_position WHERE channel_id = #{channelId}" +
+    @Select("SELECT * FROM mz_mobile_position WHERE channel_id = #{channelId}" +
             " ORDER BY timestamp DESC LIMIT 1")
     MobilePosition queryLatestPosition(@Param("channelId") Integer channelId);
 
     @Insert("<script> " +
             "<foreach collection='mobilePositions' index='index' item='item' separator=';'> " +
-            "insert into wvp_mobile_position " +
+            "insert into mz_mobile_position " +
             "(channel_id, timestamp,longitude,latitude,altitude,speed,direction," +
             "create_time)"+
             "values " +

@@ -6,7 +6,7 @@ public class H2ChannelUpsertProvider {
 
     public String batchUpsert(Map<String, Object> params) {
         return "<script>" +
-                "MERGE INTO wvp_device_channel (" +
+                "MERGE INTO mz_device_channel (" +
                 "data_device_id, device_id, data_type, name, manufacturer, model, owner, civil_code, block, " +
                 "address, parental, parent_id, safety_way, register_way, cert_num, certifiable, err_code, end_time, secrecy, " +
                 "ip_address, port, password, status, longitude, latitude, ptz_type, position_type, room_type, use_type, " +

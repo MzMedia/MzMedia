@@ -17,13 +17,13 @@ import java.util.List;
 @Repository
 public interface DeviceAlarmMapper {
 
-    @Insert("INSERT INTO wvp_device_alarm (device_id, channel_id, alarm_priority, alarm_method, alarm_time, alarm_description, longitude, latitude, alarm_type , create_time ) " +
+    @Insert("INSERT INTO mz_device_alarm (device_id, channel_id, alarm_priority, alarm_method, alarm_time, alarm_description, longitude, latitude, alarm_type , create_time ) " +
             "VALUES (#{deviceId}, #{channelId}, #{alarmPriority}, #{alarmMethod}, #{alarmTime}, #{alarmDescription}, #{longitude}, #{latitude}, #{alarmType}, #{createTime})")
     int add(DeviceAlarmNotify alarm);
 
 
     @Select( value = {" <script>" +
-            " SELECT * FROM wvp_device_alarm " +
+            " SELECT * FROM mz_device_alarm " +
             " WHERE 1=1 " +
             " <if test=\"deviceId != null\" >  AND device_id = #{deviceId}</if>" +
             " <if test=\"channelId != null\" >  AND channel_id = #{channelId}</if>" +
@@ -39,7 +39,7 @@ public interface DeviceAlarmMapper {
 
 
     @Delete(" <script>" +
-            "DELETE FROM wvp_device_alarm WHERE 1=1 " +
+            "DELETE FROM mz_device_alarm WHERE 1=1 " +
             " <if test=\"deviceIdList != null and id == null \" > AND device_id in " +
             "<foreach collection='deviceIdList'  item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
             "</if>" +

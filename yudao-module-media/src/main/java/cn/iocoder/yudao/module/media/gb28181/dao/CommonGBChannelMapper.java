@@ -27,7 +27,7 @@ public interface CommonGBChannelMapper {
     List<CommonGBChannel> queryByDeviceId(@Param("gbDeviceId") String gbDeviceId);
 
     @Insert(" <script>" +
-            "INSERT INTO wvp_device_channel (" +
+            "INSERT INTO mz_device_channel (" +
             "gb_device_id," +
             "data_type," +
             "data_device_id," +
@@ -115,11 +115,11 @@ public interface CommonGBChannelMapper {
     @SelectProvider(type = ChannelProvider.class, method = "queryById")
     CommonGBChannel queryById(@Param("gbId") int gbId);
 
-    @Delete(value = {"delete from wvp_device_channel where id = #{gbId} "})
+    @Delete(value = {"delete from mz_device_channel where id = #{gbId} "})
     void delete(int gbId);
 
     @Update(value = {" <script>" +
-            "UPDATE wvp_device_channel " +
+            "UPDATE mz_device_channel " +
             "SET update_time=#{updateTime}" +
             "<if test='gbDeviceId != null' > , gb_device_id = #{gbDeviceId}</if> " +
             "<if test='gbName != null' > , gb_name = #{gbName}</if> " +
@@ -160,7 +160,7 @@ public interface CommonGBChannelMapper {
     int update(CommonGBChannel commonGBChannel);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET gb_status = #{status}" +
             " WHERE id = #{gbId}"+
             " </script>"})
@@ -168,7 +168,7 @@ public interface CommonGBChannelMapper {
 
     @Update("<script> " +
             "<foreach collection='commonGBChannels' index='index' item='item' separator=';'> " +
-            "UPDATE wvp_device_channel SET gb_status = #{status} WHERE id = #{item.gbId}" +
+            "UPDATE mz_device_channel SET gb_status = #{status} WHERE id = #{item.gbId}" +
             "</foreach> " +
             "</script>")
     int updateStatusForListById(List<CommonGBChannel> commonGBChannels, @Param("status") String status);
@@ -185,7 +185,7 @@ public interface CommonGBChannelMapper {
     int batchUpsert(@Param("channels") List<CommonGBChannel> channels);
 
     @Insert(" <script>" +
-            "INSERT INTO wvp_device_channel (" +
+            "INSERT INTO mz_device_channel (" +
             "gb_device_id," +
             "data_type, " +
             "data_device_id," +
@@ -240,13 +240,13 @@ public interface CommonGBChannelMapper {
 
     @Update("<script> " +
             "<foreach collection='commonGBChannels' index='index' item='item' separator=';'> " +
-            "UPDATE wvp_device_channel SET gb_status = #{item.gbStatus} WHERE id = #{item.gbId}" +
+            "UPDATE mz_device_channel SET gb_status = #{item.gbStatus} WHERE id = #{item.gbId}" +
             "</foreach> " +
             "</script>")
     int updateStatus(List<CommonGBChannel> commonGBChannels);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET update_time=#{updateTime}" +
             "<foreach collection='fields' index='index' item='item'> " +
             " ,${item} = null" +
@@ -260,7 +260,7 @@ public interface CommonGBChannelMapper {
     List<CommonGBChannel> queryByIds(Collection<Integer> ids);
 
     @Delete(value = {" <script>" +
-            " delete from wvp_device_channel" +
+            " delete from mz_device_channel" +
             " where 1 = 1 and id in " +
             " <foreach collection='channelListInDb'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
             "</script>"})
@@ -288,13 +288,13 @@ public interface CommonGBChannelMapper {
             "    coalesce(gb_status, status) as status, " +
             "    1 as type, " +
             "    true as is_leaf " +
-            " from wvp_device_channel " +
+            " from mz_device_channel " +
             " where coalesce(gb_civil_code, civil_code) = #{parentDeviceId} " +
             " </script>")
     List<RegionTree> queryForRegionTreeByCivilCode(@Param("parentDeviceId") String parentDeviceId);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET gb_civil_code = null, civil_code = null" +
             " WHERE gb_civil_code in "+
             " <foreach collection='allChildren'  item='item'  open='(' separator=',' close=')' > #{item.deviceId}</foreach>" +
@@ -303,7 +303,7 @@ public interface CommonGBChannelMapper {
 
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET gb_civil_code = #{civilCode}" +
             " WHERE id in "+
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
@@ -314,7 +314,7 @@ public interface CommonGBChannelMapper {
     List<CommonGBChannel> queryByIdsOrCivilCode(@Param("civilCode") String civilCode, @Param("ids") List<Integer> ids);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET gb_civil_code = null, civil_code = null" +
             " WHERE id in "+
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
@@ -322,7 +322,7 @@ public interface CommonGBChannelMapper {
     int removeCivilCodeByChannels(List<CommonGBChannel> channelList);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET gb_civil_code = null, civil_code = null" +
             " WHERE id in "+
             " <foreach collection='channelIdList'  item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
@@ -339,7 +339,7 @@ public interface CommonGBChannelMapper {
     List<CommonGBChannel> queryByGbDeviceIds(List<String> deviceIds);
 
     @Select(value = {" <script>" +
-            " select id from wvp_device_channel " +
+            " select id from mz_device_channel " +
             " where channel_type = 0 and data_type = #{dataType} and data_device_id in  "+
             " <foreach collection='deviceIds'  item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
             " </script>"})
@@ -349,7 +349,7 @@ public interface CommonGBChannelMapper {
     List<CommonGBChannel> queryByGroupList(List<Group> groupList);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET gb_parent_id = null, gb_business_group_id = null, parent_id = null, business_group_id = null" +
             " WHERE id in "+
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
@@ -363,7 +363,7 @@ public interface CommonGBChannelMapper {
     List<CommonGBChannel> queryByParentId(@Param("parentId") String parentId);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET gb_business_group_id = #{businessGroup}" +
             " WHERE id in "+
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
@@ -371,7 +371,7 @@ public interface CommonGBChannelMapper {
     int updateBusinessGroupByChannelList(@Param("businessGroup") String businessGroup, List<CommonGBChannel> channelList);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET gb_parent_id = #{parentId}" +
             " WHERE id in "+
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
@@ -389,7 +389,7 @@ public interface CommonGBChannelMapper {
             "    coalesce(gb_status, status) as status, " +
             "    1 as type, " +
             "    true as is_leaf " +
-            " from wvp_device_channel " +
+            " from mz_device_channel " +
             " where channel_type = 0 and coalesce(gb_parent_id, parent_id) = #{parent} " +
             " <if test='query != null'> AND (coalesce(gb_device_id, device_id) LIKE concat('%',#{query},'%') " +
             " OR coalesce(gb_name, name) LIKE concat('%',#{query},'%'))</if> " +
@@ -397,7 +397,7 @@ public interface CommonGBChannelMapper {
     List<GroupTree> queryForGroupTreeByParentId(@Param("query") String query, @Param("parent") String parent);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET gb_parent_id = #{parentId}, gb_business_group_id = #{businessGroup}" +
             " WHERE id in "+
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
@@ -408,7 +408,7 @@ public interface CommonGBChannelMapper {
     @Update({"<script>" +
             "<foreach collection='commonGBChannels' item='item' separator=';'>" +
             " UPDATE" +
-            " wvp_device_channel" +
+            " mz_device_channel" +
             " SET update_time=#{item.updateTime}" +
             ", gb_device_id=#{item.gbDeviceId}" +
             ", gb_name=#{item.gbName}" +
@@ -458,7 +458,7 @@ public interface CommonGBChannelMapper {
     List<CommonGBChannel> queryShareChannelByCivilCode(@Param("civilCode") String civilCode, @Param("platformId") Integer platformId);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET gb_civil_code = #{civilCode}" +
             " WHERE id in "+
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
@@ -470,7 +470,7 @@ public interface CommonGBChannelMapper {
 
     @Update(value = {" <script>" +
             " <foreach collection='gpsMsgInfoList' item='item' separator=';' >" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET gb_longitude=#{item.lng}" +
             ", gb_latitude=#{item.lat} " +
             ", gps_speed=#{item.speed} " +
@@ -488,7 +488,7 @@ public interface CommonGBChannelMapper {
                                     @Param("civilCode") String civilCode, @Param("parentDeviceId") String parentDeviceId);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET record_plan_id = null" +
             " WHERE id in "+
             " <foreach collection='channelIds'  item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
@@ -496,7 +496,7 @@ public interface CommonGBChannelMapper {
     void removeRecordPlan(List<Integer> channelIds);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET record_plan_id = #{planId}" +
             " WHERE id in "+
             " <foreach collection='channelIds'  item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
@@ -504,13 +504,13 @@ public interface CommonGBChannelMapper {
     void addRecordPlan(List<Integer> channelIds, @Param("planId") Integer planId);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET record_plan_id = #{planId}" +
             " </script>"})
     void addRecordPlanForAll(@Param("planId") Integer planId);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET record_plan_id = null" +
             " WHERE record_plan_id = #{planId} "+
             " </script>"})
@@ -560,7 +560,7 @@ public interface CommonGBChannelMapper {
             "    coalesce( wdc.gb_download_speed, wdc.download_speed) as gb_download_speed,\n" +
             "    coalesce( wdc.gb_svc_space_support_mod, wdc.svc_space_support_mod) as gb_svc_space_support_mod,\n" +
             "    coalesce( wdc.gb_svc_time_support_mode, wdc.svc_time_support_mode) as gb_svc_time_support_mode \n" +
-            " from wvp_device_channel wdc" +
+            " from mz_device_channel wdc" +
             " where wdc.channel_type = 0 " +
             " <if test='query != null'> " +
             " AND (coalesce(wdc.gb_device_id, wdc.device_id) LIKE concat('%',#{query},'%') escape '/' " +
@@ -591,7 +591,7 @@ public interface CommonGBChannelMapper {
     List<Integer> queryAllForUnusualParent();
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device_channel " +
+            " UPDATE mz_device_channel " +
             " SET gb_parent_id = null, gb_business_group_id = null, parent_id = null, business_group_id = null" +
             " WHERE id in "+
             " <foreach collection='channelIdsForClear'  item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
@@ -608,12 +608,12 @@ public interface CommonGBChannelMapper {
     @SelectProvider(type = ChannelProvider.class, method = "queryCommonChannelByDeviceChannel")
     CommonGBChannel queryCommonChannelByDeviceChannel(@Param("dataType") Integer dataType, @Param("dataDeviceId") Integer dataDeviceId, @Param("deviceId") String deviceId);
 
-    @Update("UPDATE wvp_device_channel SET stream_id = #{stream} where id = #{gbId}")
+    @Update("UPDATE mz_device_channel SET stream_id = #{stream} where id = #{gbId}")
     void updateStream(int gbId, String stream);
 
     @Update("<script> " +
             "<foreach collection='commonGBChannels' index='index' item='item' separator=';'> " +
-            "UPDATE wvp_device_channel " +
+            "UPDATE mz_device_channel " +
             " SET gb_longitude=#{item.gbLongitude}" +
             ", gb_latitude=#{item.gbLatitude} " +
             ", gps_speed=#{item.gpsSpeed} " +
@@ -670,7 +670,7 @@ public interface CommonGBChannelMapper {
 
     @Update("<script> " +
             "<foreach collection='channels' index='index' item='item' separator=';'> " +
-            "UPDATE wvp_device_channel SET map_level=#{item.mapLevel} " +
+            "UPDATE mz_device_channel SET map_level=#{item.mapLevel} " +
             "WHERE id = #{item.gbId}" +
             "</foreach> " +
             "</script>")
@@ -685,7 +685,7 @@ public interface CommonGBChannelMapper {
     @SelectProvider(type = ChannelProvider.class, method = "queryMeetingChannelList")
     List<CameraChannel> queryMeetingChannelList(@Param("business") String business);
 
-    @Update("UPDATE wvp_device_channel SET map_level=null")
+    @Update("UPDATE mz_device_channel SET map_level=null")
     int resetLevel();
 
     @SelectProvider(type = ChannelProvider.class, method = "queryCameraChannelInBox")
@@ -697,7 +697,7 @@ public interface CommonGBChannelMapper {
             "MIN(coalesce(gb_longitude, longitude)) as minLng,  " +
             "MAX(coalesce(gb_latitude, latitude)) as maxLat,  " +
             "MIN(coalesce(gb_latitude, latitude)) as minLat  " +
-            " from wvp_device_channel " +
+            " from mz_device_channel " +
             " where channel_type = 0")
     Extent queryExtent();
 

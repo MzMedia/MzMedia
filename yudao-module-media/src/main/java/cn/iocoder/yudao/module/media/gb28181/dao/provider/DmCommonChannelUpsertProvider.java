@@ -3,13 +3,13 @@ package cn.iocoder.yudao.module.media.gb28181.dao.provider;
 import java.util.Map;
 
 /**
- * 达梦(DM8) upsert 实现（wvp_device_channel 的 gb_ 字段），使用 MERGE 语法。
+ * 达梦(DM8) upsert 实现（mz_device_channel 的 gb_ 字段），使用 MERGE 语法。
  */
 public class DmCommonChannelUpsertProvider {
 
     public String batchUpsert(Map<String, Object> params) {
         return "<script>" +
-                "MERGE INTO wvp_device_channel t " +
+                "MERGE INTO mz_device_channel t " +
                 "USING ( " +
                 " <foreach collection='channels' item='item' separator=' UNION ALL '> " +
                 " SELECT " +

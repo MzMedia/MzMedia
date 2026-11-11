@@ -6,7 +6,7 @@ public class PostgresStyleUpsertProvider {
 
     public String batchUpsert(Map<String, Object> params) {
         return "<script>" +
-                "INSERT INTO wvp_device_channel (" +
+                "INSERT INTO mz_device_channel (" +
                 "device_id, data_type, data_device_id, name, manufacturer, model, owner, civil_code, block, " +
                 "address, parental, parent_id, safety_way, register_way, cert_num, certifiable, err_code, end_time, secrecy, " +
                 "ip_address, port, password, status, longitude, latitude, ptz_type, position_type, room_type, use_type, " +

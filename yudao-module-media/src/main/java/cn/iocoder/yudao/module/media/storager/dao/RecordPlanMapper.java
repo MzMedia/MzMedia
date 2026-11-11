@@ -10,7 +10,7 @@ import java.util.List;
 public interface RecordPlanMapper {
 
     @Insert(" <script>" +
-            "INSERT INTO wvp_record_plan (" +
+            "INSERT INTO mz_record_plan (" +
             " name," +
             " snap," +
             " create_time," +
@@ -25,7 +25,7 @@ public interface RecordPlanMapper {
     void add(RecordPlan plan);
 
     @Insert(" <script>" +
-            "INSERT INTO wvp_record_plan_item (" +
+            "INSERT INTO mz_record_plan_item (" +
             "start_time," +
             "stop_time, " +
             "week_day," +
@@ -37,30 +37,30 @@ public interface RecordPlanMapper {
             " </script>")
     void batchAddItem(@Param("planId") int planId, List<RecordPlanItem> planItemList);
 
-    @Select("select * from wvp_record_plan where  id = #{planId}")
+    @Select("select * from mz_record_plan where  id = #{planId}")
     RecordPlan get(@Param("planId") Integer planId);
 
     @Select(" <script>" +
-            " SELECT wrp.*, (select count(1) from wvp_device_channel where record_plan_id = wrp.id) AS channelCount\n" +
-            " FROM wvp_record_plan wrp where  1=1" +
+            " SELECT wrp.*, (select count(1) from mz_device_channel where record_plan_id = wrp.id) AS channelCount\n" +
+            " FROM mz_record_plan wrp where  1=1" +
             " <if test='query != null'> AND (name LIKE concat('%',#{query},'%') escape '/' )</if> " +
             " </script>")
     List<RecordPlan> query(@Param("query") String query);
 
-    @Update("UPDATE wvp_record_plan SET update_time=#{updateTime}, name=#{name}, snap=#{snap} WHERE id=#{id}")
+    @Update("UPDATE mz_record_plan SET update_time=#{updateTime}, name=#{name}, snap=#{snap} WHERE id=#{id}")
     void update(RecordPlan plan);
 
-    @Delete("DELETE FROM wvp_record_plan WHERE id=#{planId}")
+    @Delete("DELETE FROM mz_record_plan WHERE id=#{planId}")
     void delete(@Param("planId") Integer planId);
 
-    @Select("select * from wvp_record_plan_item where  plan_id = #{planId}")
+    @Select("select * from mz_record_plan_item where  plan_id = #{planId}")
     List<RecordPlanItem> getItemList(@Param("planId") Integer planId);
 
-    @Delete("DELETE FROM wvp_record_plan_item WHERE plan_id = #{planId}")
+    @Delete("DELETE FROM mz_record_plan_item WHERE plan_id = #{planId}")
     void cleanItems(@Param("planId") Integer planId);
 
     @Select(" <script>" +
-            " select wdc.id from wvp_device_channel wdc left join wvp_record_plan_item wrpi on wrpi.plan_id = wdc.record_plan_id " +
+            " select wdc.id from mz_device_channel wdc left join mz_record_plan_item wrpi on wrpi.plan_id = wdc.record_plan_id " +
             " where  wrpi.week_day = #{week} and wrpi.start_time &lt;= #{index} and wrpi.stop_time &gt;= #{index} group by wdc.id" +
             " </script>")
     List<Integer> queryRecordIng(@Param("week") int week, @Param("index") int index);

@@ -10,7 +10,7 @@ public class DmChannelUpsertProvider {
 
     public String batchUpsert(Map<String, Object> params) {
         return "<script>" +
-                "MERGE INTO wvp_device_channel t " +
+                "MERGE INTO mz_device_channel t " +
                 "USING ( " +
                 " <foreach collection='channels' item='item' separator=' UNION ALL '> " +
                 " SELECT " +

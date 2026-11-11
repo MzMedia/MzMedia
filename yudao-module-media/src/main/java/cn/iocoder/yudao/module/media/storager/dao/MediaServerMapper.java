@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface MediaServerMapper {
 
-    @Insert("INSERT INTO wvp_media_server (" +
+    @Insert("INSERT INTO mz_media_server (" +
             "id,"+
             "ip,"+
             "hook_ip,"+
@@ -84,7 +84,7 @@ public interface MediaServerMapper {
     int add(MediaServer mediaServerItem);
 
     @Update(value = {" <script>" +
-            "UPDATE wvp_media_server " +
+            "UPDATE mz_media_server " +
             "SET update_time=#{updateTime}, transcode_suffix=#{transcodeSuffix} " +
             ", ip=#{ip}, hook_ip=#{hookIp}, sdp_ip=#{sdpIp}, stream_ip=#{streamIp}, http_port=#{httpPort}" +
             ", http_ssl_port=#{httpSSlPort}, rtmp_port=#{rtmpPort}, rtmp_ssl_port=#{rtmpSSlPort}" +
@@ -99,30 +99,30 @@ public interface MediaServerMapper {
             " </script>"})
     int update(MediaServer mediaServerItem);
 
-    @Select("SELECT * FROM wvp_media_server WHERE id=#{id}")
+    @Select("SELECT * FROM mz_media_server WHERE id=#{id}")
     MediaServer queryOne(@Param("id") String id);
 
-    @Select("SELECT * FROM wvp_media_server WHERE id=#{id} and server_id = #{serverId}")
+    @Select("SELECT * FROM mz_media_server WHERE id=#{id} and server_id = #{serverId}")
     MediaServer queryOneWithServerId(@Param("id") String id, @Param("serverId") String serverId);
 
-    @Select("SELECT * FROM wvp_media_server where server_id = #{serverId}")
+    @Select("SELECT * FROM mz_media_server where server_id = #{serverId}")
     List<MediaServer> queryAll(@Param("serverId") String serverId);
 
-    @Select("SELECT * FROM wvp_media_server where default_server=false AND server_id = #{serverId}")
+    @Select("SELECT * FROM mz_media_server where default_server=false AND server_id = #{serverId}")
     List<MediaServer> queryAllWithOutDefault(@Param("serverId") String serverId);
 
-    @Delete("DELETE FROM wvp_media_server WHERE id=#{id} and server_id = #{serverId}")
+    @Delete("DELETE FROM mz_media_server WHERE id=#{id} and server_id = #{serverId}")
     void delOne(String id, @Param("serverId") String serverId);
 
-    @Select("SELECT * FROM wvp_media_server WHERE ip=#{host} and http_port=#{port} and server_id = #{serverId}")
+    @Select("SELECT * FROM mz_media_server WHERE ip=#{host} and http_port=#{port} and server_id = #{serverId}")
     MediaServer queryOneByHostAndPort(@Param("host") String host, @Param("port") int port, @Param("serverId") String serverId);
 
-    @Select("SELECT * FROM wvp_media_server WHERE default_server=true and server_id = #{serverId}")
+    @Select("SELECT * FROM mz_media_server WHERE default_server=true and server_id = #{serverId}")
     MediaServer queryDefault(@Param("serverId") String serverId);
 
-    @Select("SELECT * FROM wvp_media_server WHERE record_assist_port > 0 and server_id = #{serverId}")
+    @Select("SELECT * FROM mz_media_server WHERE record_assist_port > 0 and server_id = #{serverId}")
     List<MediaServer> queryAllWithAssistPort(@Param("serverId") String serverId);
 
-    @Delete("DELETE FROM wvp_media_server WHERE default_server=true and server_id = #{serverId}")
+    @Delete("DELETE FROM mz_media_server WHERE default_server=true and server_id = #{serverId}")
     void deleteDefault(@Param("serverId") String serverId);
 }

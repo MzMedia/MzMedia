@@ -57,8 +57,8 @@ public class DeviceChannelProvider {
                 " coalesce(dc.gb_svc_space_support_mod, dc.svc_space_support_mod) as svc_space_support_mod,\n" +
                 " coalesce(dc.gb_svc_time_support_mode,dc.svc_time_support_mode) as svc_time_support_mode\n" +
                 " from " +
-                " wvp_device_channel dc " +
-                " left join wvp_device d on d.id = dc.data_device_id "
+                " mz_device_channel dc " +
+                " left join mz_device d on d.id = dc.data_device_id "
                 ;
     }
     public String queryChannels(Map<String, Object> params ){

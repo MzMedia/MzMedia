@@ -6,7 +6,7 @@ public class MysqlCommonChannelUpsertProvider {
 
     public String batchUpsert(Map<String, Object> params) {
         return "<script>" +
-                "INSERT INTO wvp_device_channel (" +
+                "INSERT INTO mz_device_channel (" +
                 "gb_device_id, data_type, data_device_id, create_time, update_time, " +
                 "gb_name, gb_manufacturer, gb_model, gb_owner, gb_civil_code, gb_block, gb_address, " +
                 "gb_parental, gb_parent_id, gb_safety_way, gb_register_way, gb_cert_num, gb_certifiable, " +

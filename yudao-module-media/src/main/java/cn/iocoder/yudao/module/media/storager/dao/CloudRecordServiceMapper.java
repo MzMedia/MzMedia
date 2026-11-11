@@ -11,7 +11,7 @@ import java.util.List;
 public interface CloudRecordServiceMapper {
 
     @Insert(" <script>" +
-            "INSERT INTO wvp_cloud_record (" +
+            "INSERT INTO mz_cloud_record (" +
             " app," +
             " stream," +
             "<if test=\"callId != null\"> call_id,</if>" +
@@ -42,7 +42,7 @@ public interface CloudRecordServiceMapper {
 
     @Select(" <script>" +
             "select * " +
-            " from wvp_cloud_record " +
+            " from mz_cloud_record " +
             " where 1 = 1" +
             " <if test='query != null'> AND (app LIKE concat('%',#{query},'%') escape '/' OR stream LIKE concat('%',#{query},'%') escape '/' )</if> " +
             " <if test= 'app != null '> and app=#{app}</if>" +
@@ -67,7 +67,7 @@ public interface CloudRecordServiceMapper {
 
     @Select(" <script>" +
             "select file_path" +
-            " from wvp_cloud_record " +
+            " from mz_cloud_record " +
             " where 0 = 0" +
             " <if test= 'app != null '> and app=#{app}</if>" +
             " <if test= 'stream != null '> and stream=#{stream}</if>" +
@@ -83,13 +83,13 @@ public interface CloudRecordServiceMapper {
                                   @Param("callId")String callId, List<MediaServer> mediaServerItemList);
 
     @Update(" <script>" +
-            "update wvp_cloud_record set collect = #{collect} where file_path in " +
+            "update mz_cloud_record set collect = #{collect} where file_path in " +
             " <foreach collection='cloudRecordItemList'  item='item'  open='(' separator=',' close=')' > #{item.filePath}</foreach>" +
             " </script>")
     int updateCollectList(@Param("collect") boolean collect, List<CloudRecordItem> cloudRecordItemList);
 
     @Delete(" <script>" +
-            "delete from wvp_cloud_record where media_server_id=#{mediaServerId} and file_path in " +
+            "delete from mz_cloud_record where media_server_id=#{mediaServerId} and file_path in " +
             " <foreach collection='filePathList'  item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
             " </script>")
     void deleteByFileList(List<String> filePathList, @Param("mediaServerId") String mediaServerId);
@@ -97,51 +97,51 @@ public interface CloudRecordServiceMapper {
 
     @Select(" <script>" +
             "select *" +
-            " from wvp_cloud_record " +
+            " from mz_cloud_record " +
             " where collect = false and end_time &lt;= #{endTimeStamp} and media_server_id  = #{mediaServerId} " +
             " </script>")
     List<CloudRecordItem> queryRecordListForDelete(@Param("endTimeStamp")Long endTimeStamp, String mediaServerId);
 
     @Update(" <script>" +
-            "update wvp_cloud_record set collect = #{collect} where id = #{recordId} " +
+            "update mz_cloud_record set collect = #{collect} where id = #{recordId} " +
             " </script>")
     int changeCollectById(@Param("collect") boolean collect, @Param("recordId") Integer recordId);
 
     @Delete(" <script>" +
-            "delete from wvp_cloud_record where id in " +
+            "delete from mz_cloud_record where id in " +
             " <foreach collection='cloudRecordItemIdList'  item='item'  open='(' separator=',' close=')' > #{item.id}</foreach>" +
             " </script>")
     int deleteList(List<CloudRecordItem> cloudRecordItemIdList);
 
     @Select(" <script>" +
             "select *" +
-            " from wvp_cloud_record " +
+            " from mz_cloud_record " +
             "where call_id = #{callId}" +
             " </script>")
     List<CloudRecordItem> getListByCallId(@Param("callId") String callId);
 
     @Select(" <script>" +
             "select *" +
-            " from wvp_cloud_record " +
+            " from mz_cloud_record " +
             "where id = #{id}" +
             " </script>")
     CloudRecordItem queryOne(@Param("id") Integer id);
 
     @Select(" <script>" +
             "select *" +
-            " from wvp_cloud_record " +
+            " from mz_cloud_record " +
             " where app=#{app} and stream=#{stream} and file_name = #{fileName} " +
             " </script>")
     CloudRecordItem getListByFileName(@Param("app") String app, @Param("stream") String stream, @Param("fileName") String fileName);
 
     @Update(" <script>" +
-            "update wvp_cloud_record set time_len = #{time}, end_time = #{endTime}  where id = #{id} " +
+            "update mz_cloud_record set time_len = #{time}, end_time = #{endTime}  where id = #{id} " +
             " </script>")
     void updateTimeLen(@Param("id") int id, @Param("time") Long time, @Param("endTime") long endTime);
 
     @Select(" <script>" +
             "select media_server_id " +
-            " from wvp_cloud_record " +
+            " from mz_cloud_record " +
             " where 0 = 0" +
             " <if test= 'app != null '> and app=#{app}</if>" +
             " <if test= 'stream != null '> and stream=#{stream}</if>" +
@@ -156,14 +156,14 @@ public interface CloudRecordServiceMapper {
 
     @Select(" <script>" +
             "select * " +
-            " from wvp_cloud_record where id in " +
+            " from mz_cloud_record where id in " +
             " <foreach collection='ids'  item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
             " </script>")
     List<CloudRecordItem> queryRecordByIds(Collection<Integer> ids);
 
     @Select(" <script>" +
             "select * " +
-            " from wvp_cloud_record where 0=0 " +
+            " from mz_cloud_record where 0=0 " +
             " <if test= 'app != null '> and app=#{app}</if>" +
             " <if test= 'stream != null '> and stream=#{stream}</if>" +
             " <if test= 'callId != null '> and call_id=#{callId}</if>" +

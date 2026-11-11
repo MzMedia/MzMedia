@@ -44,11 +44,11 @@ public interface DeviceMapper {
             "server_id,"+
             "media_server_id," +
             "broadcast_push_after_ack," +
-            "(SELECT count(0) FROM wvp_device_channel dc WHERE dc.data_type = 1 and dc.data_device_id= de.id) as channel_count "+
-            " FROM wvp_device de WHERE de.device_id = #{deviceId}")
+            "(SELECT count(0) FROM mz_device_channel dc WHERE dc.data_type = 1 and dc.data_device_id= de.id) as channel_count "+
+            " FROM mz_device de WHERE de.device_id = #{deviceId}")
     Device getDeviceByDeviceId( @Param("deviceId") String deviceId);
 
-    @Insert("INSERT INTO wvp_device (" +
+    @Insert("INSERT INTO mz_device (" +
                 "device_id, " +
                 "name, " +
                 "manufacturer, " +
@@ -115,7 +115,7 @@ public interface DeviceMapper {
     int add(Device device);
 
     @Update(value = {" <script>" +
-                "UPDATE wvp_device " +
+                "UPDATE mz_device " +
                 "SET update_time=#{updateTime}" +
                 ", name=#{name}" +
                 ", manufacturer=#{manufacturer}" +
@@ -171,15 +171,15 @@ public interface DeviceMapper {
             "geo_coord_sys,"+
             "on_line,"+
             "media_server_id,"+
-            "(SELECT count(0) FROM wvp_device_channel dc WHERE dc.data_type = #{dataType} and dc.data_device_id= de.id) as channel_count " +
-            "FROM wvp_device de" +
+            "(SELECT count(0) FROM mz_device_channel dc WHERE dc.data_type = #{dataType} and dc.data_device_id= de.id) as channel_count " +
+            "FROM mz_device de" +
             "<if test='online != null'> where de.on_line=#{online}</if>"+
             " order by de.create_time desc "+
             " </script>"
     )
     List<Device> getDevices(@Param("dataType") Integer dataType, @Param("online") Boolean online);
 
-    @Delete("DELETE FROM wvp_device WHERE device_id=#{deviceId}")
+    @Delete("DELETE FROM mz_device WHERE device_id=#{deviceId}")
     int del(String deviceId);
 
     @Select("SELECT " +
@@ -211,7 +211,7 @@ public interface DeviceMapper {
             "geo_coord_sys,"+
             "server_id,"+
             "on_line"+
-            " FROM wvp_device WHERE on_line = true")
+            " FROM mz_device WHERE on_line = true")
     @Select(value = "SELECT " +
             "id, " +
             "device_id, " +
@@ -241,7 +241,7 @@ public interface DeviceMapper {
             "geo_coord_sys,"+
             "server_id,"+
             "on_line"+
-            " FROM wvp_device WHERE on_line = 1", databaseId = "dm")
+            " FROM mz_device WHERE on_line = 1", databaseId = "dm")
     List<Device> getOnlineDevices();
 
     @Select("SELECT " +
@@ -274,7 +274,7 @@ public interface DeviceMapper {
             "geo_coord_sys,"+
             "server_id,"+
             "on_line"+
-            " FROM wvp_device WHERE on_line = true and server_id = #{serverId}")
+            " FROM mz_device WHERE on_line = true and server_id = #{serverId}")
     @Select(value = "SELECT " +
             "id, " +
             "device_id, " +
@@ -305,7 +305,7 @@ public interface DeviceMapper {
             "geo_coord_sys,"+
             "server_id,"+
             "on_line"+
-            " FROM wvp_device WHERE on_line = 1 and server_id = #{serverId}", databaseId = "dm")
+            " FROM mz_device WHERE on_line = 1 and server_id = #{serverId}", databaseId = "dm")
     List<Device> getOnlineDevicesByServerId(@Param("serverId") String serverId);
 
     @Select("SELECT " +
@@ -336,11 +336,11 @@ public interface DeviceMapper {
             "broadcast_push_after_ack,"+
             "geo_coord_sys,"+
             "on_line"+
-            " FROM wvp_device WHERE ip = #{host} AND port=#{port}")
+            " FROM mz_device WHERE ip = #{host} AND port=#{port}")
     Device getDeviceByHostAndPort(@Param("host") String host, @Param("port") int port);
 
     @Update(value = {" <script>" +
-            "UPDATE wvp_device " +
+            "UPDATE mz_device " +
             "SET update_time=#{updateTime}, custom_name=#{name} , password=#{password}, stream_mode=#{streamMode}" +
             ", ip=#{ip}, sdp_ip=#{sdpIp}, port=#{port}, charset=#{charset}" +
             ", ssrc_check=#{ssrcCheck}, as_message_channel=#{asMessageChannel}" +
@@ -349,7 +349,7 @@ public interface DeviceMapper {
             " </script>"})
     void updateCustom(Device device);
 
-    @Insert("INSERT INTO wvp_device (" +
+    @Insert("INSERT INTO mz_device (" +
             "device_id,"+
             "custom_name,"+
             "password,"+
@@ -384,10 +384,10 @@ public interface DeviceMapper {
             ")")
     void addCustomDevice(Device device);
 
-    @Select("select * FROM wvp_device")
+    @Select("select * FROM mz_device")
     List<Device> getAll();
 
-    @Select("select * FROM wvp_device where  as_message_channel = true")
+    @Select("select * FROM mz_device where  as_message_channel = true")
     List<Device> queryDeviceWithAsMessageChannel();
 
     @Select(" <script>" +
@@ -424,8 +424,8 @@ public interface DeviceMapper {
             ",position_capability" +
             ",broadcast_push_after_ack" +
             ",server_id" +
-            ",(SELECT count(0) FROM wvp_device_channel dc WHERE dc.data_type = #{dataType} and dc.data_device_id= de.id) as channel_count " +
-            " FROM wvp_device de" +
+            ",(SELECT count(0) FROM mz_device_channel dc WHERE dc.data_type = #{dataType} and dc.data_device_id= de.id) as channel_count " +
+            " FROM mz_device de" +
             " where 1 = 1 "+
             " <if test='status != null'> AND de.on_line=#{status}</if>"+
             " <if test='query != null'> AND (" +
@@ -437,40 +437,40 @@ public interface DeviceMapper {
             " </script>")
     List<Device> getDeviceList(@Param("dataType") Integer dataType, @Param("query") String query, @Param("status") Boolean status);
 
-    @Select("select * from wvp_device_channel where id = #{id}")
+    @Select("select * from mz_device_channel where id = #{id}")
     DeviceChannel getRawChannel(@Param("id") int id);
 
-    @Select("select * from wvp_device where id = #{id}")
+    @Select("select * from mz_device where id = #{id}")
     Device query(@Param("id") Integer id);
 
-    @Select("select wd.* from wvp_device wd left join wvp_device_channel wdc on wdc.data_type = #{dataType} and wd.id = wdc.data_device_id  where wdc.id = #{channelId}")
+    @Select("select wd.* from mz_device wd left join mz_device_channel wdc on wdc.data_type = #{dataType} and wd.id = wdc.data_device_id  where wdc.id = #{channelId}")
     Device queryByChannelId(@Param("dataType") Integer dataType, @Param("channelId") Integer channelId);
 
-    @Select("select wd.* from wvp_device wd left join wvp_device_channel wdc on wdc.data_type = #{dataType} and wd.id = wdc.data_device_id  where wdc.device_id = #{channelDeviceId}")
+    @Select("select wd.* from mz_device wd left join mz_device_channel wdc on wdc.data_type = #{dataType} and wd.id = wdc.data_device_id  where wdc.device_id = #{channelDeviceId}")
     Device getDeviceBySourceChannelDeviceId(@Param("dataType") Integer dataType, @Param("channelDeviceId") String channelDeviceId);
 
     @Update(value = {" <script>" +
-            " UPDATE wvp_device " +
+            " UPDATE mz_device " +
             "  SET subscribe_cycle_for_catalog=#{subscribeCycleForCatalog}" +
             " WHERE id=#{id}"+
             " </script>"})
     void updateSubscribeCatalog(Device device);
 
     @Update(value = {" <script>" +
-            "UPDATE wvp_device " +
+            "UPDATE mz_device " +
             "SET subscribe_cycle_for_mobile_position=#{subscribeCycleForMobilePosition}, mobile_position_submission_interval=#{mobilePositionSubmissionInterval}" +
             " WHERE id=#{id}"+
             " </script>"})
     void updateSubscribeMobilePosition(Device device);
 
     @Update(value = {" <script>" +
-            "UPDATE wvp_device " +
+            "UPDATE mz_device " +
             "SET on_line=false" +
             " WHERE id in"+
             "<foreach collection='offlineDevices' item='item'  open='(' separator=',' close=')' > #{item.id}</foreach>" +
             " </script>"})
     @Update(value = {" <script>" +
-            "UPDATE wvp_device " +
+            "UPDATE mz_device " +
             "SET on_line=0" +
             " WHERE id in"+
             "<foreach collection='offlineDevices' item='item'  open='(' separator=',' close=')' > #{item.id}</foreach>" +
@@ -481,7 +481,7 @@ public interface DeviceMapper {
     @Update({"<script>" +
             "<foreach collection='devices' item='item' separator=';'>" +
             " UPDATE" +
-            " wvp_device" +
+            " mz_device" +
             " SET update_time=#{item.updateTime}" +
             ", name=#{item.name}" +
             ", manufacturer=#{item.manufacturer}" +
@@ -541,7 +541,7 @@ public interface DeviceMapper {
             ",position_capability" +
             ",broadcast_push_after_ack" +
             ",server_id" +
-            " FROM wvp_device" +
+            " FROM mz_device" +
             " WHERE device_id in"+
             "<foreach collection='deviceIds' item='item'  open='(' separator=',' close=')' > #{item}</foreach>" +
             " </script>"})

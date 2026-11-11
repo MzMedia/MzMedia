@@ -14,8 +14,8 @@ public interface AlarmMapper {
             " wa.*," +
             " coalesce(wdc.gb_device_id, wdc.device_id) as channelDeviceId, " +
             " coalesce(wdc.gb_name, wdc.name) as channelName " +
-            " FROM wvp_alarm wa " +
-            " LEFT join wvp_device_channel wdc " +
+            " FROM mz_alarm wa " +
+            " LEFT join mz_device_channel wdc " +
             " on wdc.id = wa.channel_id " +
             " WHERE 1=1" +
             "<if test='alarmType != null and alarmType.size() > 0'>" +
@@ -33,7 +33,7 @@ public interface AlarmMapper {
                           @Param("endTimeLong") Long endTimeLong);
 
     @Delete("<script>" +
-            "DELETE FROM wvp_alarm WHERE id IN " +
+            "DELETE FROM mz_alarm WHERE id IN " +
             "<foreach collection='ids' item='id' open='(' separator=',' close=')'>" +
             "#{id}" +
             "</foreach>" +
@@ -41,7 +41,7 @@ public interface AlarmMapper {
     void deleteAlarms(@Param("ids") List<Long> ids);
 
     @Insert("<script>" +
-            "INSERT INTO wvp_alarm (channel_id, description, snap_path, record_path, longitude, latitude, alarm_type, alarm_time)" +
+            "INSERT INTO mz_alarm (channel_id, description, snap_path, record_path, longitude, latitude, alarm_type, alarm_time)" +
             " VALUES " +
             "<foreach collection='handlerCatchDataList' item='item' separator=','>" +
             "(#{item.channelId}, #{item.description}, #{item.snapPath}, #{item.recordPath}, #{item.longitude}, #{item.latitude}, #{item.alarmType}, #{item.alarmTime})" +
@@ -49,11 +49,11 @@ public interface AlarmMapper {
             "</script>")
     void insertAlarms(@Param("handlerCatchDataList") List<Alarm> handlerCatchDataList);
 
-    @Select("SELECT snap_path FROM wvp_alarm WHERE id = #{id}")
+    @Select("SELECT snap_path FROM mz_alarm WHERE id = #{id}")
     String getSnapPathById(@Param("id") Long id);
 
     @Delete("<script>" +
-            "DELETE FROM wvp_alarm WHERE 1=1" +
+            "DELETE FROM mz_alarm WHERE 1=1" +
             "<if test='alarmType != null and alarmType.size() > 0'>" +
             " AND alarm_type IN " +
             "<foreach collection='alarmType' item='item' open='(' separator=',' close=')'>" +

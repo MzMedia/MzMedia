@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface StreamProxyMapper {
 
-    @Insert("INSERT INTO wvp_stream_proxy (type, app, stream, relates_media_server_id, src_url, " +
+    @Insert("INSERT INTO mz_stream_proxy (type, app, stream, relates_media_server_id, src_url, " +
             "timeout, ffmpeg_cmd_key, rtsp_type, enable_audio, enable_mp4, enable, pulling, " +
             "enable_disable_none_reader, server_id, create_time) VALUES" +
             "(#{type}, #{app}, #{stream}, #{relatesMediaServerId}, #{srcUrl}, " +
@@ -20,7 +20,7 @@ public interface StreamProxyMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int add(StreamProxy streamProxyDto);
 
-    @Update("UPDATE wvp_stream_proxy " +
+    @Update("UPDATE mz_stream_proxy " +
             "SET type=#{type}, " +
             "app=#{app}," +
             "stream=#{stream}," +
@@ -37,7 +37,7 @@ public interface StreamProxyMapper {
             "WHERE id=#{id}")
     int update(StreamProxy streamProxyDto);
 
-    @Delete("DELETE FROM wvp_stream_proxy WHERE app=#{app} AND stream=#{stream}")
+    @Delete("DELETE FROM mz_stream_proxy WHERE app=#{app} AND stream=#{stream}")
     int delByAppAndStream(String app, String stream);
 
     @SelectProvider(type = StreamProxyProvider.class, method = "selectAll")
@@ -50,17 +50,17 @@ public interface StreamProxyMapper {
     List<StreamProxy> selectForPushingInMediaServer(@Param("mediaServerId")  String mediaServerId, @Param("enable") boolean enable);
 
 
-    @Select("select count(1) from wvp_stream_proxy")
+    @Select("select count(1) from mz_stream_proxy")
     int getAllCount();
 
-    @Select("select count(1) from wvp_stream_proxy where pulling = true")
+    @Select("select count(1) from mz_stream_proxy where pulling = true")
     int getOnline();
 
-    @Delete("DELETE FROM wvp_stream_proxy WHERE id=#{id}")
+    @Delete("DELETE FROM mz_stream_proxy WHERE id=#{id}")
     int delete(@Param("id") int id);
 
     @Delete(value = "<script>" +
-            "DELETE FROM wvp_stream_proxy WHERE id in (" +
+            "DELETE FROM mz_stream_proxy WHERE id in (" +
             "<foreach collection='streamProxiesForRemove' index='index' item='item' separator=','> " +
             "#{item.id}"+
             "</foreach>" +
@@ -68,12 +68,12 @@ public interface StreamProxyMapper {
             "</script>")
     void deleteByList(List<StreamProxy> streamProxiesForRemove);
 
-    @Update("UPDATE wvp_stream_proxy " +
+    @Update("UPDATE mz_stream_proxy " +
             "SET pulling=true " +
             "WHERE id=#{id}")
     int online(@Param("id") int id);
 
-    @Update("UPDATE wvp_stream_proxy " +
+    @Update("UPDATE mz_stream_proxy " +
             "SET pulling=false " +
             "WHERE id=#{id}")
     int offline(@Param("id") int id);
@@ -81,13 +81,13 @@ public interface StreamProxyMapper {
     @SelectProvider(type = StreamProxyProvider.class, method = "select")
     StreamProxy select(@Param("id") int id);
 
-    @Update("UPDATE wvp_stream_proxy " +
+    @Update("UPDATE mz_stream_proxy " +
             " SET pulling=false, media_server_id = null," +
             " stream_key = null " +
             " WHERE id=#{id}")
     void removeStream(@Param("id")int id);
 
-    @Update("UPDATE wvp_stream_proxy " +
+    @Update("UPDATE mz_stream_proxy " +
             " SET pulling=#{pulling}, media_server_id = #{mediaServerId}, " +
             " stream_key = #{streamKey} " +
             " WHERE id=#{id}")

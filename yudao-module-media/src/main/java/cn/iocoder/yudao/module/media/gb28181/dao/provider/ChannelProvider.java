@@ -57,7 +57,7 @@ public class ChannelProvider {
             "    coalesce(gb_download_speed, download_speed) as gb_download_speed,\n" +
             "    coalesce(gb_svc_space_support_mod, svc_space_support_mod) as gb_svc_space_support_mod,\n" +
             "    coalesce(gb_svc_time_support_mode,svc_time_support_mode) as gb_svc_time_support_mode\n" +
-            " from wvp_device_channel\n"
+            " from mz_device_channel\n"
             ;
 
     public final static String BASE_SQL_TABLE_NAME = "select\n" +
@@ -103,7 +103,7 @@ public class ChannelProvider {
             "    coalesce(wdc.gb_download_speed,  wdc.download_speed) as gb_download_speed,\n" +
             "    coalesce(wdc.gb_svc_space_support_mod,  wdc.svc_space_support_mod) as gb_svc_space_support_mod,\n" +
             "    coalesce(wdc.gb_svc_time_support_mode,  wdc.svc_time_support_mode) as gb_svc_time_support_mode\n" +
-            " from wvp_device_channel wdc\n"
+            " from mz_device_channel wdc\n"
             ;
 
     private final static String BASE_SQL_FOR_PLATFORM =
@@ -148,8 +148,8 @@ public class ChannelProvider {
             "    coalesce(wpgc.custom_download_speed, wdc.gb_download_speed, wdc.download_speed) as gb_download_speed,\n" +
             "    coalesce(wpgc.custom_svc_space_support_mod, wdc.gb_svc_space_support_mod, wdc.svc_space_support_mod) as gb_svc_space_support_mod,\n" +
             "    coalesce(wpgc.custom_svc_time_support_mode, wdc.gb_svc_time_support_mode, wdc.svc_time_support_mode) as gb_svc_time_support_mode\n" +
-            "    from wvp_device_channel wdc" +
-                    " left join wvp_platform_channel wpgc on wdc.id = wpgc.device_channel_id"
+            "    from mz_device_channel wdc" +
+                    " left join mz_platform_channel wpgc on wdc.id = wpgc.device_channel_id"
             ;
 
     private final static String BASE_SQL_FOR_CAMERA_DEVICE =
@@ -199,10 +199,10 @@ public class ChannelProvider {
                     "    coalesce(wdc.gb_download_speed,  wdc.download_speed) as gb_download_speed,\n" +
                     "    coalesce(wdc.gb_svc_space_support_mod,  wdc.svc_space_support_mod) as gb_svc_space_support_mod,\n" +
                     "    coalesce(wdc.gb_svc_time_support_mode,  wdc.svc_time_support_mode) as gb_svc_time_support_mode\n" +
-                    " from wvp_device_channel wdc\n" +
-                    " left join wvp_device wd on wdc.data_type = 1 AND wd.id = wdc.data_device_id" +
-                    " left join wvp_common_group wcg on wcg.device_id = coalesce(wdc.gb_parent_id,  wdc.parent_id)" +
-                    " left join wvp_common_group wcg2 on wcg2.device_id = wcg.business_group"
+                    " from mz_device_channel wdc\n" +
+                    " left join mz_device wd on wdc.data_type = 1 AND wd.id = wdc.data_device_id" +
+                    " left join mz_common_group wcg on wcg.device_id = coalesce(wdc.gb_parent_id,  wdc.parent_id)" +
+                    " left join mz_common_group wcg2 on wcg2.device_id = wcg.business_group"
             ;
 
     public String queryByDeviceId(Map<String, Object> params ){
@@ -500,7 +500,7 @@ public class ChannelProvider {
     public String queryListByCivilCodeForUnusual(Map<String, Object> params ){
         StringBuilder sqlBuild = new StringBuilder();
         sqlBuild.append(BASE_SQL_TABLE_NAME);
-        sqlBuild.append(" left join (select wcr.device_id from wvp_common_region wcr) temp on temp.device_id = coalesce(wdc.gb_civil_code, wdc.civil_code)" +
+        sqlBuild.append(" left join (select wcr.device_id from mz_common_region wcr) temp on temp.device_id = coalesce(wdc.gb_civil_code, wdc.civil_code)" +
                 " where coalesce(wdc.gb_civil_code, wdc.civil_code) is not null and temp.device_id is null ");
         sqlBuild.append(" AND wdc.channel_type = 0 ");
         if (params.get("query") != null) {
@@ -523,7 +523,7 @@ public class ChannelProvider {
     public String queryListByParentForUnusual(Map<String, Object> params ){
         StringBuilder sqlBuild = new StringBuilder();
         sqlBuild.append(BASE_SQL_TABLE_NAME);
-        sqlBuild.append(" left join (select wcg.device_id from wvp_common_group wcg) temp on temp.device_id = coalesce(wdc.gb_parent_id, wdc.parent_id)" +
+        sqlBuild.append(" left join (select wcg.device_id from mz_common_group wcg) temp on temp.device_id = coalesce(wdc.gb_parent_id, wdc.parent_id)" +
                 " where coalesce(wdc.gb_parent_id, wdc.parent_id) is not null and temp.device_id is null ");
         sqlBuild.append(" AND wdc.channel_type = 0 ");
         if (params.get("query") != null) {
@@ -578,8 +578,8 @@ public class ChannelProvider {
 
     public String queryAllForUnusualCivilCode(Map<String, Object> params ){
         StringBuilder sqlBuild = new StringBuilder();
-        sqlBuild.append("select wdc.id from wvp_device_channel wdc ");
-        sqlBuild.append(" left join (select wcr.device_id from wvp_common_region wcr) temp on temp.device_id = coalesce(wdc.gb_civil_code, wdc.civil_code)" +
+        sqlBuild.append("select wdc.id from mz_device_channel wdc ");
+        sqlBuild.append(" left join (select wcr.device_id from mz_common_region wcr) temp on temp.device_id = coalesce(wdc.gb_civil_code, wdc.civil_code)" +
                 " where coalesce(wdc.gb_civil_code, wdc.civil_code) is not null and temp.device_id is null ");
         sqlBuild.append(" AND wdc.channel_type = 0 ");
         return sqlBuild.toString();
@@ -587,8 +587,8 @@ public class ChannelProvider {
 
     public String queryAllForUnusualParent(Map<String, Object> params ){
         StringBuilder sqlBuild = new StringBuilder();
-        sqlBuild.append("select wdc.id from wvp_device_channel wdc ");
-        sqlBuild.append(" left join (select wcg.device_id from wvp_common_group wcg) temp on temp.device_id = coalesce(wdc.gb_parent_id, wdc.parent_id)" +
+        sqlBuild.append("select wdc.id from mz_device_channel wdc ");
+        sqlBuild.append(" left join (select wcg.device_id from mz_common_group wcg) temp on temp.device_id = coalesce(wdc.gb_parent_id, wdc.parent_id)" +
                 " where coalesce(wdc.gb_parent_id, wdc.parent_id) is not null and temp.device_id is null ");
         sqlBuild.append(" AND wdc.channel_type = 0 ");
         return sqlBuild.toString();
