@@ -73,6 +73,13 @@
             <version>${revision}</version>
         </dependency>
 
+        <!-- 视频监控与流媒体中心模块 -->
+        <dependency>
+            <groupId>cn.iocoder.boot</groupId>
+            <artifactId>yudao-module-media</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
         <!-- MES 制造执行系统相关模块 -->
         <dependency>
             <groupId>cn.iocoder.boot</groupId>

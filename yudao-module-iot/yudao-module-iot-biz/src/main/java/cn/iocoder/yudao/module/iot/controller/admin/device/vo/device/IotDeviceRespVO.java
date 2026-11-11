@@ -88,6 +88,9 @@ public class IotDeviceRespVO {
     @Schema(description = "设备位置的经度", example = "45.000000")
     private BigDecimal longitude;
 
+    @Schema(description = "视频监控配置(JSON)")
+    private String videoConfig;
+
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
     private LocalDateTime createTime;

@@ -49,4 +49,7 @@ public class IotDeviceSaveReqVO {
     @DecimalMax(value = "180", message = "经度范围为 -180 到 180")
     private BigDecimal longitude;
 
+    @Schema(description = "视频监控配置(JSON)")
+    private String videoConfig;
+
 }

@@ -17,7 +17,8 @@ public enum IotProductDeviceTypeEnum implements ArrayValuable<Integer> {
 
     DIRECT(0, "直连设备"),
     GATEWAY_SUB(1, "网关子设备"),
-    GATEWAY(2, "网关设备");
+    GATEWAY(2, "网关设备"),
+    VIDEO(3, "视频监控设备");
 
     /**
      * 类型
@@ -54,6 +55,16 @@ public enum IotProductDeviceTypeEnum implements ArrayValuable<Integer> {
      */
     public static boolean isGatewaySub(Integer type) {
         return GATEWAY_SUB.getType().equals(type);
+    }
+
+    /**
+     * 判断是否是视频监控设备
+     *
+     * @param type 类型
+     * @return 是否是视频监控设备
+     */
+    public static boolean isVideo(Integer type) {
+        return VIDEO.getType().equals(type);
     }
 
 }

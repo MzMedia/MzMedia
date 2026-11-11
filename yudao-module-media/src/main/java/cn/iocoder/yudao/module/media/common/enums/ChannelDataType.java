@@ -9,6 +9,10 @@ public class ChannelDataType {
     public final static int GB28181 = 1;
     public final static int STREAM_PUSH = 2;
     public final static int STREAM_PROXY = 3;
+    public final static int ONVIF = 4;
+    public final static int HIKVISION = 5;
+    public final static int DAHUA = 6;
+    public final static int EZVIZ = 7;
     public final static int JT_1078 = 200;
 
     public final static String PLAY_SERVICE = "sourceChannelPlayService";
@@ -27,6 +31,10 @@ public class ChannelDataType {
             case ChannelDataType.GB28181 -> "国标28181";
             case ChannelDataType.STREAM_PUSH -> "推流设备";
             case ChannelDataType.STREAM_PROXY -> "拉流代理";
+            case ChannelDataType.ONVIF -> "ONVIF协议";
+            case ChannelDataType.HIKVISION -> "海康威视";
+            case ChannelDataType.DAHUA -> "大华设备";
+            case ChannelDataType.EZVIZ -> "萤石云";
             case ChannelDataType.JT_1078 -> "部标设备";
             default -> "未知";
         };

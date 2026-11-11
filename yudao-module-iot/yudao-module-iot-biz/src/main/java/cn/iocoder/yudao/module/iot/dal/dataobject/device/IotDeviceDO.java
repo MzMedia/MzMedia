@@ -136,4 +136,11 @@ public class IotDeviceDO extends TenantBaseDO {
      */
     private String config;
 
+    /**
+     * 视频监控配置
+     *
+     * JSON 格式，包含协议类型 (gb28181/onvif/hikvision/dahua/ezviz/jt1078/rtsp)、设备编号、通道编号、流地址等
+     */
+    private String videoConfig;
+
 }
