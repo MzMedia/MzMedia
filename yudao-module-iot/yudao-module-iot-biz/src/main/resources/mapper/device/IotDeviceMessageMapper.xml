@@ -26,6 +26,50 @@
         )
     </update>
 
+    <update id="createSTableWithPrimaryKey">
+        CREATE STABLE IF NOT EXISTS device_message (
+            ts TIMESTAMP,
+            id VARCHAR(50) PRIMARY KEY,
+            report_time TIMESTAMP,
+            tenant_id BIGINT,
+            server_id NCHAR(50),
+            upstream BOOL,
+            reply BOOL,
+            identifier NCHAR(100),
+            request_id NCHAR(50),
+            method NCHAR(100),
+            params VARCHAR(8192),
+            data VARCHAR(8192),
+            code INT,
+            msg NCHAR(256),
+            raw VARCHAR(8192)
+        ) TAGS (
+            device_id BIGINT
+        )
+    </update>
+
+    <update id="createSTableWithoutKey">
+        CREATE STABLE IF NOT EXISTS device_message (
+            ts TIMESTAMP,
+            id VARCHAR(50),
+            report_time TIMESTAMP,
+            tenant_id BIGINT,
+            server_id NCHAR(50),
+            upstream BOOL,
+            reply BOOL,
+            identifier NCHAR(100),
+            request_id NCHAR(50),
+            method NCHAR(100),
+            params VARCHAR(8192),
+            data VARCHAR(8192),
+            code INT,
+            msg NCHAR(256),
+            raw VARCHAR(8192)
+        ) TAGS (
+            device_id BIGINT
+        )
+    </update>
+
     <select id="showSTable" resultType="String">
         SHOW STABLES LIKE 'device_message'
     </select>

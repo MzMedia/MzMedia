@@ -45,8 +45,21 @@ public class IotDeviceMessageTDengineDAO implements IotDeviceMessageDAO {
             return;
         }
         log.info("[initialize][设备消息超级表不存在，创建开始...]");
-        deviceMessageMapper.createSTable();
-        log.info("[initialize][设备消息超级表不存在，创建成功]");
+        try {
+            // 1. 优先尝试 TDengine 3.3.6.3+ 的 COMPOSITE KEY 复合主键语法
+            deviceMessageMapper.createSTable();
+        } catch (Exception ex1) {
+            log.warn("[initialize][使用 COMPOSITE KEY 创建超级表失败，尝试使用 PRIMARY KEY 语法（兼容 TDengine 3.3.0 ~ 3.3.6.2）... 提示: {}]", ex1.getMessage());
+            try {
+                // 2. 降级尝试 TDengine 3.3.0 ~ 3.3.6.2 的 PRIMARY KEY 复合主键语法
+                deviceMessageMapper.createSTableWithPrimaryKey();
+            } catch (Exception ex2) {
+                log.warn("[initialize][使用 PRIMARY KEY 创建超级表失败，尝试使用无额外主键语法（兼容 TDengine 3.3 之前旧版本）... 提示: {}]", ex2.getMessage());
+                // 3. 降级尝试无复合主键语法（兼容 TDengine 3.0 ~ 3.2 等早期版本）
+                deviceMessageMapper.createSTableWithoutKey();
+            }
+        }
+        log.info("[initialize][设备消息超级表创建成功]");
     }
 
     @Override

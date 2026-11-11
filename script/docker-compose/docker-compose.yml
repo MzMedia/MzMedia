@@ -61,22 +61,22 @@ services:
       retries: 10
 
   tdengine:
-    image: tdengine/tdengine:3.3.4.8
+    image: tdengine/tsdb:3.4.3.9
     restart: unless-stopped
     hostname: tdengine
     environment:
       TZ: Asia/Shanghai
       TAOS_ROOT_PASSWORD: ${TDENGINE_PASSWORD:-taosdata}
-      TDENGINE_DATABASE: ${TDENGINE_DATABASE:-ruoyi_vue_pro}
+      TDENGINE_DATABASE: ${TDENGINE_DATABASE:-mzmedia}
     volumes:
       - tdengine-data:/var/lib/taos
       - tdengine-log:/var/log/taos
-    # 默认不对宿主机开放；需要本机客户端（如 TDengine CLI / 数据库工具）连接时，取消注释
-    # ports:
-    #   - "127.0.0.1:6041:6041"
-    #   - "127.0.0.1:6030:6030"
+    # 对宿主机开放端口，供本地开发环境（如 IDEA / 数据库工具）连接
+    ports:
+      - "6041:6041"
+      - "6030:6030"
     healthcheck:
-      test: ["CMD-SHELL", "taos-check service && taos -s \"CREATE DATABASE IF NOT EXISTS $${TDENGINE_DATABASE:-ruoyi_vue_pro};\""]
+      test: ["CMD-SHELL", "taos-check service && ( test -f /tmp/.init_db_done || ( taos -s \"CREATE DATABASE IF NOT EXISTS $${TDENGINE_DATABASE:-mzmedia};\" && touch /tmp/.init_db_done ) )"]
       interval: 10s
       timeout: 5s
       retries: 15
@@ -107,7 +107,7 @@ services:
       SPRING_DATASOURCE_DYNAMIC_DATASOURCE_SLAVE_USERNAME: ${MYSQL_USER:-yudao}
       SPRING_DATASOURCE_DYNAMIC_DATASOURCE_SLAVE_PASSWORD: ${MYSQL_PASSWORD}
       # TDengine（IoT 物联网时序数据库）
-      SPRING_DATASOURCE_DYNAMIC_DATASOURCE_TDENGINE_URL: jdbc:TAOS-WS://tdengine:6041/${TDENGINE_DATABASE:-ruoyi_vue_pro}?varcharAsString=true&enableAutoReconnect=true
+      SPRING_DATASOURCE_DYNAMIC_DATASOURCE_TDENGINE_URL: jdbc:TAOS-WS://tdengine:6041/${TDENGINE_DATABASE:-mzmedia}?varcharAsString=true&enableAutoReconnect=true
       SPRING_DATASOURCE_DYNAMIC_DATASOURCE_TDENGINE_DRIVER_CLASS_NAME: com.taosdata.jdbc.ws.WebSocketDriver
       SPRING_DATASOURCE_DYNAMIC_DATASOURCE_TDENGINE_USERNAME: ${TDENGINE_USER:-root}
       SPRING_DATASOURCE_DYNAMIC_DATASOURCE_TDENGINE_PASSWORD: ${TDENGINE_PASSWORD:-taosdata}

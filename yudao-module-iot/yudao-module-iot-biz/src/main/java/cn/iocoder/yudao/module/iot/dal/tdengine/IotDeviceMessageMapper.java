@@ -21,9 +21,19 @@ import java.util.Map;
 public interface IotDeviceMessageMapper {
 
     /**
-     * 创建设备消息超级表
+     * 创建设备消息超级表（TDengine 3.3.6.3+ COMPOSITE KEY 语法）
      */
     void createSTable();
+
+    /**
+     * 创建设备消息超级表（兼容 TDengine 3.3.0 ~ 3.3.6.2 的 PRIMARY KEY 语法）
+     */
+    void createSTableWithPrimaryKey();
+
+    /**
+     * 创建设备消息超级表（兼容 TDengine 3.3 之前无复合主键的语法）
+     */
+    void createSTableWithoutKey();
 
     /**
      * 查询设备消息表是否存在
