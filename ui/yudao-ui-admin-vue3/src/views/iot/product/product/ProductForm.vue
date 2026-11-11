@@ -45,7 +45,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item
-        v-if="[DeviceTypeEnum.DEVICE, DeviceTypeEnum.GATEWAY].includes(formData.deviceType!)"
+        v-if="[DeviceTypeEnum.DEVICE, DeviceTypeEnum.GATEWAY, DeviceTypeEnum.VIDEO].includes(formData.deviceType!)"
         label="联网方式"
         prop="netType"
       >

@@ -54,11 +54,12 @@ export interface ProductScriptDebugRespVO {
   }
 }
 
-// IOT 产品设备类型枚举类 0: 直连设备, 1: 网关子设备, 2: 网关设备
+// IOT 产品设备类型枚举类 0: 直连设备, 1: 网关子设备, 2: 网关设备, 3: 视频监控设备
 export enum DeviceTypeEnum {
   DEVICE = 0, // 直连设备
   GATEWAY_SUB = 1, // 网关子设备
-  GATEWAY = 2 // 网关设备
+  GATEWAY = 2, // 网关设备
+  VIDEO = 3 // 视频监控设备
 }
 // IoT 协议类型枚举
 export enum ProtocolTypeEnum {

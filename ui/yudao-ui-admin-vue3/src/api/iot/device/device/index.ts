@@ -27,6 +27,7 @@ export interface DeviceVO {
   address: string // 设备详细地址
   serialNumber: string // 设备序列号
   config: string // 设备配置
+  videoConfig?: string // 视频流媒体配置
   groupIds?: number[] // 添加分组 ID
 }
 

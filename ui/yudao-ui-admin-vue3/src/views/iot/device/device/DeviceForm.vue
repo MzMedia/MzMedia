@@ -64,6 +64,48 @@
             </div>
           </el-form-item>
         </el-collapse-item>
+        <el-collapse-item title="视频监控配置" name="video">
+          <el-form-item label="监控协议">
+            <el-select v-model="videoConfigData.protocol" placeholder="选择视频接入协议" style="width: 100%">
+              <el-option label="GB28181 国标协议" value="GB28181" />
+              <el-option label="ONVIF 开放网络视频协议" value="ONVIF" />
+              <el-option label="海康威视 (ISAPI)" value="HIKVISION" />
+              <el-option label="大华 (RPC/CGI)" value="DAHUA" />
+              <el-option label="萤石云 (Ezviz)" value="EZVIZ" />
+              <el-option label="部标 JT/T 1078 (车载视频)" value="JT1078" />
+              <el-option label="拉流代理 (RTSP/RTMP)" value="PROXY" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="绑定视频通道">
+            <el-select
+              v-model="videoConfigData.channelId"
+              placeholder="可直接选择视频中心已接入的通道"
+              filterable
+              clearable
+              style="width: 100%"
+              @change="onVideoChannelSelect"
+            >
+              <el-option
+                v-for="ch in videoChannelOptions"
+                :key="ch.id"
+                :label="`${ch.name || ch.channelId} (${ch.deviceId})`"
+                :value="ch.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="设备国标号">
+            <el-input v-model="videoConfigData.deviceId" placeholder="国标设备ID / 唯一标识" />
+          </el-form-item>
+          <el-form-item label="通道国标号">
+            <el-input v-model="videoConfigData.channelGbId" placeholder="国标通道编码" />
+          </el-form-item>
+          <el-form-item label="视频流地址">
+            <el-input v-model="videoConfigData.streamUrl" placeholder="例如 rtsp://... 或 http://...flv" />
+          </el-form-item>
+          <el-form-item label="云台控制 (PTZ)">
+            <el-switch v-model="videoConfigData.hasPtz" />
+          </el-form-item>
+        </el-collapse-item>
       </el-collapse>
     </el-form>
     <template #footer>
@@ -78,6 +120,7 @@
 import { DeviceApi, DeviceVO } from '@/api/iot/device/device'
 import { DeviceGroupApi } from '@/api/iot/device/group'
 import { ProductApi, ProductVO } from '@/api/iot/product/product'
+import { getChannelPage } from '@/api/media/channel'
 import { UploadImg } from '@/components/UploadFile'
 import { MapDialog } from '@/components/Map'
 import { ref } from 'vue'
@@ -104,6 +147,7 @@ const formData = ref({
   serialNumber: undefined,
   longitude: undefined as number | string | undefined,
   latitude: undefined as number | string | undefined,
+  videoConfig: undefined as string | undefined,
   groupIds: [] as number[]
 })
 
@@ -208,6 +252,23 @@ const formRules = reactive({
 const formRef = ref() // 表单 Ref
 const products = ref<ProductVO[]>([]) // 产品列表
 const deviceGroups = ref<any[]>([])
+const videoChannelOptions = ref<any[]>([])
+const videoConfigData = reactive({
+  protocol: 'GB28181',
+  channelId: undefined as number | undefined,
+  deviceId: '',
+  channelGbId: '',
+  streamUrl: '',
+  hasPtz: true
+})
+
+const onVideoChannelSelect = (channelId: number) => {
+  const ch = videoChannelOptions.value.find((c) => c.id === channelId)
+  if (ch) {
+    videoConfigData.deviceId = ch.deviceId
+    videoConfigData.channelGbId = ch.channelId
+  }
+}
 
 /** 打开弹窗 */
 const open = async (type: string, id?: number) => {
@@ -221,6 +282,15 @@ const open = async (type: string, id?: number) => {
     formLoading.value = true
     try {
       formData.value = await DeviceApi.getDevice(id)
+      if (formData.value.videoConfig) {
+        try {
+          const cfg =
+            typeof formData.value.videoConfig === 'string'
+              ? JSON.parse(formData.value.videoConfig)
+              : formData.value.videoConfig
+          Object.assign(videoConfigData, cfg)
+        } catch (e) {}
+      }
     } finally {
       formLoading.value = false
     }
@@ -230,6 +300,11 @@ const open = async (type: string, id?: number) => {
   products.value = await ProductApi.getSimpleProductList()
   // 加载设备分组列表
   deviceGroups.value = await DeviceGroupApi.getSimpleDeviceGroupList()
+  // 加载可选视频通道
+  try {
+    const chRes = await getChannelPage({ page: 1, count: 100 })
+    videoChannelOptions.value = chRes?.data?.list || chRes?.data || []
+  } catch (e) {}
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
@@ -241,7 +316,10 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as DeviceVO
+    const data = {
+      ...formData.value,
+      videoConfig: JSON.stringify(videoConfigData)
+    } as unknown as DeviceVO
     if (formType.value === 'create') {
       await DeviceApi.createDevice(data)
       message.success(t('common.createSuccess'))
@@ -269,8 +347,17 @@ const resetForm = () => {
     serialNumber: undefined,
     longitude: undefined,
     latitude: undefined,
+    videoConfig: undefined,
     groupIds: []
   }
+  Object.assign(videoConfigData, {
+    protocol: 'GB28181',
+    channelId: undefined,
+    deviceId: '',
+    channelGbId: '',
+    streamUrl: '',
+    hasPtz: true
+  })
   formRef.value?.resetFields()
 }
 

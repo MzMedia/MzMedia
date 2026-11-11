@@ -20,7 +20,7 @@
       </el-descriptions-item>
       <el-descriptions-item
         label="联网方式"
-        v-if="[DeviceTypeEnum.DEVICE, DeviceTypeEnum.GATEWAY].includes(product.deviceType)"
+        v-if="[DeviceTypeEnum.DEVICE, DeviceTypeEnum.GATEWAY, DeviceTypeEnum.VIDEO].includes(product.deviceType)"
       >
         <dict-tag :type="DICT_TYPE.IOT_NET_TYPE" :value="product.netType" />
       </el-descriptions-item>

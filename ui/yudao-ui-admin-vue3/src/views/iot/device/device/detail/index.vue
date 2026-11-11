@@ -65,6 +65,17 @@
           :thing-model-list="thingModelList"
         />
       </el-tab-pane>
+      <el-tab-pane
+        label="视频监控"
+        name="video"
+        v-if="product.deviceType === DeviceTypeEnum.VIDEO || (device && device.videoConfig)"
+      >
+        <DeviceDetailsVideo
+          v-if="activeTab === 'video'"
+          :device="device"
+          :product="product"
+        />
+      </el-tab-pane>
     </el-tabs>
   </el-col>
 </template>
@@ -85,6 +96,7 @@ import DeviceDetailsSimulator from './DeviceDetailsSimulator.vue'
 import DeviceDetailConfig from './DeviceDetailConfig.vue'
 import DeviceModbusConfig from './DeviceModbusConfig.vue'
 import DeviceDetailsSubDevice from './DeviceDetailsSubDevice.vue'
+import DeviceDetailsVideo from './DeviceDetailsVideo.vue'
 
 defineOptions({ name: 'IoTDeviceDetail' })
 
