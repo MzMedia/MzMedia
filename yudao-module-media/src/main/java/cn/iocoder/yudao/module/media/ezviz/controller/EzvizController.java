@@ -16,7 +16,7 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 @Tag(name = "萤石开放云平台设备管理")
 @Slf4j
 @RestController
-@RequestMapping("/api/media/ezviz")
+@RequestMapping({"/admin-api/media/ezviz", "/api/media/ezviz"})
 public class EzvizController {
 
     @Autowired

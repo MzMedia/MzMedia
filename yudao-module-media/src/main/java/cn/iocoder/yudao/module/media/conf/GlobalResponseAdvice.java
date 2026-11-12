@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.media.conf;
 
+import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import com.alibaba.fastjson2.JSON;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
 import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
@@ -15,25 +16,38 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import java.util.LinkedHashMap;
 
 /**
- * 全局统一返回结果
+ * 全局统一返回结果（仅作用于 media 模块且返回非 CommonResult 的接口）
  * @author lin
  */
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "cn.iocoder.yudao.module.media")
 public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
 
 
     @Override
     public boolean supports(@NotNull MethodParameter returnType, @NotNull Class<? extends HttpMessageConverter<?>> converterType) {
+        if (returnType.getMethod() == null) {
+            return false;
+        }
+        // 如果 Controller 方法直接返回 CommonResult，不进行包装，由框架的 GlobalResponseBodyHandler 处理
+        if (CommonResult.class.isAssignableFrom(returnType.getMethod().getReturnType())) {
+            return false;
+        }
         return true;
     }
 
 
     @Override
     public Object beforeBodyWrite(Object body, @NotNull MethodParameter returnType, @NotNull MediaType selectedContentType, @NotNull Class<? extends HttpMessageConverter<?>> selectedConverterType, @NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response) {
-        // 排除api文档的接口，这个接口不需要统一
-        String[] excludePath = {"/v3/api-docs","/api/v1","/index/hook","/api/video-"};
-        for (String path : excludePath) {
-            if (request.getURI().getPath().startsWith(path)) {
+        // 如果已经是 CommonResult，不做包装
+        if (body instanceof CommonResult) {
+            return body;
+        }
+
+        // 排除api文档的接口，以及标准管理端接口等不需要统一为 WVPResult 的接口
+        String path = request.getURI().getPath();
+        String[] excludePath = {"/v3/api-docs", "/api/v1", "/index/hook", "/api/video-", "/admin-api/", "/app-api/"};
+        for (String p : excludePath) {
+            if (path.startsWith(p)) {
                 return body;
             }
         }

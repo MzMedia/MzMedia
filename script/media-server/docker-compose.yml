@@ -1,0 +1,86 @@
+# ==============================================================================
+# MzMedia 流媒体服务器测试集群 Docker Compose (ZLM + ABL)
+# ==============================================================================
+# 支持单独启动 ZLM:  docker compose up -d zlm
+# 支持单独启动 ABL:  docker compose up -d abl
+# 支持同时启动两者: docker compose up -d
+# ==============================================================================
+
+name: mz-media-server
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. ZLMediaKit 高性能流媒体服务器
+  # ----------------------------------------------------------------------------
+  zlm:
+    image: zlmediakit/zlmediakit:master
+    container_name: mz-zlm
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${ZLM_HTTP_PORT:-18080}:80"
+      - "${ZLM_HTTPS_PORT:-18443}:443"
+      - "${ZLM_RTSP_PORT:-554}:554"
+      - "${ZLM_RTMP_PORT:-1935}:1935"
+      - "${ZLM_RTC_PORT:-8000}:8000/udp"
+      - "${ZLM_RTP_PORT:-10000}:10000"
+      - "${ZLM_RTP_PORT:-10000}:10000/udp"
+      # 国标 GB28181 多端口收流范围 (测试开放 50 个端口，避免过多占用)
+      - "30000-30050:30000-30050/udp"
+    volumes:
+      - ./zlm/config.ini:/opt/media/conf/config.ini:ro
+      - zlm-record:/opt/media/bin/www/record
+      - zlm-snap:/opt/media/bin/www/snap
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f -s 'http://127.0.0.1:80/index/api/getServerConfig?secret=${MEDIA_SECRET:-mzmedia_zlm_secret_2026_test_key}' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  # ----------------------------------------------------------------------------
+  # 2. ABLMediaServer 商用级跨平台流媒体服务器
+  # ----------------------------------------------------------------------------
+  abl:
+    build:
+      context: ./abl
+      dockerfile: Dockerfile
+    image: ablmediaserver:latest
+    container_name: mz-abl
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      SERVER_IP: ${SERVER_IP:-127.0.0.1}
+      HOOK_HOST: ${HOOK_HOST:-host.docker.internal}
+      HOOK_PORT: ${HOOK_PORT:-48080}
+    ports:
+      - "${ABL_HTTP_PORT:-9000}:9000"
+      - "${ABL_FLV_PORT:-9001}:9001"
+      - "${ABL_WS_PORT:-9002}:9002"
+      - "${ABL_MP4_PORT:-9003}:9003"
+      - "${ABL_HLS_PORT:-9004}:9004"
+      - "${ABL_RTSP_PORT:-5544}:5544"
+      - "${ABL_RTMP_PORT:-1936}:1936"
+      - "${ABL_RTP_PORT:-10002}:10002"
+      - "${ABL_JT_PORT:-7078}:7078"
+      - "${ABL_RTC_PORT:-9005}:9005/udp"
+      # ABL WebRTC / RTP 端口范围
+      - "31000-31050:31000-31050/udp"
+    volumes:
+      - ./abl/ABLMediaServer.ini:/opt/abl/ABLMediaServer.ini
+      - abl-record:/opt/abl/record
+      - abl-picture:/opt/abl/picture
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f -s 'http://127.0.0.1:9000/index/api/getServerConfig?secret=${MEDIA_SECRET:-mzmedia_zlm_secret_2026_test_key}' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  zlm-record:
+  zlm-snap:
+  abl-record:
+  abl-picture:

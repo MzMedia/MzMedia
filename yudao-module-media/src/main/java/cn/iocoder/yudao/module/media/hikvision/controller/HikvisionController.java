@@ -18,7 +18,7 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 @Tag(name = "海康威视 ISAPI 管理")
 @Slf4j
 @RestController
-@RequestMapping("/api/media/hikvision")
+@RequestMapping({"/admin-api/media/hikvision", "/api/media/hikvision"})
 public class HikvisionController {
 
     @Autowired

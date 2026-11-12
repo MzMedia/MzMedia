@@ -16,7 +16,7 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 @Tag(name = "JT1078 车载音视频管理")
 @Slf4j
 @RestController
-@RequestMapping("/api/media/jt1078")
+@RequestMapping({"/admin-api/media/jt1078", "/api/media/jt1078"})
 public class JT1078Controller {
 
     @Autowired

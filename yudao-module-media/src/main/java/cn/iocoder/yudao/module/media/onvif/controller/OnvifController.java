@@ -16,7 +16,7 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 @Tag(name = "ONVIF 设备管理")
 @Slf4j
 @RestController
-@RequestMapping("/api/media/onvif")
+@RequestMapping({"/admin-api/media/onvif", "/api/media/onvif"})
 public class OnvifController {
 
     @Autowired

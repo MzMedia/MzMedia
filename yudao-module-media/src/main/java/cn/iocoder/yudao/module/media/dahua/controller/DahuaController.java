@@ -18,7 +18,7 @@ import static cn.iocoder.yudao.framework.common.pojo.CommonResult.success;
 @Tag(name = "大华设备管理")
 @Slf4j
 @RestController
-@RequestMapping("/api/media/dahua")
+@RequestMapping({"/admin-api/media/dahua", "/api/media/dahua"})
 public class DahuaController {
 
     @Autowired

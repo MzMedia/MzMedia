@@ -156,3 +156,13 @@ docker compose exec -T mysql sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "
 | JDK 25 + Spring Boot 4.x | `eclipse-temurin:25-jre` | `SPRING_DATA_REDIS_*`（`spring.data.redis.*`） |
 
 并核对该分支 `yudao-server/src/main/resources/application-*.yaml` 的数据源、Redis 配置项与 `sql/mysql` 下的 SQL 文件名。
+
+---
+
+## 📹 流媒体测试服务 (ZLM & ABL)
+
+如果需要测试 `yudao-module-media` 视频监控与流媒体功能，请参考专用目录：
+👉 **[`script/media-server/README.md`](../media-server/README.md)**
+
+提供 **ZLMediaKit (ZLM)** 与 **ABLMediaServer (ABL)** 双引擎 Docker 编排、一键启动脚本、API 联通探测与 FFmpeg 模拟推流测试工具。
+
