@@ -78,6 +78,16 @@
             <artifactId>dom4j</artifactId>
         </dependency>
 
+        <!-- HTTP Digest 客户端（用于 CWMP Connection Request 鉴权唤醒） -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.rburgst</groupId>
+            <artifactId>okhttp-digest</artifactId>
+        </dependency>
+
         <!-- 测试依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

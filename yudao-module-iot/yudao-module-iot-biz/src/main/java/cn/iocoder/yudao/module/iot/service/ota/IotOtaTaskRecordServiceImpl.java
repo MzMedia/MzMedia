@@ -156,7 +156,7 @@ public class IotOtaTaskRecordServiceImpl implements IotOtaTaskRecordService {
                         null,
                         null,
                         fireware.getFileSize() != null ? fireware.getFileSize() : 0L,
-                        fireware.getFileName()
+                        fireware.getName()
                 );
                 message = IotDeviceMessage.builder()
                         .deviceId(device.getId())
@@ -171,7 +171,7 @@ public class IotOtaTaskRecordServiceImpl implements IotOtaTaskRecordService {
                 args.put("FileType", "1 Firmware Upgrade Image");
                 args.put("URL", fireware.getFileUrl());
                 args.put("FileSize", String.valueOf(fireware.getFileSize() != null ? fireware.getFileSize() : 0L));
-                args.put("TargetFileName", StrUtil.nullToEmpty(fireware.getFileName()));
+                args.put("TargetFileName", StrUtil.nullToEmpty(fireware.getName()));
 
                 Map<String, Object> params = new HashMap<>();
                 params.put("command", "Device.Download()");

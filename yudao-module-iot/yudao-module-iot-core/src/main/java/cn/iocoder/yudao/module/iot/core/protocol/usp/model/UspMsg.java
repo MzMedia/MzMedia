@@ -60,7 +60,8 @@ public class UspMsg {
                msgType == UspMsgType.ADD ||
                msgType == UspMsgType.DELETE ||
                msgType == UspMsgType.GET_SUPPORTED_DM ||
-               msgType == UspMsgType.GET_INSTANCES;
+               msgType == UspMsgType.GET_INSTANCES ||
+               msgType == UspMsgType.NOTIFY;
     }
 
     /**

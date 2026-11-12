@@ -42,13 +42,21 @@ public class IotCwmpSessionManager {
     }
 
     /**
-     * 根据 Cookie 会话 ID 查找 CPE 会话
+     * 根据 Cookie 会话 ID 查找 CPE 会话（自动兼容带有 CWMP_SESSION= 前缀的 Cookie Header）
      */
     public CwmpSession getSessionByCookie(String sessionId) {
         if (StrUtil.isBlank(sessionId)) {
             return null;
         }
-        String sn = snBySessionId.get(sessionId);
+        String cleanId = sessionId.trim();
+        if (cleanId.contains("CWMP_SESSION=")) {
+            cleanId = StrUtil.subAfter(cleanId, "CWMP_SESSION=", false);
+        }
+        if (cleanId.contains(";")) {
+            cleanId = StrUtil.subBefore(cleanId, ";", false);
+        }
+        cleanId = cleanId.trim();
+        String sn = snBySessionId.get(cleanId);
         if (sn == null) {
             return null;
         }

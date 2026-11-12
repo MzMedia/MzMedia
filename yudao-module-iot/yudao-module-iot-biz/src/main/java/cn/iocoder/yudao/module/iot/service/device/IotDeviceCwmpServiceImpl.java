@@ -8,6 +8,7 @@ import cn.iocoder.yudao.module.iot.controller.admin.device.vo.cwmp.IotDeviceCwmp
 import cn.iocoder.yudao.module.iot.controller.admin.device.vo.cwmp.IotDeviceCwmpWifiVO;
 import cn.iocoder.yudao.module.iot.core.enums.IotDeviceMessageMethodEnum;
 import cn.iocoder.yudao.module.iot.core.mq.message.IotDeviceMessage;
+import cn.iocoder.yudao.module.iot.core.protocol.cwmp.IotCwmpConnectionRequestClient;
 import cn.iocoder.yudao.module.iot.core.protocol.cwmp.builder.CwmpSoapBuilder;
 import cn.iocoder.yudao.module.iot.core.protocol.cwmp.parser.CwmpSoapParser;
 import cn.iocoder.yudao.module.iot.dal.dataobject.device.IotDeviceCwmpConfigDO;
@@ -159,8 +160,7 @@ public class IotDeviceCwmpServiceImpl implements IotDeviceCwmpService {
         }
 
         // 调用 Connection Request Client 唤醒
-        cn.iocoder.yudao.module.iot.gateway.protocol.cwmp.IotCwmpConnectionRequestClient client =
-                new cn.iocoder.yudao.module.iot.gateway.protocol.cwmp.IotCwmpConnectionRequestClient();
+        IotCwmpConnectionRequestClient client = new IotCwmpConnectionRequestClient();
         return client.trigger(config.getConnectionRequestUrl(),
                 config.getConnectionRequestUsername(),
                 config.getConnectionRequestPassword());

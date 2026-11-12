@@ -104,6 +104,11 @@ public class IotDeviceMessage {
      */
     private String raw;
 
+    /**
+     * 原始二进制载荷（byte[]）
+     */
+    private byte[] payload;
+
     // ========== 基础方法：只传递"serialize（序列化）相关字段" ==========
 
     public static IotDeviceMessage requestOf(String method) {

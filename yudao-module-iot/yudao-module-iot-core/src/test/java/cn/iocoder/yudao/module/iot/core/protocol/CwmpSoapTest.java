@@ -128,6 +128,50 @@ public class CwmpSoapTest {
         String download = CwmpSoapBuilder.buildDownload("1 Firmware Upgrade Image", "http://server/firmware.bin", "admin", "123", 1024000L, "");
         assertTrue(download.contains("<cwmp:Download>"));
         assertTrue(download.contains("http://server/firmware.bin"));
+
+        // 验证 Parser 对 Builder 生成的报文的解析
+        assertEquals(1, CwmpSoapParser.parseInformResponse(informResp));
+
+        List<String> parsedGetPv = CwmpSoapParser.parseGetParameterValues(getPv);
+        assertEquals(2, parsedGetPv.size());
+        assertTrue(parsedGetPv.contains("Device.DeviceInfo."));
+        assertTrue(parsedGetPv.contains("Device.WiFi."));
+
+        List<CwmpParameterValue> parsedSpv = CwmpSoapParser.parseSetParameterValues(spv);
+        assertEquals(1, parsedSpv.size());
+        assertEquals("Device.WiFi.SSID.1.SSID", parsedSpv.get(0).getName());
+        assertEquals("MyHomeWiFi", parsedSpv.get(0).getValue());
+
+        assertEquals("TEST_CMD", CwmpSoapParser.parseReboot(reboot));
+
+        CwmpDownloadRequest dlReq = CwmpSoapParser.parseDownload(download);
+        assertNotNull(dlReq);
+        assertEquals("http://server/firmware.bin", dlReq.getUrl());
+        assertEquals("1 Firmware Upgrade Image", dlReq.getFileType());
+        assertEquals(1024000L, dlReq.getFileSize());
+    }
+
+    @Test
+    public void testCpeResponseBuilders() {
+        // 测试 CPE 响应构建方法
+        String gpvResp = CwmpSoapBuilder.buildGetParameterValuesResponse("msg001",
+                Arrays.asList(new CwmpParameterValue("Device.DeviceInfo.Manufacturer", "Huawei", "xsd:string")));
+        assertEquals("GetParameterValuesResponse", CwmpSoapParser.getMessageType(gpvResp));
+        List<CwmpParameterValue> gpvList = CwmpSoapParser.parseGetParameterValuesResponse(gpvResp);
+        assertEquals(1, gpvList.size());
+        assertEquals("Huawei", gpvList.get(0).getValue());
+
+        String spvResp = CwmpSoapBuilder.buildSetParameterValuesResponse("msg002", 0);
+        assertEquals("SetParameterValuesResponse", CwmpSoapParser.getMessageType(spvResp));
+
+        String rebootResp = CwmpSoapBuilder.buildRebootResponse("msg003");
+        assertEquals("RebootResponse", CwmpSoapParser.getMessageType(rebootResp));
+
+        String dlResp = CwmpSoapBuilder.buildDownloadResponse("msg004", 1);
+        assertEquals("DownloadResponse", CwmpSoapParser.getMessageType(dlResp));
+
+        String tcXml = CwmpSoapBuilder.buildTransferComplete("msg005", "CMD_01", 0, "");
+        assertEquals("TransferComplete", CwmpSoapParser.getMessageType(tcXml));
     }
 
 }

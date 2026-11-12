@@ -303,6 +303,206 @@ public class CwmpSoapParser {
         }
     }
 
+    /**
+     * 解析 InformResponse 报文
+     *
+     * @param xml SOAP XML
+     * @return MaxEnvelopes 数量（默认 1）
+     */
+    public static Integer parseInformResponse(String xml) {
+        try {
+            Document doc = DocumentHelper.parseText(xml);
+            Element root = doc.getRootElement();
+            Element body = findChildElementIgnoreNamespace(root, "Body");
+            if (body == null) {
+                return 1;
+            }
+            Element respElem = findChildElementIgnoreNamespace(body, "InformResponse");
+            if (respElem == null) {
+                return 1;
+            }
+            String maxEnvelopesStr = getElementText(respElem, "MaxEnvelopes");
+            return NumberUtil.isInteger(maxEnvelopesStr) ? Integer.parseInt(maxEnvelopesStr) : 1;
+        } catch (Exception e) {
+            log.error("[parseInformResponse][解析异常]", e);
+            return 1;
+        }
+    }
+
+    /**
+     * 解析 ACS 发送的 GetParameterValues 请求报文
+     *
+     * @param xml SOAP XML
+     * @return 请求查询的参数名列表
+     */
+    public static List<String> parseGetParameterValues(String xml) {
+        List<String> result = new ArrayList<>();
+        try {
+            Document doc = DocumentHelper.parseText(xml);
+            Element root = doc.getRootElement();
+            Element body = findChildElementIgnoreNamespace(root, "Body");
+            if (body == null) {
+                return result;
+            }
+            Element reqElem = findChildElementIgnoreNamespace(body, "GetParameterValues");
+            if (reqElem == null) {
+                return result;
+            }
+            Element paramNamesElem = findChildElementIgnoreNamespace(reqElem, "ParameterNames");
+            if (paramNamesElem == null) {
+                return result;
+            }
+            List<Element> stringList = findChildElementsIgnoreNamespace(paramNamesElem, "string");
+            for (Element elem : stringList) {
+                String str = elem.getTextTrim();
+                if (StrUtil.isNotBlank(str)) {
+                    result.add(str);
+                }
+            }
+        } catch (Exception e) {
+            log.error("[parseGetParameterValues][解析异常]", e);
+        }
+        return result;
+    }
+
+    /**
+     * 解析 ACS 发送的 SetParameterValues 请求报文
+     *
+     * @param xml SOAP XML
+     * @return 请求设置的参数键值对列表
+     */
+    public static List<CwmpParameterValue> parseSetParameterValues(String xml) {
+        List<CwmpParameterValue> result = new ArrayList<>();
+        try {
+            Document doc = DocumentHelper.parseText(xml);
+            Element root = doc.getRootElement();
+            Element body = findChildElementIgnoreNamespace(root, "Body");
+            if (body == null) {
+                return result;
+            }
+            Element reqElem = findChildElementIgnoreNamespace(body, "SetParameterValues");
+            if (reqElem == null) {
+                return result;
+            }
+            Element paramListElem = findChildElementIgnoreNamespace(reqElem, "ParameterList");
+            if (paramListElem == null) {
+                return result;
+            }
+            List<Element> pvsList = findChildElementsIgnoreNamespace(paramListElem, "ParameterValueStruct");
+            for (Element pvs : pvsList) {
+                Element nameElem = findChildElementIgnoreNamespace(pvs, "Name");
+                Element valElem = findChildElementIgnoreNamespace(pvs, "Value");
+                if (nameElem != null) {
+                    String name = nameElem.getTextTrim();
+                    String val = valElem != null ? valElem.getText() : "";
+                    String type = valElem != null ? valElem.attributeValue("type") : "";
+                    result.add(CwmpParameterValue.builder()
+                            .name(name)
+                            .value(val)
+                            .type(type)
+                            .build());
+                }
+            }
+        } catch (Exception e) {
+            log.error("[parseSetParameterValues][解析异常]", e);
+        }
+        return result;
+    }
+
+    /**
+     * 解析 ACS 发送的 GetParameterNames 请求报文
+     *
+     * @param xml SOAP XML
+     * @return CwmpGetParameterNamesRequest 对象
+     */
+    public static CwmpGetParameterNamesRequest parseGetParameterNames(String xml) {
+        try {
+            Document doc = DocumentHelper.parseText(xml);
+            Element root = doc.getRootElement();
+            Element body = findChildElementIgnoreNamespace(root, "Body");
+            if (body == null) {
+                return null;
+            }
+            Element reqElem = findChildElementIgnoreNamespace(body, "GetParameterNames");
+            if (reqElem == null) {
+                return null;
+            }
+            String path = getElementText(reqElem, "ParameterPath");
+            String nextLevelStr = getElementText(reqElem, "NextLevel");
+            boolean nextLevel = "1".equals(nextLevelStr) || "true".equalsIgnoreCase(nextLevelStr);
+            return CwmpGetParameterNamesRequest.builder()
+                    .parameterPath(path)
+                    .nextLevel(nextLevel)
+                    .build();
+        } catch (Exception e) {
+            log.error("[parseGetParameterNames][解析异常]", e);
+            return null;
+        }
+    }
+
+    /**
+     * 解析 ACS 发送的 Reboot 请求报文
+     *
+     * @param xml SOAP XML
+     * @return CommandKey
+     */
+    public static String parseReboot(String xml) {
+        try {
+            Document doc = DocumentHelper.parseText(xml);
+            Element root = doc.getRootElement();
+            Element body = findChildElementIgnoreNamespace(root, "Body");
+            if (body == null) {
+                return "";
+            }
+            Element reqElem = findChildElementIgnoreNamespace(body, "Reboot");
+            if (reqElem == null) {
+                return "";
+            }
+            return StrUtil.nullToEmpty(getElementText(reqElem, "CommandKey"));
+        } catch (Exception e) {
+            log.error("[parseReboot][解析异常]", e);
+            return "";
+        }
+    }
+
+    /**
+     * 解析 ACS 发送的 Download 请求报文
+     *
+     * @param xml SOAP XML
+     * @return CwmpDownloadRequest 对象
+     */
+    public static CwmpDownloadRequest parseDownload(String xml) {
+        try {
+            Document doc = DocumentHelper.parseText(xml);
+            Element root = doc.getRootElement();
+            Element body = findChildElementIgnoreNamespace(root, "Body");
+            if (body == null) {
+                return null;
+            }
+            Element reqElem = findChildElementIgnoreNamespace(body, "Download");
+            if (reqElem == null) {
+                return null;
+            }
+            String fileSizeStr = getElementText(reqElem, "FileSize");
+            String delaySecondsStr = getElementText(reqElem, "DelaySeconds");
+            return CwmpDownloadRequest.builder()
+                    .commandKey(getElementText(reqElem, "CommandKey"))
+                    .fileType(getElementText(reqElem, "FileType"))
+                    .url(getElementText(reqElem, "URL"))
+                    .username(getElementText(reqElem, "Username"))
+                    .password(getElementText(reqElem, "Password"))
+                    .fileSize(NumberUtil.isLong(fileSizeStr) ? Long.parseLong(fileSizeStr) : 0L)
+                    .targetFileName(getElementText(reqElem, "TargetFileName"))
+                    .delaySeconds(NumberUtil.isInteger(delaySecondsStr) ? Integer.parseInt(delaySecondsStr) : 0)
+                    .successUrl(getElementText(reqElem, "SuccessURL"))
+                    .failureUrl(getElementText(reqElem, "FailureURL"))
+                    .build();
+        } catch (Exception e) {
+            log.error("[parseDownload][解析异常]", e);
+            return null;
+        }
+    }
+
     // ==================== 辅助 DOM 解析工具方法（忽略命名空间前缀） ====================
 
     private static Element findChildElementIgnoreNamespace(Element parent, String localName) {

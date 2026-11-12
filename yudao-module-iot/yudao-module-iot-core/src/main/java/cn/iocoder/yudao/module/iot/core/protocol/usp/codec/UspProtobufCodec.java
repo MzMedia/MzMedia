@@ -170,7 +170,7 @@ public class UspProtobufCodec {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         CodedOutputStream cos = CodedOutputStream.newInstance(baos);
 
-        if (msg.isRequest() || msg.getGetRequest() != null || msg.getSetRequest() != null || msg.getOperateRequest() != null) {
+        if (msg.isRequest() || msg.getGetRequest() != null || msg.getSetRequest() != null || msg.getOperateRequest() != null || msg.getNotify() != null) {
             // Field 1: Request request
             byte[] reqBytes = encodeRequest(msg);
             cos.writeByteArray(1, reqBytes);
@@ -196,12 +196,67 @@ public class UspProtobufCodec {
             // Field 1: Get get
             byte[] getBytes = encodeGet(msg.getGetRequest());
             cos.writeByteArray(1, getBytes);
+        } else if (msg.getSetRequest() != null) {
+            // Field 2: Set set
+            byte[] setBytes = encodeSet(msg.getSetRequest());
+            cos.writeByteArray(2, setBytes);
         } else if (msg.getOperateRequest() != null) {
             // Field 6: Operate operate
             byte[] operateBytes = encodeOperate(msg.getOperateRequest());
             cos.writeByteArray(6, operateBytes);
+        } else if (msg.getNotify() != null) {
+            // Field 7: Notify notify
+            byte[] notifyBytes = encodeNotify(msg.getNotify());
+            cos.writeByteArray(7, notifyBytes);
         }
 
+        cos.flush();
+        return baos.toByteArray();
+    }
+
+    private static byte[] encodeSet(UspSetRequest setReq) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        CodedOutputStream cos = CodedOutputStream.newInstance(baos);
+        cos.writeBool(1, Boolean.TRUE.equals(setReq.getAllowPartial()));
+        if (setReq.getParams() != null) {
+            for (Map.Entry<String, String> entry : setReq.getParams().entrySet()) {
+                byte[] entryBytes = encodeMapEntry(entry.getKey(), entry.getValue());
+                cos.writeByteArray(2, entryBytes);
+            }
+        }
+        cos.flush();
+        return baos.toByteArray();
+    }
+
+    private static byte[] encodeNotify(UspNotify notify) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        CodedOutputStream cos = CodedOutputStream.newInstance(baos);
+        if (StrUtil.isNotBlank(notify.getSubscriptionId())) {
+            cos.writeString(1, notify.getSubscriptionId());
+        }
+        cos.writeBool(2, Boolean.TRUE.equals(notify.getSendResp()));
+        if (StrUtil.isNotBlank(notify.getEventName())) {
+            cos.writeString(3, notify.getEventName());
+        }
+        if (notify.getParams() != null) {
+            for (Map.Entry<String, String> entry : notify.getParams().entrySet()) {
+                byte[] entryBytes = encodeMapEntry(entry.getKey(), entry.getValue());
+                cos.writeByteArray(4, entryBytes);
+            }
+        }
+        cos.flush();
+        return baos.toByteArray();
+    }
+
+    private static byte[] encodeMapEntry(String key, String value) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        CodedOutputStream cos = CodedOutputStream.newInstance(baos);
+        if (StrUtil.isNotBlank(key)) {
+            cos.writeString(1, key);
+        }
+        if (StrUtil.isNotBlank(value)) {
+            cos.writeString(2, value);
+        }
         cos.flush();
         return baos.toByteArray();
     }
@@ -231,6 +286,12 @@ public class UspProtobufCodec {
             cos.writeString(2, opReq.getCommandKey());
         }
         cos.writeBool(3, Boolean.TRUE.equals(opReq.getSendResp()));
+        if (opReq.getInputArgs() != null) {
+            for (Map.Entry<String, String> entry : opReq.getInputArgs().entrySet()) {
+                byte[] entryBytes = encodeMapEntry(entry.getKey(), entry.getValue());
+                cos.writeByteArray(4, entryBytes);
+            }
+        }
         cos.flush();
         return baos.toByteArray();
     }
@@ -238,7 +299,77 @@ public class UspProtobufCodec {
     private static byte[] encodeResponse(UspMsg msg) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         CodedOutputStream cos = CodedOutputStream.newInstance(baos);
-        // 省略根据需要编码的返回
+
+        if (msg.getGetResponse() != null) {
+            // Field 1: GetResp get_resp
+            byte[] getRespBytes = encodeGetResp(msg.getGetResponse());
+            cos.writeByteArray(1, getRespBytes);
+        } else if (msg.getSetResponse() != null) {
+            // Field 3: SetResp set_resp
+            byte[] setRespBytes = encodeSetResp(msg.getSetResponse());
+            cos.writeByteArray(3, setRespBytes);
+        } else if (msg.getOperateResponse() != null) {
+            // Field 6: OperateResp operate_resp
+            byte[] opRespBytes = encodeOperateResp(msg.getOperateResponse());
+            cos.writeByteArray(6, opRespBytes);
+        }
+
+        cos.flush();
+        return baos.toByteArray();
+    }
+
+    private static byte[] encodeGetResp(UspGetResponse getResp) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        CodedOutputStream cos = CodedOutputStream.newInstance(baos);
+
+        // ReqPathResult (Field 1)
+        ByteArrayOutputStream reqPathBaos = new ByteArrayOutputStream();
+        CodedOutputStream reqPathCos = CodedOutputStream.newInstance(reqPathBaos);
+
+        // ResolvedPathResult (Field 3)
+        ByteArrayOutputStream resBaos = new ByteArrayOutputStream();
+        CodedOutputStream resCos = CodedOutputStream.newInstance(resBaos);
+        resCos.writeString(1, ""); // resolved_path
+        if (getResp.getEntries() != null) {
+            for (Map.Entry<String, String> entry : getResp.getEntries().entrySet()) {
+                byte[] entryBytes = encodeMapEntry(entry.getKey(), entry.getValue());
+                resCos.writeByteArray(2, entryBytes); // result_params
+            }
+        }
+        resCos.flush();
+
+        reqPathCos.writeByteArray(3, resBaos.toByteArray());
+        reqPathCos.flush();
+
+        cos.writeByteArray(1, reqPathBaos.toByteArray());
+        cos.flush();
+        return baos.toByteArray();
+    }
+
+    private static byte[] encodeSetResp(UspSetResponse setResp) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        CodedOutputStream cos = CodedOutputStream.newInstance(baos);
+        cos.writeBool(1, Boolean.TRUE.equals(setResp.getSuccess()));
+        if (setResp.getUpdatedParams() != null) {
+            for (Map.Entry<String, String> entry : setResp.getUpdatedParams().entrySet()) {
+                byte[] entryBytes = encodeMapEntry(entry.getKey(), entry.getValue());
+                cos.writeByteArray(2, entryBytes);
+            }
+        }
+        cos.flush();
+        return baos.toByteArray();
+    }
+
+    private static byte[] encodeOperateResp(UspOperateResponse opResp) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        CodedOutputStream cos = CodedOutputStream.newInstance(baos);
+        cos.writeBool(1, Boolean.TRUE.equals(opResp.getExecuted()));
+        if (opResp.getOutputArgs() != null) {
+            for (Map.Entry<String, String> entry : opResp.getOutputArgs().entrySet()) {
+                byte[] entryBytes = encodeMapEntry(entry.getKey(), entry.getValue());
+                cos.writeByteArray(2, entryBytes);
+            }
+        }
         cos.flush();
         return baos.toByteArray();
     }
@@ -349,14 +480,108 @@ public class UspProtobufCodec {
             int tag = cis.readTag();
             if (tag == 0) break;
             int field = WireFormat.getTagFieldNumber(tag);
-            if (field == 2) {
-                // Notify
-                byte[] notifyBytes = cis.readByteArray();
-                decodeNotify(notifyBytes, msg);
+            switch (field) {
+                case 1: {
+                    // Get
+                    byte[] getBytes = cis.readByteArray();
+                    decodeGet(getBytes, msg);
+                    break;
+                }
+                case 2: {
+                    // Set
+                    byte[] setBytes = cis.readByteArray();
+                    decodeSet(setBytes, msg);
+                    break;
+                }
+                case 6: {
+                    // Operate
+                    byte[] operateBytes = cis.readByteArray();
+                    decodeOperate(operateBytes, msg);
+                    break;
+                }
+                case 7: {
+                    // Notify
+                    byte[] notifyBytes = cis.readByteArray();
+                    decodeNotify(notifyBytes, msg);
+                    break;
+                }
+                default:
+                    cis.skipField(tag);
+                    break;
+            }
+        }
+    }
+
+    private static void decodeGet(byte[] getBytes, UspMsg msg) throws IOException {
+        CodedInputStream cis = CodedInputStream.newInstance(getBytes);
+        UspGetRequest req = new UspGetRequest();
+        java.util.List<String> paths = new java.util.ArrayList<>();
+        while (!cis.isAtEnd()) {
+            int tag = cis.readTag();
+            if (tag == 0) break;
+            int field = WireFormat.getTagFieldNumber(tag);
+            if (field == 1) {
+                paths.add(cis.readString());
+            } else if (field == 2) {
+                req.setMaxDepth(cis.readUInt32());
             } else {
                 cis.skipField(tag);
             }
         }
+        req.setParamPaths(paths);
+        msg.setGetRequest(req);
+    }
+
+    private static void decodeSet(byte[] setBytes, UspMsg msg) throws IOException {
+        CodedInputStream cis = CodedInputStream.newInstance(setBytes);
+        UspSetRequest req = new UspSetRequest();
+        Map<String, String> params = new HashMap<>();
+        while (!cis.isAtEnd()) {
+            int tag = cis.readTag();
+            if (tag == 0) break;
+            int field = WireFormat.getTagFieldNumber(tag);
+            if (field == 1) {
+                req.setAllowPartial(cis.readBool());
+            } else if (field == 2) {
+                byte[] entryBytes = cis.readByteArray();
+                Map.Entry<String, String> entry = decodeMapEntry(entryBytes);
+                if (entry != null) {
+                    params.put(entry.getKey(), entry.getValue());
+                }
+            } else {
+                cis.skipField(tag);
+            }
+        }
+        req.setParams(params);
+        msg.setSetRequest(req);
+    }
+
+    private static void decodeOperate(byte[] opBytes, UspMsg msg) throws IOException {
+        CodedInputStream cis = CodedInputStream.newInstance(opBytes);
+        UspOperateRequest req = new UspOperateRequest();
+        Map<String, String> inputArgs = new HashMap<>();
+        while (!cis.isAtEnd()) {
+            int tag = cis.readTag();
+            if (tag == 0) break;
+            int field = WireFormat.getTagFieldNumber(tag);
+            if (field == 1) {
+                req.setCommand(cis.readString());
+            } else if (field == 2) {
+                req.setCommandKey(cis.readString());
+            } else if (field == 3) {
+                req.setSendResp(cis.readBool());
+            } else if (field == 4) {
+                byte[] entryBytes = cis.readByteArray();
+                Map.Entry<String, String> entry = decodeMapEntry(entryBytes);
+                if (entry != null) {
+                    inputArgs.put(entry.getKey(), entry.getValue());
+                }
+            } else {
+                cis.skipField(tag);
+            }
+        }
+        req.setInputArgs(inputArgs);
+        msg.setOperateRequest(req);
     }
 
     private static void decodeResponse(byte[] respBytes, UspMsg msg) throws IOException {
@@ -374,14 +599,14 @@ public class UspProtobufCodec {
                 }
                 case 3: {
                     // SetResp
-                    msg.setSetResponse(UspSetResponse.builder().success(true).build());
-                    cis.skipField(tag);
+                    byte[] setRespBytes = cis.readByteArray();
+                    decodeSetResp(setRespBytes, msg);
                     break;
                 }
                 case 6: {
                     // OperateResp
-                    msg.setOperateResponse(UspOperateResponse.builder().executed(true).build());
-                    cis.skipField(tag);
+                    byte[] operateRespBytes = cis.readByteArray();
+                    decodeOperateResp(operateRespBytes, msg);
                     break;
                 }
                 default:
@@ -389,6 +614,54 @@ public class UspProtobufCodec {
                     break;
             }
         }
+    }
+
+    private static void decodeSetResp(byte[] bytes, UspMsg msg) throws IOException {
+        CodedInputStream cis = CodedInputStream.newInstance(bytes);
+        UspSetResponse resp = new UspSetResponse();
+        Map<String, String> updated = new HashMap<>();
+        while (!cis.isAtEnd()) {
+            int tag = cis.readTag();
+            if (tag == 0) break;
+            int field = WireFormat.getTagFieldNumber(tag);
+            if (field == 1) {
+                resp.setSuccess(cis.readBool());
+            } else if (field == 2) {
+                byte[] entryBytes = cis.readByteArray();
+                Map.Entry<String, String> entry = decodeMapEntry(entryBytes);
+                if (entry != null) {
+                    updated.put(entry.getKey(), entry.getValue());
+                }
+            } else {
+                cis.skipField(tag);
+            }
+        }
+        resp.setUpdatedParams(updated);
+        msg.setSetResponse(resp);
+    }
+
+    private static void decodeOperateResp(byte[] bytes, UspMsg msg) throws IOException {
+        CodedInputStream cis = CodedInputStream.newInstance(bytes);
+        UspOperateResponse resp = new UspOperateResponse();
+        Map<String, String> outputArgs = new HashMap<>();
+        while (!cis.isAtEnd()) {
+            int tag = cis.readTag();
+            if (tag == 0) break;
+            int field = WireFormat.getTagFieldNumber(tag);
+            if (field == 1) {
+                resp.setExecuted(cis.readBool());
+            } else if (field == 2) {
+                byte[] entryBytes = cis.readByteArray();
+                Map.Entry<String, String> entry = decodeMapEntry(entryBytes);
+                if (entry != null) {
+                    outputArgs.put(entry.getKey(), entry.getValue());
+                }
+            } else {
+                cis.skipField(tag);
+            }
+        }
+        resp.setOutputArgs(outputArgs);
+        msg.setOperateResponse(resp);
     }
 
     private static void decodeGetResp(byte[] getRespBytes, UspMsg msg) throws IOException {
@@ -479,6 +752,7 @@ public class UspProtobufCodec {
     private static void decodeNotify(byte[] notifyBytes, UspMsg msg) throws IOException {
         CodedInputStream cis = CodedInputStream.newInstance(notifyBytes);
         UspNotify notify = new UspNotify();
+        Map<String, String> params = new HashMap<>();
         while (!cis.isAtEnd()) {
             int tag = cis.readTag();
             if (tag == 0) break;
@@ -490,16 +764,16 @@ public class UspProtobufCodec {
                 case 2:
                     notify.setSendResp(cis.readBool());
                     break;
-                case 3: {
-                    // Event
+                case 3:
+                    notify.setEventName(cis.readString());
                     notify.setType("Event");
-                    cis.skipField(tag);
                     break;
-                }
                 case 4: {
-                    // ValueChange
-                    notify.setType("ValueChange");
-                    cis.skipField(tag);
+                    byte[] entryBytes = cis.readByteArray();
+                    Map.Entry<String, String> entry = decodeMapEntry(entryBytes);
+                    if (entry != null) {
+                        params.put(entry.getKey(), entry.getValue());
+                    }
                     break;
                 }
                 default:
@@ -507,6 +781,7 @@ public class UspProtobufCodec {
                     break;
             }
         }
+        notify.setParams(params);
         msg.setNotify(notify);
     }
 

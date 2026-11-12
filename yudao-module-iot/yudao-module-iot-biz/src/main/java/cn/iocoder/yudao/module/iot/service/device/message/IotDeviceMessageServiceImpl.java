@@ -213,7 +213,10 @@ public class IotDeviceMessageServiceImpl implements IotDeviceMessageService {
 
         // 3. 校验载荷：按产品协议的字节规则，与网关 encode 输出、脚本调试是同一份
         try {
-            byte[] payload = IotDeviceMessageUtils.decodeRawPayload(message.getParams(), IotDeviceMessageUtils.RAW_PAYLOAD_MAX_BYTES);
+            byte[] payload = message.getPayload();
+            if (payload == null) {
+                payload = IotDeviceMessageUtils.decodeRawPayload(message.getParams(), IotDeviceMessageUtils.RAW_PAYLOAD_MAX_BYTES);
+            }
             IotDeviceMessageUtils.validateRawPayload(protocol, payload);
             return payload;
         } catch (IllegalArgumentException e) {

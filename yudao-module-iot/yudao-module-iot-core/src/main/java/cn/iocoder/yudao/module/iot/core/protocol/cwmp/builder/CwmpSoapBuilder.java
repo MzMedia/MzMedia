@@ -245,6 +245,211 @@ public class CwmpSoapBuilder {
     }
 
     /**
+     * 构建 Inform 报文（由 CPE 发送给 ACS）
+     *
+     * @param inform Inform 实体
+     * @return SOAP XML
+     */
+    public static String buildInform(cn.iocoder.yudao.module.iot.core.protocol.cwmp.model.CwmpInform inform) {
+        String msgId = StrUtil.blankToDefault(inform.getHeaderId(), IdUtil.simpleUUID());
+        StringBuilder sb = new StringBuilder(SOAP_ENV_START);
+        sb.append("  <soap:Header>\n");
+        sb.append("    <cwmp:ID soap:mustUnderstand=\"1\">").append(escapeXml(msgId)).append("</cwmp:ID>\n");
+        sb.append("  </soap:Header>\n");
+        sb.append("  <soap:Body soap:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n");
+        sb.append("    <cwmp:Inform>\n");
+        if (inform.getDeviceId() != null) {
+            sb.append("      <DeviceId>\n");
+            sb.append("        <Manufacturer>").append(escapeXml(inform.getDeviceId().getManufacturer())).append("</Manufacturer>\n");
+            sb.append("        <OUI>").append(escapeXml(inform.getDeviceId().getOui())).append("</OUI>\n");
+            sb.append("        <ProductClass>").append(escapeXml(inform.getDeviceId().getProductClass())).append("</ProductClass>\n");
+            sb.append("        <SerialNumber>").append(escapeXml(inform.getDeviceId().getSerialNumber())).append("</SerialNumber>\n");
+            sb.append("      </DeviceId>\n");
+        }
+        sb.append("      <Event soapenc:arrayType=\"cwmp:EventStruct[").append(inform.getEvents() != null ? inform.getEvents().size() : 0).append("]\">\n");
+        if (inform.getEvents() != null) {
+            for (cn.iocoder.yudao.module.iot.core.protocol.cwmp.model.CwmpEvent event : inform.getEvents()) {
+                sb.append("        <EventStruct>\n");
+                sb.append("          <EventCode>").append(escapeXml(event.getEventCode())).append("</EventCode>\n");
+                sb.append("          <CommandKey>").append(escapeXml(StrUtil.nullToEmpty(event.getCommandKey()))).append("</CommandKey>\n");
+                sb.append("        </EventStruct>\n");
+            }
+        }
+        sb.append("      </Event>\n");
+        sb.append("      <CurrentTime>").append(StrUtil.blankToDefault(inform.getCurrentTime(), java.time.Instant.now().toString())).append("</CurrentTime>\n");
+        sb.append("      <RetryCount>").append(inform.getRetryCount() != null ? inform.getRetryCount() : 0).append("</RetryCount>\n");
+        sb.append("      <ParameterList soapenc:arrayType=\"cwmp:ParameterValueStruct[").append(inform.getParameterList() != null ? inform.getParameterList().size() : 0).append("]\">\n");
+        if (inform.getParameterList() != null) {
+            for (cn.iocoder.yudao.module.iot.core.protocol.cwmp.model.CwmpParameterValue pv : inform.getParameterList()) {
+                sb.append("        <ParameterValueStruct>\n");
+                sb.append("          <Name>").append(escapeXml(pv.getName())).append("</Name>\n");
+                sb.append("          <Value xsi:type=\"").append(StrUtil.blankToDefault(pv.getType(), "xsd:string")).append("\">").append(escapeXml(pv.getValue())).append("</Value>\n");
+                sb.append("        </ParameterValueStruct>\n");
+            }
+        }
+        sb.append("      </ParameterList>\n");
+        sb.append("    </cwmp:Inform>\n");
+        sb.append("  </soap:Body>\n");
+        sb.append(SOAP_ENV_END);
+        return sb.toString();
+    }
+
+    /**
+     * 构建 GetParameterValuesResponse 响应报文（由 CPE 发送给 ACS）
+     */
+    public static String buildGetParameterValuesResponse(String headerId, Collection<cn.iocoder.yudao.module.iot.core.protocol.cwmp.model.CwmpParameterValue> values) {
+        StringBuilder sb = new StringBuilder(SOAP_ENV_START);
+        sb.append("  <soap:Header>\n");
+        if (StrUtil.isNotBlank(headerId)) {
+            sb.append("    <cwmp:ID soap:mustUnderstand=\"1\">").append(escapeXml(headerId)).append("</cwmp:ID>\n");
+        }
+        sb.append("  </soap:Header>\n");
+        sb.append("  <soap:Body soap:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n");
+        sb.append("    <cwmp:GetParameterValuesResponse>\n");
+        sb.append("      <ParameterList soapenc:arrayType=\"cwmp:ParameterValueStruct[").append(values != null ? values.size() : 0).append("]\">\n");
+        if (values != null) {
+            for (cn.iocoder.yudao.module.iot.core.protocol.cwmp.model.CwmpParameterValue pv : values) {
+                sb.append("        <ParameterValueStruct>\n");
+                sb.append("          <Name>").append(escapeXml(pv.getName())).append("</Name>\n");
+                sb.append("          <Value xsi:type=\"").append(StrUtil.blankToDefault(pv.getType(), "xsd:string")).append("\">").append(escapeXml(pv.getValue())).append("</Value>\n");
+                sb.append("        </ParameterValueStruct>\n");
+            }
+        }
+        sb.append("      </ParameterList>\n");
+        sb.append("    </cwmp:GetParameterValuesResponse>\n");
+        sb.append("  </soap:Body>\n");
+        sb.append(SOAP_ENV_END);
+        return sb.toString();
+    }
+
+    /**
+     * 构建 GetParameterNamesResponse 响应报文（由 CPE 发送给 ACS）
+     */
+    public static String buildGetParameterNamesResponse(String headerId, Collection<cn.iocoder.yudao.module.iot.core.protocol.cwmp.model.CwmpParameterInfo> infos) {
+        StringBuilder sb = new StringBuilder(SOAP_ENV_START);
+        sb.append("  <soap:Header>\n");
+        if (StrUtil.isNotBlank(headerId)) {
+            sb.append("    <cwmp:ID soap:mustUnderstand=\"1\">").append(escapeXml(headerId)).append("</cwmp:ID>\n");
+        }
+        sb.append("  </soap:Header>\n");
+        sb.append("  <soap:Body soap:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n");
+        sb.append("    <cwmp:GetParameterNamesResponse>\n");
+        sb.append("      <ParameterList soapenc:arrayType=\"cwmp:ParameterInfoStruct[").append(infos != null ? infos.size() : 0).append("]\">\n");
+        if (infos != null) {
+            for (cn.iocoder.yudao.module.iot.core.protocol.cwmp.model.CwmpParameterInfo info : infos) {
+                sb.append("        <ParameterInfoStruct>\n");
+                sb.append("          <Name>").append(escapeXml(info.getName())).append("</Name>\n");
+                sb.append("          <Writable>").append(Boolean.TRUE.equals(info.getWritable()) ? "1" : "0").append("</Writable>\n");
+                sb.append("        </ParameterInfoStruct>\n");
+            }
+        }
+        sb.append("      </ParameterList>\n");
+        sb.append("    </cwmp:GetParameterNamesResponse>\n");
+        sb.append("  </soap:Body>\n");
+        sb.append(SOAP_ENV_END);
+        return sb.toString();
+    }
+
+    /**
+     * 构建 SetParameterValuesResponse 响应报文
+     */
+    public static String buildSetParameterValuesResponse(String headerId, int status) {
+        StringBuilder sb = new StringBuilder(SOAP_ENV_START);
+        sb.append("  <soap:Header>\n");
+        if (StrUtil.isNotBlank(headerId)) {
+            sb.append("    <cwmp:ID soap:mustUnderstand=\"1\">").append(escapeXml(headerId)).append("</cwmp:ID>\n");
+        }
+        sb.append("  </soap:Header>\n");
+        sb.append("  <soap:Body soap:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n");
+        sb.append("    <cwmp:SetParameterValuesResponse>\n");
+        sb.append("      <Status>").append(status).append("</Status>\n");
+        sb.append("    </cwmp:SetParameterValuesResponse>\n");
+        sb.append("  </soap:Body>\n");
+        sb.append(SOAP_ENV_END);
+        return sb.toString();
+    }
+
+    /**
+     * 构建 RebootResponse 响应报文
+     */
+    public static String buildRebootResponse(String headerId) {
+        StringBuilder sb = new StringBuilder(SOAP_ENV_START);
+        sb.append("  <soap:Header>\n");
+        if (StrUtil.isNotBlank(headerId)) {
+            sb.append("    <cwmp:ID soap:mustUnderstand=\"1\">").append(escapeXml(headerId)).append("</cwmp:ID>\n");
+        }
+        sb.append("  </soap:Header>\n");
+        sb.append("  <soap:Body soap:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n");
+        sb.append("    <cwmp:RebootResponse/>\n");
+        sb.append("  </soap:Body>\n");
+        sb.append(SOAP_ENV_END);
+        return sb.toString();
+    }
+
+    /**
+     * 构建 FactoryResetResponse 响应报文
+     */
+    public static String buildFactoryResetResponse(String headerId) {
+        StringBuilder sb = new StringBuilder(SOAP_ENV_START);
+        sb.append("  <soap:Header>\n");
+        if (StrUtil.isNotBlank(headerId)) {
+            sb.append("    <cwmp:ID soap:mustUnderstand=\"1\">").append(escapeXml(headerId)).append("</cwmp:ID>\n");
+        }
+        sb.append("  </soap:Header>\n");
+        sb.append("  <soap:Body soap:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n");
+        sb.append("    <cwmp:FactoryResetResponse/>\n");
+        sb.append("  </soap:Body>\n");
+        sb.append(SOAP_ENV_END);
+        return sb.toString();
+    }
+
+    /**
+     * 构建 DownloadResponse 响应报文
+     */
+    public static String buildDownloadResponse(String headerId, int status) {
+        StringBuilder sb = new StringBuilder(SOAP_ENV_START);
+        sb.append("  <soap:Header>\n");
+        if (StrUtil.isNotBlank(headerId)) {
+            sb.append("    <cwmp:ID soap:mustUnderstand=\"1\">").append(escapeXml(headerId)).append("</cwmp:ID>\n");
+        }
+        sb.append("  </soap:Header>\n");
+        sb.append("  <soap:Body soap:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n");
+        sb.append("    <cwmp:DownloadResponse>\n");
+        sb.append("      <Status>").append(status).append("</Status>\n");
+        sb.append("      <StartTime>").append(java.time.Instant.now().toString()).append("</StartTime>\n");
+        sb.append("      <CompleteTime>0001-01-01T00:00:00Z</CompleteTime>\n");
+        sb.append("    </cwmp:DownloadResponse>\n");
+        sb.append("  </soap:Body>\n");
+        sb.append(SOAP_ENV_END);
+        return sb.toString();
+    }
+
+    /**
+     * 构建 TransferComplete 报文（CPE 上报固件传输完毕）
+     */
+    public static String buildTransferComplete(String headerId, String commandKey, int faultCode, String faultString) {
+        StringBuilder sb = new StringBuilder(SOAP_ENV_START);
+        sb.append("  <soap:Header>\n");
+        if (StrUtil.isNotBlank(headerId)) {
+            sb.append("    <cwmp:ID soap:mustUnderstand=\"1\">").append(escapeXml(headerId)).append("</cwmp:ID>\n");
+        }
+        sb.append("  </soap:Header>\n");
+        sb.append("  <soap:Body soap:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n");
+        sb.append("    <cwmp:TransferComplete>\n");
+        sb.append("      <CommandKey>").append(escapeXml(StrUtil.nullToEmpty(commandKey))).append("</CommandKey>\n");
+        sb.append("      <FaultStruct>\n");
+        sb.append("        <FaultCode>").append(faultCode).append("</FaultCode>\n");
+        sb.append("        <FaultString>").append(escapeXml(StrUtil.nullToEmpty(faultString))).append("</FaultString>\n");
+        sb.append("      </FaultStruct>\n");
+        sb.append("      <StartTime>").append(java.time.Instant.now().toString()).append("</StartTime>\n");
+        sb.append("      <CompleteTime>").append(java.time.Instant.now().toString()).append("</CompleteTime>\n");
+        sb.append("    </cwmp:TransferComplete>\n");
+        sb.append("  </soap:Body>\n");
+        sb.append(SOAP_ENV_END);
+        return sb.toString();
+    }
+
+    /**
      * XML 特殊字符转义
      */
     private static String escapeXml(String text) {

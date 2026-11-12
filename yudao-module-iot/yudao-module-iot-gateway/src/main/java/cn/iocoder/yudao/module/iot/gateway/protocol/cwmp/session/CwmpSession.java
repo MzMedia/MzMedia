@@ -41,6 +41,11 @@ public class CwmpSession {
     private volatile long lastActiveTime = System.currentTimeMillis();
 
     /**
+     * 最近一次 Inform 报文对象
+     */
+    private cn.iocoder.yudao.module.iot.core.protocol.cwmp.model.CwmpInform lastInform;
+
+    /**
      * 待下发给 CPE 的 RPC 命令队列
      */
     @Builder.Default
