@@ -51,6 +51,7 @@
 | **消息总线 (Bus)** | Redis Stream / Kafka / RocketMQ | 可配置插拔 | 默认配置 `type: redis`，支持高吞吐场景切换为 Kafka/RocketMQ |
 | **MQTT Broker** | EMQX | **5.0+** | 工业网关与传感器标准化接入 Broker，集成 Webhook 与认证鉴权 |
 | **流媒体服务器** | ZLMediaKit | 核心 Docker 节点 | 支持 RTSP/RTMP/GB28181-RTP/WebRTC/FLV/HLS 多协议拉转推与 REST Hook |
+| **视频监控协议网关** | GB28181 / ONVIF / ISAPI / RPC / Ezviz / JT1078 | 国标 2016/2022、ONVIF Profile S/G/T、海康 ISAPI、大华 RPC/CGI、萤石 OpenAPI、部标 JT/T 1078 (Netty 1078/7078) | 多协议安防与车载视频综合接入中枢，统一转码与 PTZ 云台调度 |
 | **国标 SIP 协议栈** | JAIN SIP (NIST) / GB28181 | 2016 / 2022 国标 | 端口 `5060`，支持 UDP/TCP 双栈信令与鉴权 |
 | **AI 智能中枢** | Spring AI + 官方 Java MCP SDK | **1.1+** | 对接 18+ 主流大模型厂商；支持 MCP Client（stdio 与 http-streamable 双通道） |
 | **工作流引擎** | Flowable | **7.0** | 支撑设备报修、巡检保养工单与工程项目审批 |
@@ -104,7 +105,7 @@ flowchart TD
 | :--- | :--- | :--- | :--- |
 | **`yudao-dependencies`** | Maven BOM | `pom.xml` | 锁定整个系统全部第三方库版本（Spring Boot 4.1.2、Lombok 1.18.48、MapStruct 1.7.0.Beta2、ZLMediaKit SDK、JAIN SIP、Netty 等）。 |
 | **`yudao-framework`** | 框架组件层 | `yudao-common`<br/>`*-starter-mybatis`<br/>`*-starter-redis`<br/>`*-starter-security`<br/>`*-starter-biz-tenant`<br/>`*-starter-biz-data-permission`<br/>`*-starter-web`<br/>`*-starter-websocket` | 封装全套企业级通用 Starter：租户隔离、数据权限切面、Redis 幂等限流、全局异常拦截、MyBatis-Plus 自动填充、WebSocket 广播通道。 |
-| **`yudao-module-media`** | 视频监控中心 | `cn.iocoder.yudao.module.media`<br/>├── `gb28181` (SIP信令栈/设备/通道)<br/>├── `media` (ZLMediaKit Hook对接)<br/>├── `streamProxy` (拉流代理)<br/>├── `streamPush` (推流分发)<br/>├── `vmanager` (录像/抓拍/报警控制)<br/>└── `jt1078` (车载音视频) | 国标 GB/T 28181 服务端（注册、心跳、目录、PTZ、对讲、回放）；ZLMediaKit 节点管理与 RTP 端口调度；视频录像计划与云端切片。 |
+| **`yudao-module-media`** | 视频监控中心 | `cn.iocoder.yudao.module.media`<br/>├── `gb28181` (SIP信令栈/设备/通道)<br/>├── `onvif` (ONVIF WS-Discovery/SOAP客户端/PTZ)<br/>├── `hikvision` (海康威视 ISAPI Digest REST/PTZ/抓图)<br/>├── `dahua` (大华 RPC/CGI/RTSP/PTZ/快照)<br/>├── `ezviz` (萤石云 Token缓存/FLV与HLS直播/云台)<br/>├── `jt1078` (JT/T 1078 车载音视频 Netty 网关)<br/>├── `media` (ZLMediaKit Hook对接)<br/>├── `streamProxy` (拉流代理)<br/>├── `streamPush` (推流分发)<br/>└── `vmanager` (录像/抓拍/报警控制/集群看板) | 多协议视频接入中枢（GB/T 28181、ONVIF、海康 ISAPI、大华 RPC/CGI、萤石云、部标 JT/T 1078）；ZLMediaKit 节点管理与 RTP 端口调度；视频录像计划与云端切片；全协议 PTZ 云台控制与预置位联动。 |
 | **`yudao-module-iot`** | 物联网接入中枢 | ├── `yudao-module-iot-core`<br/>├── `yudao-module-iot-gateway`<br/>└── `yudao-module-iot-biz` | **三层架构**：<br/>1. `core`：TSL 物模型规范、消息体定义、`IotMessageBus` 消息总线接口；<br/>2. `gateway`：Netty/Vert.x 13+ 协议网关（MQTT、Modbus、CoAP、TCP/UDP、HTTP、WS）；<br/>3. `biz`：设备资产、Modbus 点位调度、OTA 升级、数据分发规则（9 Sink）与 TCA 场景联动规则。 |
 | **`yudao-module-ai1-springai`**| AI 驱动中枢 | `cn.iocoder.yudao.module.ai1`<br/>├── `harness` (LLM/MCP/Skill/RAG/Memory)<br/>├── `service.agent` (Agent 编排)<br/>├── `service.mcp` (MCP 客户端管理)<br/>└── `service.knowledge` (向量检索) | 基于 Spring AI 1.1+ 与 Model Context Protocol（MCP）构建；支持本地 stdio 与远程 HTTP MCP 客户端；提供 Skill 物化沙箱、时序运维 RAG 诊断助手、私有协议逆向解析。 |
 | **`yudao-module-mes`** | 智能制造执行 | `cn.iocoder.yudao.module.mes`<br/>├── `cal` (生产日历/班次排班)<br/>├── `dv` (设备台账/点检/保修)<br/>├── `md` (BOM/SOP/工位/编码规则)<br/>├── `pro` (工序/工艺路线/工单/报工/安灯)<br/>├── `qc` (IQC/IPQC/OQC 质量检验)<br/>└── `wm` (车间仓储/批次/SN/盘点) | 覆盖车间生产排产、工艺路线、工单流转、生产报工与安灯（Andon）预警；设备运行维护与保养记录闭环；产品全生命周期质量追溯。 |
@@ -123,22 +124,27 @@ flowchart TD
 ### 4.1 视频监控与流媒体中心 (`yudao-module-media`)
 
 #### 4.1.1 核心数据库实体 (`sql/module/media-2026-11-12.sql`)
-- `mz_device`：国标/监控设备主表（国标 ID `deviceId`、SIP 域 `domain`、IP 端口、传输协议 TCP/UDP、注册时间、心跳时间、状态）。
-- `mz_device_channel`：设备通道表（通道 ID `channelId`、通道名称、PTZ 类型、经纬度、子通道列表、在线状态、推流地址）。
-- `mz_media_server`：ZLMediaKit 流媒体服务器节点（ID、HTTP 端口、RTMP/RTSP 端口、RTP 端口范围、REST Secret、Hook 回调配置）。
-- `mz_platform` / `mz_platform_channel`：上级国标平台级联表，支撑向上级公安或集团平台级联推送目录与视频流。
-- `mz_stream_proxy`：外部 RTSP/RTMP/HTTP 拉流代理任务表（自动拉流并转协议分发）。
-- `mz_stream_push`：自主推流管理表。
-- `mz_cloud_record` / `mz_record_plan`：云端录像记录与定时录像计划表。
-- `mz_device_onvif` / `mz_device_hik` / `mz_device_dahua` / `mz_device_ezviz` / `mz_device_jt1078`：多协议泛接入设备配置表。
+- `wvp_device`：国标/监控设备主表（国标 ID `deviceId`、SIP 域 `domain`、IP 端口、传输协议 TCP/UDP、注册时间、心跳时间、状态）。
+- `wvp_device_channel`：设备通道表（通道 ID `channelId`、通道名称、PTZ 类型、经纬度、子通道列表、在线状态、推流地址、`dataType` 接入协议类型）。
+- `wvp_media_server`：ZLMediaKit 流媒体服务器节点（ID、HTTP 端口、RTMP/RTSP 端口、RTP 端口范围、REST Secret、Hook 回调配置）。
+- `wvp_platform` / `wvp_platform_channel`：上级国标平台级联表，支撑向上级公安或集团平台级联推送目录与视频流。
+- `wvp_stream_proxy`：外部 RTSP/RTMP/HTTP 拉流代理任务表（自动拉流并转协议分发）。
+- `wvp_stream_push`：自主推流管理表。
+- `wvp_cloud_record` / `wvp_record_plan`：云端录像记录与定时录像计划表。
+- `wvp_device_onvif`：ONVIF 协议设备表（IP、端口、账号、密码、Profiles、StreamUri、状态）。
+- `wvp_device_hik`：海康威视 ISAPI 设备表（IP、端口、账号、密码、通道数、设备型号DeviceInfo、状态）。
+- `wvp_device_dahua`：大华 RPC/CGI 设备表（IP、端口、账号、密码、通道数、设备信息、状态）。
+- `wvp_device_ezviz`：萤石云开放平台设备表（AppKey、AppSecret、设备序列号DeviceSerial、通道号ChannelNo、验证码、直播地址）。
+- `wvp_device_jt1078`：部标 JT/T 1078 车载终端表（SIM卡号、逻辑通道号、车牌号PlateNumber、转推流ID、状态）。
+- `iot_device.video_config`：IoT 设备视频流媒体配置（JSON 格式：协议、关联通道、流地址、云台控制标志等）。
 
 #### 4.1.2 GB/T 28181 信令交互全链路
 1. **设备注册与鉴权**：
-   - 设备发送 `REGISTER` -> 本地 SIP Stack 响应 `401 Unauthorized` 携带 `nonce` -> 设备使用 MD5 密码重新发送 `REGISTER` -> 校验通过，存储/刷新 Redis 会话，写入 `mz_device`。
+   - 设备发送 `REGISTER` -> 本地 SIP Stack 响应 `401 Unauthorized` 携带 `nonce` -> 设备使用 MD5 密码重新发送 `REGISTER` -> 校验通过，存储/刷新 Redis 会话，写入 `wvp_device`。
 2. **设备保活 (Keepalive)**：
    - 监听设备的 `MESSAGE` 请求，解析 XML 内容中的 `<CmdType>Keepalive</CmdType>`，更新设备最新心跳时间，心跳超时触发离线事件。
 3. **通道目录检索与订阅 (Catalog)**：
-   - 系统主动发送 `Catalog` 查询请求，接收设备分批上报的通道列表 XML 响应，解析通道国标编码规则（第 11-13 位代表类型：132 摄像机、131 报警通道、200 网络视频服务器等），入库 `mz_device_channel`。
+   - 系统主动发送 `Catalog` 查询请求，接收设备分批上报的通道列表 XML 响应，解析通道国标编码规则（第 11-13 位代表类型：132 摄像机、131 报警通道、200 网络视频服务器等），入库 `wvp_device_channel`。
 4. **实时点播 (Live Playback)**：
    ```text
    前端请求 Play -> MediaServer 分配本地动态 RTP 接收端口 -> 发送 SIP INVITE (携带 SDP)
@@ -150,6 +156,106 @@ flowchart TD
    - 包含云台八向微调、焦距变大/变小、光圈缩放、预置位设置/调用/删除（**预置位调用指令码：129 即 `0x81`**）、巡航轨迹与自动扫描。
 6. **双向语音对讲 (Voice Talk)**：
    - 支持 G.711A/G.711U 格式双向音频流转发，通过 ZLMediaKit 音频通道实现浏览器麦克风声音采集、编码推流至摄像机扬声器。
+
+#### 4.1.3 多协议视频接入全矩阵 (深度技术规范)
+
+系统在传统 GB28181 基础上，全面升级扩展了安防与车载主流协议接入引擎：
+
+```mermaid
+graph TD
+    subgraph 视频接入协议矩阵
+        GB[GB/T 28181 2016/2022] -->|JAIN-SIP 5060| MediaCore
+        ONVIF[ONVIF Profile S/G/T] -->|WS-Discovery / SOAP| MediaCore
+        HIK[海康威视 ISAPI] -->|Digest HTTP REST| MediaCore
+        DH[大华 RPC / CGI] -->|Digest RPC / RTSP| MediaCore
+        EZ[萤石云 Ezviz] -->|OpenAPI Token / CDN| MediaCore
+        JT[部标 JT/T 1078] -->|Netty TCP 1078/7078| MediaCore
+        PROXY[拉流代理 RTSP/RTMP] -->|FFmpeg / ZLMediaKit| MediaCore
+    end
+
+    subgraph 核心流转中枢 yudao-module-media
+        MediaCore[统一视频引擎 / ChannelDataType]
+        MediaCore --> ZLM[ZLMediaKit 流媒体服务器]
+    end
+
+    subgraph 前端与终端呈现
+        ZLM -->|WebRTC 毫秒级极速流| Player[MediaLivePlayer 播放器]
+        ZLM -->|HTTP/WS-FLV / HLS| Player
+    end
+```
+
+1. **ONVIF 协议栈 (`cn.iocoder.yudao.module.media.onvif`)**：
+   - **设备探测**：基于 WS-Discovery 协议向局域网广播组播包（`239.255.255.250:3702`），探测局域网内所有兼容摄像机；
+   - **SOAP 认证**：采用 WS-UsernameToken 摘要鉴权（Password Digest = `Base64(SHA-1(nonce + created + password))`）；
+   - **流与配置解析**：调用 `GetProfiles` 获取设备配置，调用 `GetStreamUri` 获取高/标清 RTSP 取流地址；
+   - **云台控制**：封装 `ContinuousMove`（八向速度矢量 `[-1.0, 1.0]`）、`Stop` 及 `GotoPreset` 预置位调用。
+2. **海康威视 ISAPI 协议 (`cn.iocoder.yudao.module.media.hikvision`)**：
+   - **通信鉴权**：基于 OkHttp3 摘要认证拦截器 (`DigestAuthenticator`) 与海康设备 ISAPI 接口通信；
+   - **信息与通道同步**：调用 `/ISAPI/System/deviceInfo` 获取型号固件；遍历 `/ISAPI/ContentMgmt/InputProxy/channels` 同步所有模拟/网络通道；
+   - **RTSP 取流**：自动构建海康标准取流地址 `rtsp://admin:password@ip:port/Streaming/channels/101`（101 主码流、102 子码流）；
+   - **PTZ 与抓图**：调用 `/ISAPI/PTZCtrl/channels/{id}/continuous` 下发连续云台运动指令；调用 `/ISAPI/Streaming/channels/{id}/picture` 获取高清现场快照。
+3. **大华 HTTP RPC / CGI 协议 (`cn.iocoder.yudao.module.media.dahua`)**：
+   - **RPC 交互**：基于 Digest 摘要认证调用大华设备 CGI 服务；
+   - **通道探测**：调用 `/cgi-bin/magicBox.cgi?action=getSystemInfo` 与 `/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle` 提取通道名称列表；
+   - **RTSP 流规范**：统一拼接大华标准取流 URL `rtsp://username:password@ip:port/cam/realmonitor?channel={ch}&subtype=0`；
+   - **云台与快照**：调用 `/cgi-bin/ptz.cgi?action=start&channel={ch}&code={code}&arg1={speed}&arg2={speed}` 驱动云台，调用 `/cgi-bin/snapshot.cgi?channel={ch}` 抓取快照。
+4. **萤石云开放平台 (`cn.iocoder.yudao.module.media.ezviz`)**：
+   - **Token 托管**：维护 `appKey` 与 `appSecret`，自动换取并缓存 `accessToken`（过期前自动刷新）；
+   - **直播流拉取**：调用 `/api/lapp/v2/live/address/get` 获取超低延迟 FLV/HLS 直播地址；
+   - **云台与抓图**：调用 `/api/lapp/device/ptz/start` & `/stop` 远程调向，调用 `/api/lapp/device/capture` 触发云端抓拍并获取 CDN 图片链接。
+5. **部标 JT/T 1078 车载音视频网关 (`cn.iocoder.yudao.module.media.jt1078`)**：
+   - **标准遵循**：严格符合《JT/T 1078-2016 道路运输车辆卫星定位系统 视频通信协议》；
+   - **双端口监听**：Netty 高性能服务端监听视频通道 `1078` 端口与信令指令 `7078` 端口；
+   - **报文帧解码**：识别 4 字节固定帧头魔数 `0x30 0x31 0x63 0x64`，解码 BCD 终端手机号/SIM、逻辑通道号（1-驾驶员, 2-车辆正前, 3-车内全景, 4-车后门等）、数据类型（I帧/P帧/B帧/音频帧）、时间戳及 Payload；
+   - **会话与转推**：`JT1078SessionManager` 维持车载终端连接，通过 Netty 管道将音视频数据解封装并转推至 ZLMediaKit RTP 收流端口完成多协议分发。
+
+#### 4.1.4 跨协议统一点播与云台/预置位联动架构
+
+为了让上层业务与前端完全解耦底层协议差异，系统采用插件化多态设计：
+
+1. **统一通道类型枚举 (`ChannelDataType.java`)**：
+   - `0`：GB28181 国标协议
+   - `1`：拉流代理 (StreamProxy)
+   - `2`：推流任务 (StreamPush)
+   - `4`：ONVIF 协议
+   - `5`：海康威视 (ISAPI)
+   - `6`：大华 (RPC/CGI)
+   - `7`：萤石云 (Ezviz)
+   - `200`：部标 JT/T 1078
+2. **Spring Bean 服务多态约定**：
+   - 各协议分别实现 `@Service(ChannelDataType.PLAY_SERVICE + ChannelDataType.XXX)`（点播/停止拉流服务）；
+   - 各协议分别实现 `@Service(ChannelDataType.PTZ_SERVICE + ChannelDataType.XXX)`（云台控制服务）；
+   - 统一调度入口：全局统一路由 `/api/common/channel/play`、`/api/common/channel/play/stop` 及 `/api/front-end/ptz` 无需任何分支重构，天然支持所有协议。
+3. **事件驱动引擎跨协议精准联动 (`MediaLinkageEventListener.java`)**：
+   - 监听 IoT 模块发布的 `IotMediaLinkageEvent` 事件；
+   - 依据通道设备编号前缀（`onvif_`、`hik_`、`dh_`、`ezviz_`、`jt_` 及 `gb28181_`）自动路由，实现传感器告警秒级联动球机转动预置位与录像抓拍。
+
+#### 4.1.5 前端“视频中心”全套架构设计 (`ui/yudao-ui-admin-vue3`)
+
+1. **核心播放器组件 (`src/components/MediaLivePlayer/index.vue`)**：
+   - 支持 WebRTC (毫秒级超低延迟)、HTTP-FLV、HLS 自由切换；
+   - 8向 360° 交互式云台圆盘（上/下/左/右/左上/右上/左下/右下/复位）；
+   - 变倍（Zoom +/-）、聚焦（Focus +/-）、光圈（Iris +/-）精细微调；
+   - 云台转动速度滑块控制（1 ~ 255）；
+   - 预置位列表快速调用与现场抓拍截图下载；
+   - 一键网页/系统全屏，音频静音与音量调节。
+2. **视频中心 7 大核心业务页面 (`src/views/media/`)**：
+   - **实时预览** (`live/index.vue`, 菜单 26010)：1/4/9/16 多分屏自由切换，左侧通道目录树，双击上屏，一键全部停止；
+   - **设备管理** (`device/index.vue`, 菜单 26020)：多协议设备管理 Tab（GB28181、ONVIF局域网探测、海康ISAPI、大华RPC、萤石云、JT1078、拉流代理），通道同步抽屉；
+   - **录像回放** (`playback/index.vue`, 菜单 26030)：24小时连续时间轴刻度（绿色有效区间标注与游标拖拽），0.5x~4x 倍速播放与下载；
+   - **录像计划** (`recordPlan/index.vue`, 菜单 26040)：周一至周日 7×24 小时录像计划时间段编辑器，通道批量穿梭框关联；
+   - **流媒体服务** (`server/index.vue`, 菜单 26050)：ZLMediaKit 节点负载指标看板，CPU/内存监控，在线自检；
+   - **电子地图** (`map/index.vue`, 菜单 26060)：电子地图监控点位分布视图，经纬度标注与摄像机脉冲指示点，点击弹窗实时点播；
+   - **报警记录** (`alarm/index.vue`, 菜单 26070)：移动侦测、视频遮挡、周界入侵等报警事件流，级别标识、抓拍快照预览、单条删除与一键清空。
+
+#### 4.1.6 IoT 视频设备模型与场景联动机制
+
+1. **产品与设备模型扩展**：
+   - `IotProductDeviceTypeEnum.java`：新增 `VIDEO(3, "视频监控设备")` 及 `isVideo()` 判定；
+   - 在 `IotDeviceDO` 及 VO 中新增 `videoConfig` 扩展字段，用于存储监控协议、流地址、绑定通道及云台参数。
+2. **前端 IoT 表单与详情联动**：
+   - `DeviceForm.vue`：新增“视频监控配置”折叠项，支持快速选择视频中心已接入的通道直接绑定；
+   - `DeviceDetailsVideo.vue`：在 IoT 设备详情页新增“视频监控”Tab，嵌入播放器与云台控制，支持传感器告警时联动摄像机转动预置位与录像抓拍。
 
 ---
 
@@ -163,6 +269,7 @@ flowchart TD
 │   · 设备全生命周期 (IotDevice)         · Modbus 点位轮询调度 (IotModbus)       │
 │   · 产品与品类管理 (IotProduct)        · OTA 固件任务流转 (IotOta)            │
 │   · 物模型 TSL 管理 (IotThingModel)    · 告警配置与履历 (IotAlert)            │
+│   ★ TR-069 CWMP 管理 (IotDeviceCwmp)   · TR-369 USP 终端控制 (IotDeviceUsp)   │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │   ★ 规则引擎双核心：                                                        │
 │   1. 数据分发引擎 (IotDataRule): SpEL 过滤 -> 9 种 Sink 输出 (TDengine/MQ等) │
@@ -171,23 +278,30 @@ flowchart TD
 │                      yudao-module-iot-core (核心模型与总线)                  │
 │   · IotMessageBus (消息总线抽象: Redis Stream / Kafka / RocketMQ)          │
 │   · TSL 物模型规范 (Property/Service/Event)   · 设备消息体 (IotDeviceMessage) │
+│   ★ TR-069 SOAP 编解码 (CwmpSoapParser/Builder)                            │
+│   ★ TR-369 Protobuf 编解码 (UspProtobufCodec/Builder)                       │
+│   ★ TR-181/TR-098 物模型统一映射器 (Tr181ThingModelMapper)                  │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                    yudao-module-iot-gateway (协议网关与接入)                │
 │   · MQTT / EMQX 5.0 (长连接)         · Modbus TCP / RTU (工业 PLC / 仪表)    │
 │   · CoAP (窄带 NB-IoT / 电池传感器)   · TCP / UDP (私有定长/分隔符报文)       │
 │   · HTTP REST / WebHook (主动推送)    · WebSocket (双全工大屏推送)            │
+│   ★ TR-069 ACS (Vert.x HTTP :9292 / 会话状态机 / Connection Request 唤醒)   │
+│   ★ TR-369 MTP (Vert.x MQTT :18833 / WebSocket / Protobuf Record 路由)     │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-#### 4.2.2 核心数据库实体 (`sql/module/iot-2026-02-10-*.sql`)
-- `iot_product` / `iot_product_category`：物联产品与品类（接入协议类型、数据格式 JSON/Custom、网络类型、物模型模板）。
+#### 4.2.2 核心数据库实体 (`sql/iot_tr069_tr369.sql` & `sql/module/iot-*.sql`)
+- `iot_product` / `iot_product_category`：物联产品与品类（接入协议类型包括 TR069、TR369_MQTT、TR369_WEBSOCKET，数据格式 JSON/Custom/TR069_SOAP/TR369_USP，网络类型，物模型模板）。
 - `iot_device`：设备实体表（设备名称、ProductKey、DeviceSecret、在线状态、最后活跃时间、设备影子 JSON、网关子设备父子拓扑）。
 - `iot_thing_model`：物模型定义表（属性 Identifier、数据类型 int/float/string/bool/enum/struct/array、读写权限、事件级别、服务入参与出参）。
 - `iot_device_modbus_config` / `iot_device_modbus_point`：工业 Modbus 采集配置表（从站地址 SlaveId、轮询周期、寄存器类型 01/02/03/04、寄存器地址、缩放系数、数据类型、读写属性）。
+- `iot_device_cwmp_config` / `iot_device_cwmp_param`：TR-069 CPE 连接认证配置表与参数树快照表（支持 TR-098/TR-181 规范、ConnectionRequestURL、周期上报 Inform 设置）。
+- `iot_device_usp_config` / `iot_device_usp_param`：TR-369 USP Agent 连接配置表与参数快照表（Agent Endpoint ID、Controller Endpoint ID、MTP 类型、MQTT Topic 路由）。
 - `iot_data_rule` / `iot_data_sink`：数据分发规则与目的地配置表。
 - `iot_scene_rule`：TCA 场景联动规则表（触发器、触发条件、执行动作配置）。
 - `iot_alert_config` / `iot_alert_record`：告警规则阈值配置与告警触发历史记录。
-- `iot_ota_firmware` / `iot_ota_task` / `iot_ota_task_record`：OTA 升级固件包、批次升级任务与单个设备升级进度记录。
+- `iot_ota_firmware` / `iot_ota_task` / `iot_ota_task_record`：OTA 升级固件包、批次升级任务与单个设备升级进度记录（支持 TR-069 `<cwmp:Download>` 与 USP `Device.Download()` 联动）。
 
 #### 4.2.3 规则引擎双核心技术规格
 1. **数据分发引擎 (`IotDataRuleService` & `IotDataSinkService`)**：
@@ -208,6 +322,64 @@ flowchart TD
      - 调用设备服务 (`IotDeviceServiceInvokeSceneRuleAction`)
      - 产生系统告警 (`IotAlertTriggerSceneRuleAction`) 与自动解除告警
      - **视频监控联动 (`IotMediaSceneRuleAction`)**：向系统事件总线发布 `IotMediaLinkageEvent`，命令指定国标摄像头旋转至预置位或触发录像。
+
+#### 4.2.4 宽带网络 TR-069 (CWMP) 与 TR-369 (USP) 深度集成规范
+
+MzMedia 参考开源 Oktopus 架构，在物联网模块中原生打通了 Broadband Forum（宽带论坛）标准定义的 **TR-069 (CWMP)** 与 **TR-369 (USP)** 协议，实现对光猫（ONT/ONU）、家庭宽带网关、企业级路由器及 Wi-Fi 7 智能终端的全生命周期管控：
+
+```
+                    ┌────────────────────────────────────────────────────────┐
+                    │               Web 管理后台 (Vue3 Admin)                 │
+                    │   · CWMP 状态看板 / 主动唤醒 / 远程重启 / Wi-Fi配置 / 诊断 │
+                    │   · USP Agent 概览 / TR-181 树 / Operate 远程命令执行器  │
+                    └───────────────────────────┬────────────────────────────┘
+                                                │ REST API (/iot/device-cwmp/*, /iot/device-usp/*)
+                                                ▼
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 yudao-module-iot-biz                                        │
+│  · IotDeviceCwmpService: 参数快照维护, GetParameterNames/Values, Wi-Fi快速配置, Ping 诊断   │
+│  · IotDeviceUspService: Agent Endpoint 路由, USP Get/Set/Operate, 远程 Reboot/Reset          │
+│  · IotOtaTaskRecordServiceImpl: 协议自适应固件调度 (CWMP <Download> / USP Device.Download)   │
+└──────────────────────────────────────┬──────────────────────────────────────────────────────┘
+                                       │ 统一消息总线 (IotMessageBus)
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                               yudao-module-iot-gateway                                      │
+│  ┌──────────────────────────────────────────────┐  ┌──────────────────────────────────────┐ │
+│  │ IotCwmpProtocol (Vert.x HTTP ACS :9292/cwmp) │  │ IotUspMqttProtocol (Vert.x MQTT)     │ │
+│  │ · Basic/Digest 认证拦截 (IotCwmpAuthHandler) │  │ · 端口 :18833 (内嵌 Vert.x MQTT Server)│ │
+│  │ · 会话状态机 & 命令出队 (IotCwmpSession)      │  │ · 路由: agent/{endpointId}           │ │
+│  │ · 反向主动唤醒 (Connection Request Client)   │  │ · 路由: controller/{endpointId}      │ │
+│  └──────────────────────────────────────────────┘  └──────────────────────────────────────┘ │
+└──────────────────────────────────────┬──────────────────────────────────────────────────────┘
+                                       │ 物理链路 (SOAP XML / Protobuf Record)
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                       终端设备层                                            │
+│  · TR-069 CPE: 运营商光猫/政企网关/VoIP语音盒     · TR-369 Agent: Wi-Fi 7 智能路由/边缘容器网关 │
+└─────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **TR-069 (CWMP) 规范与机制**：
+   - **ACS 会话管理**：CPE 仅在发起 HTTP POST（如周期 Inform 或值变更）建立的会话中接收下行指令。平台网关基于 `IotCwmpSessionManager` 维护 Cookie 会话与待下发命令队列，在空 POST（200 OK 带 SOAP XML）中依次出队执行，全部完成后回复 204 No Content 关闭会话。
+   - **反向唤醒客户端 (`IotCwmpConnectionRequestClient`)**：当设备离线或处于空闲周期时，平台使用 OkHttp + okhttp-digest 向 CPE 的 `ConnectionRequestURL` 发送带 HTTP Digest 认证的 GET 请求，主动触发 CPE 立即向 ACS 发起 Inform 建立连接。
+   - **编解码与构建器**：
+     - `CwmpSoapParser`：基于 DOM4J 快速解析 CPE 的 `Inform`、`GetParameterValuesResponse`、`TransferComplete`、`Fault` 报文。
+     - `CwmpSoapBuilder`：标准构建 `InformResponse`、`GetParameterNames`、`GetParameterValues`、`SetParameterValues`、`Reboot`、`FactoryReset`、`Download`（OTA 固件下载）、`AddObject`、`DeleteObject` 报文。
+2. **TR-369 (USP) 规范与机制**：
+   - **MTP 传输通道**：支持 MQTT MTP（Vert.x 内嵌 MQTT Server 端口 `:18833`）及 WebSocket MTP。Agent 端监听 `agent/{endpointId}` 主题接收 Controller 指令，向 `controller/{endpointId}` 发布响应与通知。
+   - **纯 Java Protobuf 编解码 (`UspProtobufCodec`)**：基于 Google Protobuf wire format (`CodedInputStream` / `CodedOutputStream`) 直接对 `usp-record-1-3.proto` 与 `usp-msg-1-3.proto` 规范报文进行无依赖流式序列化，彻底消除部署环境缺少本地 `protoc` 二进制工具链的风险。
+   - **核心指令集**：
+     - `USP Get`：路径查询参数（支持最大深度过滤）。
+     - `USP Set`：对象参数修改（支持部分允许 `allowPartial`）。
+     - `USP Operate`：远程调用标准 TR-181 动作（`Device.Reboot()`、`Device.FactoryReset()`、`Device.Download()`、`Device.IP.Diagnostics.IPPing()` 等）。
+     - `USP Notify`：上报属性变更（ValueChange）与操作完成事件。
+3. **TR-181 统一物模型 (TSL) 映射与 OTA 固件协同**：
+   - **语义归一 (`Tr181ThingModelMapper`)**：将复杂的 TR-069 / TR-181 对象路径（如 `InternetGatewayDevice.DeviceInfo.SoftwareVersion`、`Device.WiFi.SSID.1.SSID`、`ExternalIPAddress`）双向自动映射为平台物模型统一属性（`firmwareVersion`、`wifiSsid`、`wanIp` 等），直接纳管进**数据分发规则引擎**（输出到 TDengine/Kafka）和**场景联动引擎**（如网络异常联动安防摄像机巡检抓拍）。
+   - **自适应 OTA 固件调度 (`IotOtaTaskRecordServiceImpl`)**：创建批次升级任务时，调度器根据产品协议类型自适应识别：
+     - `TR069` 协议：组装 `<cwmp:Download>` RPC（FileType 为 `"1 Firmware Upgrade Image"`）并入队等待 CPE 获取；
+     - `TR369` 协议：组装 USP `Device.Download()` 操作命令直接下发至 Agent；
+     - 升级完成后通过 `TransferComplete` 或 Inform 版本号变更自动流转任务状态至成功。
 
 ---
 
@@ -310,32 +482,41 @@ flowchart TD
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Sensor as 物联传感器 (Modbus/MQTT)
-    participant Gateway as iot-gateway
-    participant Biz as iot-biz (规则引擎)
-    participant EventBus as Spring Event / MessageBus
-    participant Media as yudao-module-media
-    participant Flowable as Flowable / MES 工单
-    participant Camera as 海康/大华球机 (GB28181)
+    participant Sensor as 物联传感器 (Modbus/MQTT/CoAP)
+    participant Gateway as iot-gateway (协议网关)
+    participant Biz as iot-biz (场景联动规则引擎)
+    participant EventBus as Spring Event / IotMessageBus
+    participant Media as yudao-module-media (多协议媒体中枢)
+    participant Flowable as Flowable 流程审批 / 维保工单
+    participant Camera as 监控设备 (GB28181/ONVIF/海康/大华/萤石/JT1078)
 
-    Sensor->>Gateway: 上报遥测报文 (如: 温度 98°C)
-    Gateway->>Biz: 解码并归一为 TSL 属性消息
+    Sensor->>Gateway: 上报遥测报文 (如: 温度超限 98°C)
+    Gateway->>Biz: 解码并归一为 TSL 属性与告警事件
     Biz->>Biz: 命中 TCA 场景联动规则 (Trigger: 属性超限)
-    Biz->>EventBus: 发布 IotMediaLinkageEvent 事件
+    Biz->>EventBus: 发布 IotMediaLinkageEvent 跨模块联动事件
     EventBus->>Media: 异步监听器 MediaLinkageEventListener 消费
-    Media->>Camera: SIP 下发云台指令 (0x81 预置位 1)
-    Media->>Camera: SIP 下发 RecordCmd 录像抓拍指令
-    Biz->>Flowable: 自动触发设备排障审批工单
+    Media->>Camera: 依据协议驱动下发云台指令 (预置位跳转/拉近变倍)
+    Media->>Camera: 下发抓拍或开启录像存证
+    Biz->>Flowable: 自动触发设备排障维保审批工单
 ```
 
 ### 5.1 典型跨模块事件：`IotMediaLinkageEvent`
 - **定义位置**：`yudao-framework/yudao-common/src/main/java/cn/iocoder/yudao/framework/common/event/IotMediaLinkageEvent.java`
-- **发布方**：`IotMediaSceneRuleAction`（属于 `yudao-module-iot`）
-- **消费方**：`MediaLinkageEventListener`（属于 `yudao-module-media`）
+- **发布方**：`IotMediaSceneRuleAction`（属于 `yudao-module-iot` 场景规则动作执行器）
+- **消费方**：`MediaLinkageEventListener`（属于 `yudao-module-media` 媒体监听器）
+- **跨协议自适应路由**：
+  - 自动识别通道设备前缀（`onvif_`、`hik_`、`dh_`、`ezviz_`、`jt_` 及 `gb28181_`）；
+  - 针对国标设备下发 SIP XML 控制帧（预置位调用指令码 129 即 `0x81`）；
+  - 针对 ONVIF 设备下发 SOAP `GotoPreset`；
+  - 针对海康设备下发 ISAPI PUT `/ISAPI/PTZCtrl/channels/{id}/presets/{id}/goto`；
+  - 针对大华设备下发 RPC CGI `ptz.cgi?action=start&code=GotoPreset`；
+  - 针对萤石云设备下发 OpenAPI PTZ 控制指令；
+  - 针对 JT1078 车载设备下发信令对讲与抓图。
 - **支持动作**：
   - `ptz_preset`：调用预置位（指令码 129 即 `0x81`）
-  - `record_start`：启动设备端国标录像
+  - `record_start`：启动设备端录像
   - `record_stop`：停止录像
+  - `snapshot`：实时抓拍现场照片存证并上传至对象存储 (MinIO/OSS)
 
 ---
 
@@ -427,9 +608,13 @@ git stash pop # 恢复暂存
 
 #### 防线一：业务逻辑独立模块化防线
 - **视频业务**（SIP、ZLMediaKit、WebRTC、PTZ）代码**必须**放在 `yudao-module-media` 中。
-- **物联网核心**（协议网关、TSL 物模型、规则引擎）代码**必须**放在 `yudao-module-iot` 中。
+- **物联网核心**（协议网关、TSL 物模型、规则引擎、Modbus、TR-069/TR-369 宽带网关）代码**必须**放在 `yudao-module-iot` 中。
 - **AI 智能体**（Spring AI、MCP、Agent 编排）代码**必须**放在 `yudao-module-ai1-springai` 中。
 - **严禁侵入核心底座**：**绝对禁止**直接修改 `yudao-framework` 或 `yudao-module-system` 的内部核心逻辑！若需要扩展框架能力，必须使用 **Spring 继承拓展**、**`@Primary` Bean 覆盖** 或 **AOP 切面注入** 实现。
+- **宽带网关协议（TR-069 / TR-369）开发守则**：
+  - **TR-069 会话交互铁律**：CPE 遵循反向请求/响应模式，平台严禁脱离 CPE 会话向下强推 SOAP 指令。下行指令必须暂存于会话队列；当 CPE 空闲时，必须通过 `IotCwmpConnectionRequestClient` 主动触发反向唤醒。
+  - **TR-369 编解码规范**：必须使用基于标准 Java 的 `UspProtobufCodec`，严禁在 Maven 构建或部署流程中引入对本地 `protoc` 二进制文件的强依赖。
+  - **物模型映射一致性**：新增 TR-181/TR-098 参数时，优先在 `Tr181ThingModelMapper` 中建立映射，确保无缝接入平台的数据分发与场景联动规则引擎。
 
 #### 防线二：配置文件隔离防线
 - 禁止在根配置 `application.yaml` 中大规模修改官方现有参数；
@@ -484,6 +669,14 @@ git stash pop # 恢复暂存
 3. **场景规则联动视频无响应**：
    - 检查 `IotMediaLinkageEvent` 监听器是否生效；
    - 检查绑定的 `deviceId` 和 `channelId` 在 `mz_device_channel` 中是否存在且当前设备处于 `online=true` 状态。
+4. **TR-069 CPE 周期上报 Inform 失败（401 Unauthorized）**：
+   - 检查 CPE 中配置的 ACS URL 是否包含正确路径（默认 `http://<ip>:9292/cwmp`）；
+   - 检查 CPE 认证用户名密码是否与 `iot_device_cwmp_config` 中的 `acs_username` / `acs_password` 匹配，注意区分 HTTP Basic 与 Digest 鉴权类型。
+5. **TR-069 Connection Request 主动唤醒超时或不可达**：
+   - CPE 处于私网/NAT 后面且无公网 IP 时，ACS 直接 HTTP GET 访问 `ConnectionRequestURL` 会超时。需确保 CPE 与 ACS 处于同一局域网、或 CPE 建立了反向 VPN 隧道、或在 CPE 端配置有效 STUN 服务。
+6. **TR-369 USP Agent 接收不到 Operate/Set 命令**：
+   - 确认 Agent 订阅的主题为 `agent/{endpointId}`，Controller 下发的主题与 `endpointId` 完全匹配；
+   - 检查 protobuf 编解码日志，确认 Record 的 `to_id` 与 Agent Endpoint 标识一致；检查 MTP 协议（默认使用 Vert.x MQTT Server 端口 `:18833`）。
 
 ### 8.3 AI 与 MCP 模块常见问题
 1. **启动时提示 `ChatClient.Builder` 重复定义报错**：

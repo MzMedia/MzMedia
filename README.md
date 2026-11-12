@@ -7,13 +7,13 @@
   <img src="https://img.shields.io/badge/Spring%20AI-1.1%2B-blueviolet.svg" alt="Spring AI">
   <img src="https://img.shields.io/badge/EMQX-5.0-orange.svg" alt="EMQX 5.0">
   <img src="https://img.shields.io/badge/TDengine-3.0%2B-red.svg" alt="TDengine">
-  <img src="https://img.shields.io/badge/Video-GB%2FT%2028181-yellowgreen.svg" alt="GB28181">
+  <img src="https://img.shields.io/badge/Video-GB28181%20%7C%20ONVIF%20%7C%20ISAPI%20%7C%20JT1078-yellowgreen.svg" alt="Multi-Protocol Video">
   <img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="License">
 </p>
 
 ## 📌 平台简介
 
-**MzMedia** 是一款专为**中小企业量身打造的企业级 AI 驱动物联网与视频融合平台**。平台基于成熟的 `ruoyi-vue-pro` 企业级底座深度重构与孵化，深度融合 **物联网（IoT）**、**安防音视频（GB28181 / WebRTC）** 与 **生成式 AI（Spring AI / MCP）** 技术。
+**MzMedia** 是一款专为**中小企业量身打造的企业级 AI 驱动物联网与视频融合平台**。平台基于成熟的 `ruoyi-vue-pro` 企业级底座深度重构与孵化，深度融合 **物联网（IoT）**、**全协议安防与车载视频（GB28181 / ONVIF / 海康ISAPI / 大华RPC / 萤石云 / 部标JT1078 / WebRTC）** 与 **生成式 AI（Spring AI / MCP）** 技术。
 
 针对中小企业在数字化升级中普遍面临的 **“协议碎片化、系统各自为政、数据烟囱林立、商业套件成本高昂”**等核心痛点，MzMedia 提供了从**设备立项、物模型配置、低成本协议接入、多设备联动、实时监控大屏、到智能运维工单闭环**的全生命周期管理能力，实现**设备接入低成本、跨协议集成智能化、业务系统无缝打通**的新一代 AIoT 解决方案。
 
@@ -53,7 +53,7 @@ MzMedia 采用清晰的层次化设计，覆盖感知层、边缘计算、协议
 | **业务层 (Business)** | 统一 OpenAPI、视频中心、场景联动、告警中心、第三方对接、可视大屏、产品管理、设备管理、设备拓扑、设备运维、设备日志 | 承载业务核心逻辑，基于 RuoYi-Vue-Pro 提供 PMS 项目交付、设备资产履历、告警工单闭环及开放接口。 |
 | **接入层 (Access)** | 设备认证接入、物模型管理（TSL）、会话管理、规则引擎、接入网关 | 维持长连接会话，解析并校验身份凭证，将异构报文解构为标准化属性、事件与服务模型。 |
 | **消息总线与存储** | **消息总线**：Vert.x、Redis Stream / RocketMQ / Kafka、EMQX 5.0<br/>**数据存储**：MySQL、Redis、TDengine（海量时序）、MinIO（流媒体与文件） | 支持百万级设备并发上报，时序数据列式高压缩存储，动静数据分离保障查询毫秒级响应。 |
-| **网络通讯层 (Network)** | **通讯网络**：NB-IoT、WiFi / 5G、LoRa、ZigBee、以太网<br/>**通讯协议**：MQTT、HTTP/HTTPS、CoAP、UDP、TCP、Modbus、GB/T 28181、ONVIF | 适应各种工业与野外严苛网络环境，支持弱网长连接保活与报文断点续传。 |
+| **网络通讯层 (Network)** | **通讯网络**：NB-IoT、WiFi / 5G、LoRa、ZigBee、以太网、宽带光纤 (GPON/EPON)<br/>**通讯协议**：MQTT、HTTP/HTTPS、CoAP、UDP、TCP、Modbus、TR-069 (CWMP)、TR-369 (USP)、GB/T 28181、ONVIF | 适应各种工业、野外及宽带网络环境，支持弱网长连接保活、反向连接请求唤醒与断点续传。 |
 | **边缘计算层 (Edge)** | 物模型配置、边缘数据交互与存储、本地认证、数据预处理与过滤、指令下发、离线自治 | 支持边缘网关（OpenWrt/Linux）本地降噪和秒级故障自闭环，网络中断时仍可本地安全联锁。 |
 | **物联网感知层 (Perception)** | 电流/电压传感器、温湿度传感器、CO2/氨气/风速感应器、电磁阀门、继电器控制器、智能水电气表、安防摄像头、门禁系统 | 覆盖工业传感、环境监测、水利农业、动力环境与安防监控等多品类物联末端设备。 |
 
@@ -72,8 +72,8 @@ MzMedia 采用清晰的层次化设计，覆盖感知层、边缘计算、协议
  │ 1. 协议逆向与代码生成 │     │ 2. 跨协议物模型语义对齐 │     │ 3. 跨系统智能体调度 │
  ├─────────────────────┤     ├───────────────────────┤     ├───────────────────┤
  │ 输入非标十六进制报文  │     │ Modbus / MQTT / CoAP  │     │ Spring AI + MCP   │
- │ 或协议规范 PDF 文档   │     │ GB28181 / TCP 私有流  │     │ 自动化排查设备故障 │
- │ 自动生成 Netty 解码器 │     │ 统一转化为 TSL 标准语义│     │ 自然语言下发多端联动│
+ │ 或协议规范 PDF 文档   │     │ TR-069 / TR-369 (USP) │     │ 自动化排查设备故障 │
+ │ 自动生成 Netty 解码器 │     │ GB28181 / TCP 私有流  │     │ 自然语言下发多端联动│
  └─────────────────────┘     └───────────────────────┘     └───────────────────┘
 ```
 
@@ -82,7 +82,7 @@ MzMedia 采用清晰的层次化设计，覆盖感知层、边缘计算、协议
 - **AI 赋能**：只需在平台上传设备协议手册（PDF/Markdown）或粘贴抓包十六进制报文，平台内置的 AI 编码助手即可自动推理报文帧头、校验码算法（CRC16/LRC/CheckSum）、长度域和数据段，**一键生成符合 MzMedia 规范的 Java 编解码器代码与单元测试用例**，设备接入从“数周”缩短至“半小时”。
 
 ### 2. 跨协议物模型语义归一化（TSL Normalization）
-- **消除协议壁垒**：无论底层是 Modbus 寄存器地址（`0x03 40001`）、MQTT JSON 负载（`{"temp": 28.5}`）、CoAP 紧凑二进制，还是 GB28181 XML 状态通知，系统通过 AI 辅助映射，将其统一归纳为物模型**属性（Property）**、**服务（Service）**、**事件（Event）**。
+- **消除协议壁垒**：无论底层是 Modbus 寄存器地址（`0x03 40001`）、TR-069/TR-369 TR-181 宽带模型路径（`Device.WiFi.SSID.1.SSID`）、MQTT JSON 负载（`{"temp": 28.5}`）、CoAP 紧凑二进制，还是 GB28181 XML 状态通知，系统通过 AI 辅助映射，将其统一归纳为物模型**属性（Property）**、**服务（Service）**、**事件（Event）**。
 - **上层无感透明调用**：业务层、数字驾驶舱以及移动端无需知晓底层通信细节，只需面向统一的物模型属性读取或下发服务，网关层自动转译为目标协议报文。
 
 ### 3. AI 驱动的跨协议即时转译与指令互操作
@@ -126,8 +126,8 @@ MzMedia 拒绝做功能单一的“管道式”IoT，而是依托 `ruoyi-vue-pro
 
 | 模块名称 | 对应工程目录 | 在 MzMedia 中的关键赋能与协同价值 | 专属文档 |
 | :--- | :--- | :--- | :--- |
-| **IoT 物联网核心** | `yudao-module-iot` | 设备全生命周期、物模型（TSL）、网关与拓扑子设备、时序上报、在线调试与 OTA 升级。 | [📖 IoT 开发手册](./yudao-module-iot/README.md) |
-| **视频监控流媒体** | `yudao-module-media` | 深度集成 ZLMediaKit 与 GB/T 28181，提供实时点播、云台 PTZ 控制、语音对讲、录像回放与视频 AI 切片。 | [📖 视频中心手册](./yudao-module-media/README.md) |
+| **IoT 物联网核心** | `yudao-module-iot` | 设备全生命周期、物模型（TSL）、网关与拓扑子设备、时序上报、在线调试与 OTA 升级；支持创建视频监控设备 (`VIDEO = 3`) 与流媒体参数配置。 | [📖 IoT 开发手册](./yudao-module-iot/README.md) |
+| **视频中心与流媒体** | `yudao-module-media` | 深度集成 ZLMediaKit 与多协议视频网关（GB28181、ONVIF、海康 ISAPI、大华 RPC/CGI、萤石云、部标 JT/T 1078）；提供视频中心 7 大功能矩阵（实时预览、设备管理、24h 时间轴回放、录像计划、流媒体集群监控、电子地图、智能报警）与通用播放器 `MediaLivePlayer`。 | [📖 视频中心手册](./yudao-module-media/README.md) |
 | **项目管理系统** | `yudao-module-pms` | **工程项目落地抓手**：从物联网立项、设备采购调拨、现场施工勘测到调试验收，全流程看板跟踪。 | [📖 PMS 项目手册](./yudao-module-pms/README.md) |
 | **AI 智能中枢** | `yudao-module-ai1-springai` | Spring AI 框架集成、18+ 大模型支持、MCP 协议工具暴露、RAG 故障排查知识库、Prompt 规则编排。 | [📖 Spring AI 手册](./yudao-module-ai1-springai/README.md) |
 | **数字大屏驾驶舱** | `yudao-module-report` | 预置 GoView 拖拽式大屏设计器与积木报表，内置丰富的工业、园区、农业等可视化大屏模板。 | 详见官方文档 |
@@ -178,7 +178,7 @@ MzMedia 拒绝做功能单一的“管道式”IoT，而是依托 `ruoyi-vue-pro
 
 MzMedia 内置丰富且成熟的通信协议栈，支持企业内新老设备无障碍连接：
 
-### 支持的通信协议矩阵（13+ 种）
+### 支持的通信协议矩阵（18+ 种）
 
 | 协议分类 | 通信协议 | 适用设备与典型场景 |
 | :--- | :--- | :--- |
@@ -188,9 +188,13 @@ MzMedia 内置丰富且成熟的通信协议栈，支持企业内新老设备无
 | **通用网络协议** | **HTTP / HTTPS REST** | 智能硬件主动推送、三方系统数据推送、微服务轻量交互。 |
 | **实时全双工** | **WebSocket** | 网页端与移动端实时指令交互、状态秒级同步。 |
 | **原生底层传输** | **TCP / UDP** | 老旧设备私有报文接入，支持定长、分隔符、长度字段及自定义编解码。 |
-| **安防国标标准** | **GB/T 28181 (2016/2022)** | 海康、大华、宇视等主流安防监控设备、NVR、IPC，支持视频点播、PTZ、对讲。 |
-| **通用流媒体** | **RTSP / RTMP / WebRTC / FLV** | 网络摄像机流媒体转发、低延迟网页播放、移动端推流直播。 |
-| **开放视频接口** | **ONVIF** | 局域网内网络摄像机自动发现、属性配置、PTZ 与流地址获取。 |
+| **安防国标标准** | **GB/T 28181 (2016/2022)** | 海康、大华、宇视等主流安防监控设备、NVR、IPC，支持视频点播、PTZ、对讲、级联。 |
+| **开放网络视频** | **ONVIF (Profile S/G/T)** | 局域网 WS-Discovery 设备自动发现、SOAP 鉴权、RTSP 取流、八向/变倍连续 PTZ 与预置位。 |
+| **海康私有协议** | **海康威视 ISAPI (Digest REST)** | 海康网络摄像机、球机与硬盘录像机，型号与通道同步、主辅码流 RTSP、连续 PTZ 与抓图。 |
+| **大华私有协议** | **大华 (HTTP RPC / CGI)** | 大华 IPC/NVR 原生 RPC CGI，系统信息与通道发现、RTSP 流、云台控制与快照抓图。 |
+| **消费安防云端** | **萤石云 (Ezviz Open Cloud)** | 萤石 IPC/云台机，免公网 IP，开放平台 Token 续期、FLV/HLS 直播流、远程云台与云端抓拍。 |
+| **车载视频标准** | **部标 JT/T 1078 (2016)** | 车载定位监控音视频通信网关，Netty 1078/7078 双端口，SIM 手机号 BCD 解析，RTP 转推。 |
+| **通用流媒体** | **RTSP / RTMP / WebRTC / FLV / HLS** | 网络摄像机流媒体转发、拉流代理、推流转码分发、低延迟网页播放。 |
 | **远程终端管理** | **TR-069 / TR-369 (USP)** | 宽带网关、路由器、CPE 等运营商级终端设备的集中参数配置与远程诊断。 |
 
 ### 插件化自主扩展架构
@@ -285,7 +289,8 @@ docker ps
 #### 2. 初始化数据库
 - 在 MySQL 中创建名为 `ruoyi-vue-pro` 的数据库（编码 utf8mb4）；
 - 执行 `sql/mysql/ruoyi-vue-pro.sql` 初始化基础表与字典；
-- 执行 `sql/module/` 下的 `media` 与 `iot` 专属业务脚本。
+- 执行 `sql/module/` 下的 `media` 与 `iot` 专属业务脚本（包含 `sql/module/media-2026-11-12.sql` 视频中心菜单、多协议设备表与 IoT 视频配置字段）；
+- 如需启用宽带终端管理，执行 `sql/iot_tr069_tr369.sql` 初始化 TR-069 / TR-369 专属数据表与协议字典。
 
 #### 3. 启动后端工程
 - 打开 IDEA，导入根目录 `pom.xml`；
