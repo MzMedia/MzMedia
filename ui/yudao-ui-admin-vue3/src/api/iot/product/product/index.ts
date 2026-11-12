@@ -71,13 +71,18 @@ export enum ProtocolTypeEnum {
   EMQX = 'emqx',
   COAP = 'coap',
   MODBUS_TCP_CLIENT = 'modbus_tcp_client',
-  MODBUS_TCP_SERVER = 'modbus_tcp_server'
+  MODBUS_TCP_SERVER = 'modbus_tcp_server',
+  TR069 = 'tr069',
+  TR369_MQTT = 'tr369_mqtt',
+  TR369_WEBSOCKET = 'tr369_ws'
 }
 
 // IoT 序列化类型枚举
 export enum SerializeTypeEnum {
   JSON = 'json',
-  BINARY = 'binary'
+  BINARY = 'binary',
+  TR069_SOAP = 'tr069_soap',
+  TR369_USP = 'tr369_usp'
 }
 
 // IoT 产品 API

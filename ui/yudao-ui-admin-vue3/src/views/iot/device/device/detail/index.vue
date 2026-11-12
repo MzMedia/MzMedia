@@ -66,6 +66,32 @@
         />
       </el-tab-pane>
       <el-tab-pane
+        label="CWMP (TR-069) 管理"
+        name="cwmp"
+        v-if="product.protocolType === ProtocolTypeEnum.TR069"
+      >
+        <DeviceCwmpManagement
+          v-if="activeTab === 'cwmp'"
+          :device="device"
+          :product="product"
+        />
+      </el-tab-pane>
+      <el-tab-pane
+        label="USP (TR-369) 管理"
+        name="usp"
+        v-if="
+          [ProtocolTypeEnum.TR369_MQTT, ProtocolTypeEnum.TR369_WEBSOCKET].includes(
+            product.protocolType as ProtocolTypeEnum
+          )
+        "
+      >
+        <DeviceUspManagement
+          v-if="activeTab === 'usp'"
+          :device="device"
+          :product="product"
+        />
+      </el-tab-pane>
+      <el-tab-pane
         label="视频监控"
         name="video"
         v-if="product.deviceType === DeviceTypeEnum.VIDEO || (device && device.videoConfig)"
@@ -97,6 +123,8 @@ import DeviceDetailConfig from './DeviceDetailConfig.vue'
 import DeviceModbusConfig from './DeviceModbusConfig.vue'
 import DeviceDetailsSubDevice from './DeviceDetailsSubDevice.vue'
 import DeviceDetailsVideo from './DeviceDetailsVideo.vue'
+import DeviceCwmpManagement from './DeviceCwmpManagement.vue'
+import DeviceUspManagement from './DeviceUspManagement.vue'
 
 defineOptions({ name: 'IoTDeviceDetail' })
 

@@ -136,6 +136,7 @@ import { DICT_TYPE, getIntDictOptions, getStrDictOptions } from '@/utils/dict'
 import { ProductCategoryApi, ProductCategoryVO } from '@/api/iot/product/category'
 import { UploadImg } from '@/components/UploadFile'
 import { generateRandomStr } from '@/utils'
+import { watch } from 'vue'
 
 defineOptions({ name: 'IoTProductForm' })
 
@@ -244,4 +245,15 @@ const resetForm = () => {
 const generateProductKey = () => {
   formData.value.productKey = generateRandomStr(16)
 }
+
+watch(
+  () => formData.value.protocolType,
+  (val) => {
+    if (val === ProtocolTypeEnum.TR069) {
+      formData.value.serializeType = SerializeTypeEnum.TR069_SOAP
+    } else if (val === ProtocolTypeEnum.TR369_MQTT || val === ProtocolTypeEnum.TR369_WEBSOCKET) {
+      formData.value.serializeType = SerializeTypeEnum.TR369_USP
+    }
+  }
+)
 </script>
