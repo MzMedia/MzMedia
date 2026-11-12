@@ -80,7 +80,7 @@ public class IotDeviceServiceImplTest extends BaseDbUnitTest {
     @Resource
     private IotDeviceMessageServiceImpl deviceMessageService;
 
-    @Resource
+    @Resource(name = "iotDeviceMapper")
     private IotDeviceMapper deviceMapper;
     @Resource
     private PlatformTransactionManager transactionManager;

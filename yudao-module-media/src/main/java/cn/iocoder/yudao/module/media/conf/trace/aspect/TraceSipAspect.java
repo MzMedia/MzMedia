@@ -29,7 +29,7 @@ public class TraceSipAspect {
     /**
      * SIP 发送统一出口，Call-ID 在这里获取，避免侵入 SIPCommander。
      */
-    @Before("execution(* com.genersoft.iot.vmp.gb28181.transmit.SIPSender.transmitRequest(..))")
+    @Before("execution(* cn.iocoder.yudao.module.media.gb28181.transmit.SIPSender.transmitRequest(..))")
     public void onSipSend(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         if (args.length < 2 || !(args[1] instanceof Message)) {
@@ -44,7 +44,7 @@ public class TraceSipAspect {
      * 不能切 AlarmNotifyMessageHandler：它在 afterPropertiesSet 中把目标对象注册到
      * MessageRequestProcessor，后续调用会绕过 AOP 代理。
      */
-    @Before("execution(* com.genersoft.iot.vmp.gb28181.transmit.SIPProcessorObserver.processRequest(..))")
+    @Before("execution(* cn.iocoder.yudao.module.media.gb28181.transmit.SIPProcessorObserver.processRequest(..))")
     public void onSipRecv(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         if (args.length < 1 || !(args[0] instanceof RequestEvent)) {

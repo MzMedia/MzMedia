@@ -16,22 +16,12 @@ public class StackLoggerImpl implements StackLogger {
 	private static final String FQCN = StackLoggerImpl.class.getName();
 
 	/**
-	 * 获取栈中类信息(以便底层日志记录系统能够提取正确的位置信息(方法名、行号))
-	 * @return LocationAwareLogger
-	 */
-	private static LocationAwareLogger getLocationAwareLogger() {
-		return (LocationAwareLogger) LoggerFactory.getLogger(new Throwable().getStackTrace()[4].getClassName());
-	}
-
-
-	/**
 	 * 封装打印日志的位置信息
 	 * @param level   日志级别
 	 * @param message 日志事件的消息
 	 */
 	private static void log(int level, String message) {
-		LocationAwareLogger locationAwareLogger = getLocationAwareLogger();
-		locationAwareLogger.log(null, FQCN, level, message, null, null);
+		log(level, message, null);
 	}
 
 	/**
@@ -40,8 +30,25 @@ public class StackLoggerImpl implements StackLogger {
 	 * @param message 日志事件的消息
 	 */
 	private static void log(int level, String message, Throwable throwable) {
-		LocationAwareLogger locationAwareLogger = getLocationAwareLogger();
-		locationAwareLogger.log(null, FQCN, level, message, null, throwable);
+		try {
+			StackTraceElement[] stackTrace = new Throwable().getStackTrace();
+			String className = (stackTrace.length > 4) ? stackTrace[4].getClassName() : StackLoggerImpl.class.getName();
+			org.slf4j.Logger logger = LoggerFactory.getLogger(className);
+			if (logger instanceof LocationAwareLogger) {
+				((LocationAwareLogger) logger).log(null, FQCN, level, message, null, throwable);
+			} else {
+				if (level >= LocationAwareLogger.ERROR_INT) {
+					logger.error(message, throwable);
+				} else if (level >= LocationAwareLogger.WARN_INT) {
+					logger.warn(message, throwable);
+				} else if (level >= LocationAwareLogger.INFO_INT) {
+					logger.info(message, throwable);
+				} else {
+					logger.debug(message, throwable);
+				}
+			}
+		} catch (Exception ignored) {
+		}
 	}
 
 	@Override

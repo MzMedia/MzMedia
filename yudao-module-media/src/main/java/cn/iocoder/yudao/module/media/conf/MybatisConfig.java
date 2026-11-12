@@ -1,25 +1,21 @@
 package cn.iocoder.yudao.module.media.conf;
 
 import cn.iocoder.yudao.module.media.service.bean.AlarmType;
+import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
 import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.mapping.VendorDatabaseIdProvider;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.EnumOrdinalTypeHandler;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 
-import javax.sql.DataSource;
 import java.util.Properties;
 
 /**
  * 配置mybatis
  */
-@Configuration
-@Order(value=1)
+@Configuration("mediaMybatisConfig")
 public class MybatisConfig {
 
     @Autowired
@@ -50,18 +46,14 @@ public class MybatisConfig {
     }
 
     @Bean
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource, DatabaseIdProvider databaseIdProvider) throws Exception {
-       final SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
-        sqlSessionFactory.setDataSource(dataSource);
-        org.apache.ibatis.session.Configuration config = new org.apache.ibatis.session.Configuration();
-        if (userSetting.getSqlLog()){
-            config.setLogImpl(StdOutImpl.class);
-        }
-        config.setMapUnderscoreToCamelCase(true);
-        config.getTypeHandlerRegistry().register(AlarmType.class, EnumOrdinalTypeHandler.class);
-        sqlSessionFactory.setConfiguration(config);
-        sqlSessionFactory.setDatabaseIdProvider(databaseIdProvider);
-        return sqlSessionFactory.getObject();
+    public ConfigurationCustomizer mediaConfigurationCustomizer() {
+        return configuration -> {
+            if (Boolean.TRUE.equals(userSetting.getSqlLog())) {
+                configuration.setLogImpl(StdOutImpl.class);
+            }
+            configuration.setMapUnderscoreToCamelCase(true);
+            configuration.getTypeHandlerRegistry().register(AlarmType.class, EnumOrdinalTypeHandler.class);
+        };
     }
 
 }

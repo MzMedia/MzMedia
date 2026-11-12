@@ -18,8 +18,8 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
  * 全局异常处理
  */
 @Slf4j
-@RestControllerAdvice
-public class GlobalExceptionHandler {
+@RestControllerAdvice(basePackages = "cn.iocoder.yudao.module.media")
+public class MediaGlobalExceptionHandler {
 
     /**
      * 默认异常处理

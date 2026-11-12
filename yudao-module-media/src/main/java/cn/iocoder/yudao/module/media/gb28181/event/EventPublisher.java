@@ -27,7 +27,7 @@ import java.util.*;
  * @date:   2020年5月6日 上午11:30:50
  */
 @Slf4j
-@Component
+@Component("mediaEventPublisher")
 public class EventPublisher {
 
 	@Autowired

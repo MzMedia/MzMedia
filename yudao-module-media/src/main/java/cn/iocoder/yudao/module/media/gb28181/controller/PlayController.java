@@ -192,8 +192,7 @@ public class PlayController {
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "deviceId", description = "通道国标编号", required = true)
 	@Parameter(name = "timeout", description = "推流超时时间(秒)", required = true)
-	@GetMapping("/broadcast/{deviceId}/{channelId}")
-	@PostMapping("/broadcast/{deviceId}/{channelId}")
+	@RequestMapping(value = "/broadcast/{deviceId}/{channelId}", method = {RequestMethod.GET, RequestMethod.POST})
     public AudioBroadcastResult broadcastApi(@PathVariable String deviceId, @PathVariable String channelId, Integer timeout, Boolean broadcastMode) {
 		if (log.isDebugEnabled()) {
 			log.debug("语音广播API调用");
@@ -206,8 +205,7 @@ public class PlayController {
 	@Operation(summary = "停止语音广播")
 	@Parameter(name = "deviceId", description = "设备Id", required = true)
 	@Parameter(name = "channelId", description = "通道Id", required = true)
-	@GetMapping("/broadcast/stop/{deviceId}/{channelId}")
-	@PostMapping("/broadcast/stop/{deviceId}/{channelId}")
+	@RequestMapping(value = "/broadcast/stop/{deviceId}/{channelId}", method = {RequestMethod.GET, RequestMethod.POST})
 	public void stopBroadcast(@PathVariable String deviceId, @PathVariable String channelId) {
 		if (log.isDebugEnabled()) {
 			log.debug("停止语音广播API调用");

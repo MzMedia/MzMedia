@@ -7,8 +7,8 @@ import cn.iocoder.yudao.framework.common.event.IotMediaLinkageEvent;
 import cn.iocoder.yudao.module.iot.core.mq.message.IotDeviceMessage;
 import cn.iocoder.yudao.module.iot.dal.dataobject.rule.IotSceneRuleDO;
 import cn.iocoder.yudao.module.iot.enums.rule.IotSceneRuleActionTypeEnum;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 @Slf4j
 public class IotMediaSceneRuleAction implements IotSceneRuleAction {
 
-    @Resource
+    @Autowired
     private ApplicationEventPublisher eventPublisher;
 
     @Override

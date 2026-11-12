@@ -11,7 +11,7 @@ import java.util.List;
  * 用于存储设备信息
  */
 @Mapper
-@Repository
+@Repository("mediaDeviceMapper")
 public interface DeviceMapper {
 
     @Select("SELECT " +

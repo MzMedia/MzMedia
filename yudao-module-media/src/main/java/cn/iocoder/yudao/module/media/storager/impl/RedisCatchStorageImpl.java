@@ -36,7 +36,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
-    @Autowired
     private final DeviceMapper deviceMapper;
 
     private final UserSetting userSetting;

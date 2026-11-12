@@ -71,7 +71,7 @@ import static java.util.Collections.singletonList;
 @Slf4j
 public class IotDeviceServiceImpl implements IotDeviceService {
 
-    @Resource
+    @Resource(name = "iotDeviceMapper")
     private IotDeviceMapper deviceMapper;
 
     @Resource

@@ -7,12 +7,14 @@ import cn.iocoder.yudao.module.media.gb28181.bean.Platform;
 import cn.iocoder.yudao.module.media.web.custom.bean.CameraCount;
 import cn.iocoder.yudao.module.media.web.custom.bean.CameraGroup;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @Mapper
+@Repository("mediaGroupMapper")
 public interface GroupMapper {
 
     @Insert("INSERT INTO mz_common_group (device_id, name, parent_id, parent_device_id, business_group, create_time, update_time, civil_code, alias) " +

@@ -44,7 +44,7 @@ import static cn.iocoder.yudao.module.pms.enums.ErrorCodeConstants.KNOWLEDGE_GRO
 @Validated
 public class PmsKnowledgeGroupServiceImpl implements PmsKnowledgeGroupService {
 
-    @Resource
+    @Resource(name = "pmsKnowledgeGroupMapper")
     private PmsKnowledgeGroupMapper groupMapper;
     @Resource
     private PmsKnowledgeGroupRelationMapper groupRelationMapper;

@@ -39,7 +39,7 @@ public class PmsKnowledgeGroupServiceImplTest extends BaseDbUnitTest {
     @Resource
     private PmsKnowledgeGroupServiceImpl groupService;
 
-    @Resource
+    @Resource(name = "pmsKnowledgeGroupMapper")
     private PmsKnowledgeGroupMapper groupMapper;
     @Resource
     private PmsKnowledgeGroupRelationMapper relationMapper;

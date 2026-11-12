@@ -101,7 +101,7 @@ public class SipLayer{
 					userSetting.getSipLog(), userSetting.isSipCacheServerConnections(), sipConfig.isNioMessageProcessor()));
 			sipStack.setMessageParserFactory(new GbStringMsgParserFactory());
 		} catch (PeerUnavailableException e) {
-			log.error("[SIP SERVER] SIP服务启动失败， 监听地址{}失败,请检查ip是否正确", monitorIp);
+			log.error("[SIP SERVER] SIP服务启动失败， 监听地址{}失败,请检查ip是否正确", monitorIp, e);
 			return;
 		}
 
@@ -118,7 +118,7 @@ public class SipLayer{
 				 | ObjectInUseException
 				 | InvalidArgumentException e) {
 			log.error("[SIP SERVER] tcp://{}:{} SIP服务启动失败,请检查端口是否被占用或者ip是否正确"
-					, monitorIp, port);
+					, monitorIp, port, e);
 		}
 
 		try {
@@ -135,7 +135,7 @@ public class SipLayer{
 				 | ObjectInUseException
 				 | InvalidArgumentException e) {
 			log.error("[SIP SERVER] udp://{}:{} SIP服务启动失败,请检查端口是否被占用或者ip是否正确"
-					, monitorIp, port);
+					, monitorIp, port, e);
 		}
 	}
 

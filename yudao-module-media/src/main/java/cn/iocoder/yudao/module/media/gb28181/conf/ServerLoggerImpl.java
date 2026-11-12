@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public class ServerLoggerImpl implements ServerLogger {
 
-    private boolean showLog = true;
+    private boolean showLog = false;
 
     private SIPTransactionStack sipStack;
 
@@ -24,7 +24,7 @@ public class ServerLoggerImpl implements ServerLogger {
 
     @Override
     public void logMessage(SIPMessage message, String from, String to, boolean sender, long time) {
-        if (!showLog) {
+        if (!showLog || this.stackLogger == null) {
             return;
         }
         StringBuilder stringBuilder = new StringBuilder();
@@ -37,7 +37,7 @@ public class ServerLoggerImpl implements ServerLogger {
 
     @Override
     public void logMessage(SIPMessage message, String from, String to, String status, boolean sender, long time) {
-        if (!showLog) {
+        if (!showLog || this.stackLogger == null) {
             return;
         }
         StringBuilder stringBuilder = new StringBuilder();
@@ -49,7 +49,7 @@ public class ServerLoggerImpl implements ServerLogger {
 
     @Override
     public void logMessage(SIPMessage message, String from, String to, String status, boolean sender) {
-        if (!showLog) {
+        if (!showLog || this.stackLogger == null) {
             return;
         }
         StringBuilder stringBuilder = new StringBuilder();
@@ -61,7 +61,7 @@ public class ServerLoggerImpl implements ServerLogger {
 
     @Override
     public void logException(Exception ex) {
-        if (!showLog) {
+        if (!showLog || this.stackLogger == null) {
             return;
         }
         this.stackLogger.logException(ex);
@@ -69,20 +69,12 @@ public class ServerLoggerImpl implements ServerLogger {
 
     @Override
     public void setStackProperties(Properties stackProperties) {
-        if (!showLog) {
-            return;
-        }
-        String TRACE_LEVEL = stackProperties.getProperty("gov.nist.javax.sip.TRACE_LEVEL");
-        if (TRACE_LEVEL != null) {
-            showLog = true;
-        }
+        String logMessageContent = stackProperties.getProperty("gov.nist.javax.sip.LOG_MESSAGE_CONTENT");
+        showLog = "true".equalsIgnoreCase(logMessageContent);
     }
 
     @Override
     public void setSipStack(SipStack sipStack) {
-        if (!showLog) {
-            return;
-        }
         if(sipStack instanceof SIPTransactionStack) {
             this.sipStack = (SIPTransactionStack)sipStack;
             this.stackLogger = CommonLogger.getLogger(SIPTransactionStack.class);

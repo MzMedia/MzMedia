@@ -26,7 +26,7 @@ public class TraceForwardAspect {
     @Autowired
     private TraceEventFactory traceEventFactory;
 
-    @Before("execution(* com.genersoft.iot.vmp.gb28181.transmit.cmd.impl.SIPCommanderForPlatform.sendAlarmMessage(..))")
+    @Before("execution(* cn.iocoder.yudao.module.media.gb28181.transmit.cmd.impl.SIPCommanderForPlatform.sendAlarmMessage(..))")
     public void onPlatformForward(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         if (args.length < 2 || !(args[0] instanceof Platform) || !(args[1] instanceof DeviceAlarmNotify)) {
@@ -38,7 +38,7 @@ public class TraceForwardAspect {
                 platform.getServerGBId() + "/" + platform.getDeviceGBId(), alarm);
     }
 
-    @Before("execution(* com.genersoft.iot.vmp.gb28181.transmit.cmd.impl.SIPCommander.sendAlarmMessage(..))")
+    @Before("execution(* cn.iocoder.yudao.module.media.gb28181.transmit.cmd.impl.SIPCommander.sendAlarmMessage(..))")
     public void onDeviceForward(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         if (args.length < 2 || !(args[0] instanceof Device) || !(args[1] instanceof DeviceAlarmNotify)) {
