@@ -9,22 +9,27 @@ import cn.iocoder.yudao.framework.common.util.json.JsonUtils;
 import cn.iocoder.yudao.framework.common.util.object.BeanUtils;
 import cn.iocoder.yudao.module.iot.controller.admin.ota.vo.task.record.IotOtaTaskRecordPageReqVO;
 import cn.iocoder.yudao.module.iot.core.enums.IotDeviceMessageMethodEnum;
+import cn.iocoder.yudao.module.iot.core.enums.IotProtocolTypeEnum;
 import cn.iocoder.yudao.module.iot.core.mq.message.IotDeviceMessage;
+import cn.iocoder.yudao.module.iot.core.protocol.cwmp.builder.CwmpSoapBuilder;
 import cn.iocoder.yudao.module.iot.core.topic.ota.IotDeviceOtaProgressReqDTO;
 import cn.iocoder.yudao.module.iot.core.topic.ota.IotDeviceOtaUpgradeReqDTO;
 import cn.iocoder.yudao.module.iot.dal.dataobject.device.IotDeviceDO;
 import cn.iocoder.yudao.module.iot.dal.dataobject.ota.IotOtaFirmwareDO;
 import cn.iocoder.yudao.module.iot.dal.dataobject.ota.IotOtaTaskRecordDO;
+import cn.iocoder.yudao.module.iot.dal.dataobject.product.IotProductDO;
 import cn.iocoder.yudao.module.iot.dal.mysql.ota.IotOtaTaskRecordMapper;
 import cn.iocoder.yudao.module.iot.enums.ota.IotOtaTaskRecordStatusEnum;
 import cn.iocoder.yudao.module.iot.service.device.IotDeviceService;
 import cn.iocoder.yudao.module.iot.service.device.message.IotDeviceMessageService;
+import cn.iocoder.yudao.module.iot.service.product.IotProductService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -50,6 +55,8 @@ public class IotOtaTaskRecordServiceImpl implements IotOtaTaskRecordService {
     private IotDeviceMessageService deviceMessageService;
     @Resource
     private IotDeviceService deviceService;
+    @Resource
+    private IotProductService productService;
 
     @Override
     public void createOtaTaskRecordList(List<IotDeviceDO> devices, Long firmwareId, Long taskId) {
@@ -136,10 +143,53 @@ public class IotOtaTaskRecordServiceImpl implements IotOtaTaskRecordService {
     @Override
     public boolean pushOtaTaskRecord(IotOtaTaskRecordDO record, IotOtaFirmwareDO fireware, IotDeviceDO device) {
         try {
-            // 1. 推送 OTA 任务记录
-            IotDeviceOtaUpgradeReqDTO params = BeanUtils.toBean(fireware, IotDeviceOtaUpgradeReqDTO.class);
-            IotDeviceMessage message = IotDeviceMessage.requestOf(
-                    IotDeviceMessageMethodEnum.OTA_UPGRADE.getMethod(), params);
+            // 1. 获取产品协议类型
+            IotProductDO product = productService.getProduct(device.getProductId());
+            String protocolType = product != null ? product.getProtocolType() : null;
+
+            IotDeviceMessage message;
+            if (IotProtocolTypeEnum.TR069.getType().equalsIgnoreCase(protocolType)) {
+                // TR-069: 构建 Cwmp Download RPC
+                String soapXml = CwmpSoapBuilder.buildDownload(
+                        "1 Firmware Upgrade Image",
+                        fireware.getFileUrl(),
+                        null,
+                        null,
+                        fireware.getFileSize() != null ? fireware.getFileSize() : 0L,
+                        fireware.getFileName()
+                );
+                message = IotDeviceMessage.builder()
+                        .deviceId(device.getId())
+                        .tenantId(device.getTenantId())
+                        .method(IotDeviceMessageMethodEnum.RAW_PUSH.getMethod())
+                        .payload(soapXml.getBytes(StandardCharsets.UTF_8))
+                        .build();
+            } else if (IotProtocolTypeEnum.TR369_MQTT.getType().equalsIgnoreCase(protocolType)
+                    || IotProtocolTypeEnum.TR369_WEBSOCKET.getType().equalsIgnoreCase(protocolType)) {
+                // TR-369: 构建 USP Device.Download() 操作命令
+                Map<String, String> args = new HashMap<>();
+                args.put("FileType", "1 Firmware Upgrade Image");
+                args.put("URL", fireware.getFileUrl());
+                args.put("FileSize", String.valueOf(fireware.getFileSize() != null ? fireware.getFileSize() : 0L));
+                args.put("TargetFileName", StrUtil.nullToEmpty(fireware.getFileName()));
+
+                Map<String, Object> params = new HashMap<>();
+                params.put("command", "Device.Download()");
+                params.put("commandKey", "OTA_" + record.getId());
+                params.put("inputArgs", args);
+
+                message = IotDeviceMessage.builder()
+                        .deviceId(device.getId())
+                        .tenantId(device.getTenantId())
+                        .method("usp.operate")
+                        .params(params)
+                        .build();
+            } else {
+                // 默认平台物模型标准升级通知
+                IotDeviceOtaUpgradeReqDTO params = BeanUtils.toBean(fireware, IotDeviceOtaUpgradeReqDTO.class);
+                message = IotDeviceMessage.requestOf(
+                        IotDeviceMessageMethodEnum.OTA_UPGRADE.getMethod(), params);
+            }
             deviceMessageService.sendDeviceMessage(message, device);
 
             // 2. 更新 OTA 升级记录状态为进行中

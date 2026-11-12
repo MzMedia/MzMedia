@@ -213,6 +213,10 @@ public class IotProtocolManager implements SmartLifecycle {
                 return createModbusTcpClientProtocol(config);
             case MODBUS_TCP_SERVER:
                 return createModbusTcpServerProtocol(config);
+            case TR069:
+                return createCwmpProtocol(config);
+            case TR369_MQTT:
+                return createUspMqttProtocol(config);
             default:
                 throw new IllegalArgumentException(String.format(
                         "[createProtocol][协议实例 %s 的协议类型 %s 暂不支持]", config.getId(), protocolType));
@@ -307,6 +311,26 @@ public class IotProtocolManager implements SmartLifecycle {
      */
     private IotModbusTcpServerProtocol createModbusTcpServerProtocol(IotGatewayProperties.ProtocolProperties config) {
         return new IotModbusTcpServerProtocol(config);
+    }
+
+    /**
+     * 创建 TR-069 (CWMP) 协议实例
+     *
+     * @param config 协议实例配置
+     * @return TR-069 协议实例
+     */
+    private cn.iocoder.yudao.module.iot.gateway.protocol.cwmp.IotCwmpProtocol createCwmpProtocol(IotGatewayProperties.ProtocolProperties config) {
+        return new cn.iocoder.yudao.module.iot.gateway.protocol.cwmp.IotCwmpProtocol(config);
+    }
+
+    /**
+     * 创建 TR-369 (USP) over MQTT 协议实例
+     *
+     * @param config 协议实例配置
+     * @return TR-369 协议实例
+     */
+    private cn.iocoder.yudao.module.iot.gateway.protocol.usp.IotUspMqttProtocol createUspMqttProtocol(IotGatewayProperties.ProtocolProperties config) {
+        return new cn.iocoder.yudao.module.iot.gateway.protocol.usp.IotUspMqttProtocol(config);
     }
 
 }

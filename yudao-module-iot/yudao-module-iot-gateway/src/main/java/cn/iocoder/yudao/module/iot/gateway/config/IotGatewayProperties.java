@@ -221,6 +221,18 @@ public class IotGatewayProperties {
         @Valid
         private IotModbusTcpServerConfig modbusTcpServer;
 
+        /**
+         * TR-069 (CWMP) 协议配置
+         */
+        @Valid
+        private cn.iocoder.yudao.module.iot.gateway.protocol.cwmp.IotCwmpConfig cwmp;
+
+        /**
+         * TR-369 (USP) 协议配置
+         */
+        @Valid
+        private cn.iocoder.yudao.module.iot.gateway.protocol.usp.IotUspConfig usp;
+
     }
 
     /**

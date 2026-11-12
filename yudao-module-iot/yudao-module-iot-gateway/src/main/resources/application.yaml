@@ -187,6 +187,32 @@ yudao:
             custom-function-code: 65        # 自定义功能码（用于认证等扩展交互）
             request-timeout: 5000           # Pending Request 超时时间（毫秒）
             request-cleanup-interval: 10000 # Pending Request 清理间隔（毫秒）
+        # ====================================
+        # TR-069 (CWMP) ACS 网关服务配置
+        # ====================================
+        - id: cwmp-acs-1
+          enabled: true
+          protocol: tr069
+          port: 9292
+          cwmp:
+            path: /cwmp
+            auth-type: basic
+            default-acs-username: ""
+            default-acs-password: ""
+            session-timeout-seconds: 60
+            connection-request-timeout-seconds: 10
+        # ====================================
+        # TR-369 (USP) MQTT MTP 网关服务配置
+        # ====================================
+        - id: usp-mqtt-1
+          enabled: true
+          protocol: tr369_mqtt
+          port: 18833
+          usp:
+            mtp: MQTT
+            controller-endpoint-id: proto::mzmedia-controller
+            topic-agent-prefix: agent/
+            topic-controller-prefix: controller/
 
 --- #################### 日志相关配置 ####################
 

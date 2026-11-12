@@ -19,7 +19,9 @@ import java.util.Arrays;
 public enum IotSerializeTypeEnum implements ArrayValuable<String> {
 
     JSON("json"),
-    BINARY("binary");
+    BINARY("binary"),
+    TR069_SOAP("tr069_soap"),
+    TR369_USP("tr369_usp");
 
     public static final String[] ARRAYS = Arrays.stream(values()).map(IotSerializeTypeEnum::getType).toArray(String[]::new);
 

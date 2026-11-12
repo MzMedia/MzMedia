@@ -96,6 +96,7 @@
         <oshi.version>6.6.5</oshi.version>
         <jts.version>1.18.2</jts.version>
         <java-vector-tile.version>1.4.1</java-vector-tile.version>
+        <protobuf.version>3.25.5</protobuf.version>
     </properties>
 
     <dependencyManagement>
@@ -140,6 +141,11 @@
                 <groupId>io.github.rburgst</groupId>
                 <artifactId>okhttp-digest</artifactId>
                 <version>${okhttp-digest.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
             </dependency>
             <!-- 统一依赖管理 -->
             <dependency>

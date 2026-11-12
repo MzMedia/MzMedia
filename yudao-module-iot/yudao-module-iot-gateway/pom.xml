@@ -55,6 +55,16 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- HTTP Digest 客户端（用于 CWMP Connection Request 鉴权唤醒） -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.rburgst</groupId>
+            <artifactId>okhttp-digest</artifactId>
+        </dependency>
+
         <!-- Vert.x 相关 -->
         <dependency>
             <groupId>io.vertx</groupId>

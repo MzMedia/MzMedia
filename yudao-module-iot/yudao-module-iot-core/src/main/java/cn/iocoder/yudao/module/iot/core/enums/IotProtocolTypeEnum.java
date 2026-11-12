@@ -26,7 +26,10 @@ public enum IotProtocolTypeEnum implements ArrayValuable<String> {
     EMQX("emqx", true),
     COAP("coap", false),
     MODBUS_TCP_CLIENT("modbus_tcp_client", true),
-    MODBUS_TCP_SERVER("modbus_tcp_server", true);
+    MODBUS_TCP_SERVER("modbus_tcp_server", true),
+    TR069("tr069", false),
+    TR369_MQTT("tr369_mqtt", true),
+    TR369_WEBSOCKET("tr369_ws", true);
 
     public static final String[] ARRAYS = Arrays.stream(values()).map(IotProtocolTypeEnum::getType).toArray(String[]::new);
 
@@ -53,6 +56,20 @@ public enum IotProtocolTypeEnum implements ArrayValuable<String> {
      */
     public boolean isModbus() {
         return this == MODBUS_TCP_CLIENT || this == MODBUS_TCP_SERVER;
+    }
+
+    /**
+     * @return 是否是 TR-069 (CWMP) 协议
+     */
+    public boolean isCwmp() {
+        return this == TR069;
+    }
+
+    /**
+     * @return 是否是 TR-369 (USP) 协议
+     */
+    public boolean isUsp() {
+        return this == TR369_MQTT || this == TR369_WEBSOCKET;
     }
 
 }
