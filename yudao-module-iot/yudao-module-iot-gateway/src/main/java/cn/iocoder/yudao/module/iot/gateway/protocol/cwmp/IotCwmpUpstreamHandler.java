@@ -90,11 +90,9 @@ public class IotCwmpUpstreamHandler implements Handler<RoutingContext> {
                 .reportTime(LocalDateTime.now())
                 .serverId(protocol.getServerId())
                 .method(IotDeviceMessageMethodEnum.STATE_UPDATE.getMethod())
-                .params(new IotDeviceStateUpdateReqDTO()
-                        .setState(IotDeviceStateEnum.ONLINE.getValue())
-                        .setOnlineTime(LocalDateTime.now()))
+                .params(new IotDeviceStateUpdateReqDTO(IotDeviceStateEnum.ONLINE.getState()))
                 .build();
-        messageBus.publish(IotDeviceMessage.MESSAGE_BUS_DEVICE_MESSAGE_TOPIC, stateMsg);
+        messageBus.post(IotDeviceMessage.MESSAGE_BUS_DEVICE_MESSAGE_TOPIC, stateMsg);
 
         // 2. 将核心参数映射到物模型属性并发送至总线
         Map<String, Object> props = Tr181ThingModelMapper.mapCwmpParamsToThingModel(inform.getParameterList());
@@ -106,7 +104,7 @@ public class IotCwmpUpstreamHandler implements Handler<RoutingContext> {
                     .method(IotDeviceMessageMethodEnum.PROPERTY_POST.getMethod())
                     .params(props)
                     .build();
-            messageBus.publish(IotDeviceMessage.MESSAGE_BUS_DEVICE_MESSAGE_TOPIC, propMsg);
+            messageBus.post(IotDeviceMessage.MESSAGE_BUS_DEVICE_MESSAGE_TOPIC, propMsg);
         }
 
         // 3. 设置会话 Cookie 并回复 InformResponse

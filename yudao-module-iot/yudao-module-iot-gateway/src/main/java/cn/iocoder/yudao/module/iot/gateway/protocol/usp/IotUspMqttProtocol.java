@@ -179,7 +179,7 @@ public class IotUspMqttProtocol implements IotProtocol {
                             .method(IotDeviceMessageMethodEnum.PROPERTY_POST.getMethod())
                             .params(props)
                             .build();
-                    messageBus.publish(IotDeviceMessage.MESSAGE_BUS_DEVICE_MESSAGE_TOPIC, propMsg);
+                    messageBus.post(IotDeviceMessage.MESSAGE_BUS_DEVICE_MESSAGE_TOPIC, propMsg);
                 }
             }
         } catch (Exception e) {
@@ -194,11 +194,9 @@ public class IotUspMqttProtocol implements IotProtocol {
                 .reportTime(LocalDateTime.now())
                 .serverId(getServerId())
                 .method(IotDeviceMessageMethodEnum.STATE_UPDATE.getMethod())
-                .params(new IotDeviceStateUpdateReqDTO()
-                        .setState(IotDeviceStateEnum.ONLINE.getValue())
-                        .setOnlineTime(LocalDateTime.now()))
+                .params(new IotDeviceStateUpdateReqDTO(IotDeviceStateEnum.ONLINE.getState()))
                 .build();
-        messageBus.publish(IotDeviceMessage.MESSAGE_BUS_DEVICE_MESSAGE_TOPIC, stateMsg);
+        messageBus.post(IotDeviceMessage.MESSAGE_BUS_DEVICE_MESSAGE_TOPIC, stateMsg);
 
         // 主动发送基础 Device.DeviceInfo. 查询
         try {
@@ -218,11 +216,9 @@ public class IotUspMqttProtocol implements IotProtocol {
                 .reportTime(LocalDateTime.now())
                 .serverId(getServerId())
                 .method(IotDeviceMessageMethodEnum.STATE_UPDATE.getMethod())
-                .params(new IotDeviceStateUpdateReqDTO()
-                        .setState(IotDeviceStateEnum.OFFLINE.getValue())
-                        .setOfflineTime(LocalDateTime.now()))
+                .params(new IotDeviceStateUpdateReqDTO(IotDeviceStateEnum.OFFLINE.getState()))
                 .build();
-        messageBus.publish(IotDeviceMessage.MESSAGE_BUS_DEVICE_MESSAGE_TOPIC, stateMsg);
+        messageBus.post(IotDeviceMessage.MESSAGE_BUS_DEVICE_MESSAGE_TOPIC, stateMsg);
     }
 
     /**

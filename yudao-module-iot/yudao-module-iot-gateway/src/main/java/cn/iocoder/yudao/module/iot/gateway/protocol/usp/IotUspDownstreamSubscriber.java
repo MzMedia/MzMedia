@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -41,7 +42,7 @@ public class IotUspDownstreamSubscriber extends AbstractIotProtocolDownstreamSub
     }
 
     @Override
-    protected void onMessage(IotDeviceMessage message) {
+    protected void handleMessage(IotDeviceMessage message) {
         if (message == null || message.getDeviceId() == null) {
             return;
         }
@@ -52,7 +53,7 @@ public class IotUspDownstreamSubscriber extends AbstractIotProtocolDownstreamSub
             return;
         }
 
-        String endpointId = StrUtil.isNotBlank(device.getSerialNumber()) ? device.getSerialNumber() : device.getDeviceName();
+        String endpointId = StrUtil.isNotBlank(device.getDeviceName()) ? device.getDeviceName() : String.valueOf(device.getId());
         String method = message.getMethod();
 
         log.info("[onMessage][USP 下发指令, Endpoint: {}, 方法: {}]", endpointId, method);

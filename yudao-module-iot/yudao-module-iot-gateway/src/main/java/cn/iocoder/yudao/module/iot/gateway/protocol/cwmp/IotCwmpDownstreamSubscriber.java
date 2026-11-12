@@ -42,7 +42,7 @@ public class IotCwmpDownstreamSubscriber extends AbstractIotProtocolDownstreamSu
     }
 
     @Override
-    protected void onMessage(IotDeviceMessage message) {
+    protected void handleMessage(IotDeviceMessage message) {
         if (message == null || message.getDeviceId() == null) {
             return;
         }
@@ -54,7 +54,7 @@ public class IotCwmpDownstreamSubscriber extends AbstractIotProtocolDownstreamSu
         }
 
         // 设备序列号或设备名称
-        String sn = StrUtil.isNotBlank(device.getSerialNumber()) ? device.getSerialNumber() : device.getDeviceName();
+        String sn = StrUtil.isNotBlank(device.getDeviceName()) ? device.getDeviceName() : String.valueOf(device.getId());
         String method = message.getMethod();
 
         log.info("[onMessage][收到下发指令, 设备: {}, 方法: {}]", sn, method);
