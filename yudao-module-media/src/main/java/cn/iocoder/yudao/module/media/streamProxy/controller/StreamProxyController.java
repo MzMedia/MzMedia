@@ -39,7 +39,7 @@ import java.util.Map;
 @Tag(name = "拉流代理", description = "")
 @RestController
 @Slf4j
-@RequestMapping(value = "/api/proxy")
+@RequestMapping(value = {"/admin-api/api/proxy", "/api/proxy"})
 public class StreamProxyController {
 
     @Autowired

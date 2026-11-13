@@ -20,7 +20,7 @@ import java.util.List;
 
 @Tag(name = "区域管理")
 @RestController
-@RequestMapping("/api/region")
+@RequestMapping({"/admin-api/api/region", "/api/region"})
 public class RegionController {
 
     private final static Logger logger = LoggerFactory.getLogger(RegionController.class);

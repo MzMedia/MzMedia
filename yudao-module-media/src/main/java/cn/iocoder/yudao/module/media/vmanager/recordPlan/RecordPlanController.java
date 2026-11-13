@@ -25,7 +25,7 @@ import java.util.List;
 @Tag(name = "录制计划")
 @Slf4j
 @RestController
-@RequestMapping("/api/record/plan")
+@RequestMapping({"/admin-api/api/record/plan", "/api/record/plan"})
 public class RecordPlanController {
 
     @Autowired

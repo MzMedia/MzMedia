@@ -25,7 +25,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 @Tag(name  = "国标设备控制")
 @Slf4j
 @RestController
-@RequestMapping("/api/device/control")
+@RequestMapping({"/admin-api/api/device/control", "/api/device/control"})
 public class DeviceControl {
 
     @Autowired

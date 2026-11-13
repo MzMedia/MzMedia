@@ -54,7 +54,7 @@ import java.util.zip.ZipOutputStream;
 @Tag(name  = "第三方接口")
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/sy")
+@RequestMapping(value = {"/admin-api/api/sy", "/api/sy"})
 @ConditionalOnProperty(value = "sy.enable", havingValue = "true")
 @Hidden
 public class CameraChannelController {

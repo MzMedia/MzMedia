@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 @Tag(name = "分组管理")
 @RestController
-@RequestMapping("/api/group")
+@RequestMapping({"/admin-api/api/group", "/api/group"})
 public class GroupController {
 
     @Autowired

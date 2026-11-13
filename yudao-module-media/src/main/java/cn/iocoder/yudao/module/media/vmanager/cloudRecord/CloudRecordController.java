@@ -48,7 +48,7 @@ import java.util.zip.ZipOutputStream;
 @Tag(name = "云端录像接口")
 @Slf4j
 @RestController
-@RequestMapping("/api/cloud/record")
+@RequestMapping({"/admin-api/api/cloud/record", "/api/cloud/record"})
 public class CloudRecordController {
 
 

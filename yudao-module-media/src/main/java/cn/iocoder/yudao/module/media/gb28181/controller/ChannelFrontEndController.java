@@ -27,7 +27,7 @@ import java.util.List;
 @Tag(name  = "全局通道前端控制")
 @RestController
 @Slf4j
-@RequestMapping(value = "/api/common/channel/front-end")
+@RequestMapping(value = {"/admin-api/api/common/channel/front-end", "/api/common/channel/front-end"})
 public class ChannelFrontEndController {
 
     @Autowired

@@ -32,7 +32,7 @@ import java.util.UUID;
 @Tag(name  = "位置信息管理")
 @Slf4j
 @RestController
-@RequestMapping("/api/position")
+@RequestMapping({"/admin-api/api/position", "/api/position"})
 public class MobilePositionController {
 
     @Autowired

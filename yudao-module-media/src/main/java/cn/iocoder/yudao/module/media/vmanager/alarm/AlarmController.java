@@ -25,7 +25,7 @@ import java.util.List;
 @Tag(name = "报警管理接口")
 @Slf4j
 @RestController
-@RequestMapping("/api/alarm")
+@RequestMapping({"/admin-api/api/alarm", "/api/alarm"})
 @RequiredArgsConstructor
 public class AlarmController {
 

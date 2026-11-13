@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 @Tag(name  = "国标录像")
 @Slf4j
 @RestController
-@RequestMapping("/api/gb_record")
+@RequestMapping({"/admin-api/api/gb_record", "/api/gb_record"})
 public class GBRecordController {
 
 	@Autowired

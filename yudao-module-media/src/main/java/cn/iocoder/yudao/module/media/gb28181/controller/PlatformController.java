@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name  = "级联平台管理")
 @Slf4j
 @RestController
-@RequestMapping("/api/platform")
+@RequestMapping({"/admin-api/api/platform", "/api/platform"})
 public class PlatformController {
 
     @Autowired

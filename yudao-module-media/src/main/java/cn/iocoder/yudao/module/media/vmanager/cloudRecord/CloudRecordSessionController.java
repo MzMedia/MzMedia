@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 /** 通过既有WVP认证提供文件会话控制，所有媒体身份由服务端生成。 */
 @RestController
-@RequestMapping("/api/cloud/record/sessions")
+@RequestMapping({"/admin-api/api/cloud/record/sessions", "/api/cloud/record/sessions"})
 @Tag(name = "云录像独立会话")
 @SecurityRequirement(name = JwtUtils.HEADER)
 public class CloudRecordSessionController {

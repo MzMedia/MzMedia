@@ -45,7 +45,7 @@ public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
 
         // 排除api文档的接口，以及标准管理端接口等不需要统一为 WVPResult 的接口
         String path = request.getURI().getPath();
-        String[] excludePath = {"/v3/api-docs", "/api/v1", "/index/hook", "/api/video-", "/admin-api/", "/app-api/"};
+        String[] excludePath = {"/v3/api-docs", "/api/v1", "/index/hook", "/api/video-"};
         for (String p : excludePath) {
             if (path.startsWith(p)) {
                 return body;

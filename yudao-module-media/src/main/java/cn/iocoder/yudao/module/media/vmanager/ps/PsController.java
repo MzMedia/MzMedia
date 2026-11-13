@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 @Tag(name = "第三方PS服务对接")
 @Slf4j
 @RestController
-@RequestMapping("/api/ps")
+@RequestMapping({"/admin-api/api/ps", "/api/ps"})
 public class PsController {
 
     @Autowired

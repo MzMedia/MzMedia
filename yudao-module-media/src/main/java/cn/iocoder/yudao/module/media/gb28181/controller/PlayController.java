@@ -50,7 +50,7 @@ import java.util.UUID;
 @Tag(name  = "国标设备点播")
 @Slf4j
 @RestController
-@RequestMapping("/api/play")
+@RequestMapping({"/admin-api/api/play", "/api/play"})
 public class PlayController {
 
 	@Autowired

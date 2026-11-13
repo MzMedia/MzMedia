@@ -49,7 +49,7 @@ import java.util.UUID;
 @Tag(name  = "推流信息管理")
 @RestController
 @Slf4j
-@RequestMapping(value = "/api/push")
+@RequestMapping(value = {"/admin-api/api/push", "/api/push"})
 public class StreamPushController {
 
     @Autowired

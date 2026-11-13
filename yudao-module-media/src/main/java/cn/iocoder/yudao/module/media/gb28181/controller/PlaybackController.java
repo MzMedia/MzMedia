@@ -47,7 +47,7 @@ import java.util.UUID;
 @Tag(name = "视频回放")
 @Slf4j
 @RestController
-@RequestMapping("/api/playback")
+@RequestMapping({"/admin-api/api/playback", "/api/playback"})
 public class PlaybackController {
 
 	@Autowired

@@ -44,7 +44,7 @@ import java.util.List;
 @SuppressWarnings("rawtypes")
 @Slf4j
 @RestController
-@RequestMapping("/api/device/query")
+@RequestMapping({"/admin-api/api/device/query", "/api/device/query"})
 public class DeviceQuery {
 
 	@Autowired

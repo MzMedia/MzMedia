@@ -31,7 +31,7 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/v1/device")
+@RequestMapping(value = {"/admin-api/api/v1/device", "/api/v1/device"})
 @Hidden
 public class ApiDeviceController {
 

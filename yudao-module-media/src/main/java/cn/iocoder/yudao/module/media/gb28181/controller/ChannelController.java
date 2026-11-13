@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 @Tag(name  = "全局通道管理")
 @RestController
 @Slf4j
-@RequestMapping(value = "/api/common/channel")
+@RequestMapping(value = {"/admin-api/api/common/channel", "/api/common/channel"})
 public class ChannelController {
 
     @Autowired

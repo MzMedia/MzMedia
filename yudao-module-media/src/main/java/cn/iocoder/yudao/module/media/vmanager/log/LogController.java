@@ -28,7 +28,7 @@ import java.util.List;
 @Tag(name = "日志文件查询接口")
 @Slf4j
 @RestController
-@RequestMapping("/api/log")
+@RequestMapping({"/admin-api/api/log", "/api/log"})
 public class LogController {
 
     @Autowired

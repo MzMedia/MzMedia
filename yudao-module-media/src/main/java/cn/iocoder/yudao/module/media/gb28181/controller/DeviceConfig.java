@@ -18,7 +18,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 @Slf4j
 @Tag(name = "国标设备配置")
 @RestController
-@RequestMapping("/api/device/config")
+@RequestMapping({"/admin-api/api/device/config", "/api/device/config"})
 public class DeviceConfig {
 
     @Autowired

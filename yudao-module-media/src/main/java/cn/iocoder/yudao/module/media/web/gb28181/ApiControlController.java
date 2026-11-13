@@ -22,7 +22,7 @@ import java.text.ParseException;
  */
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/v1/control")
+@RequestMapping(value = {"/admin-api/api/v1/control", "/api/v1/control"})
 @Hidden
 public class ApiControlController {
 

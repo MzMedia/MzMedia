@@ -26,7 +26,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 @Tag(name  = "前端设备控制")
 @Slf4j
 @RestController
-@RequestMapping("/api/front-end")
+@RequestMapping({"/admin-api/api/front-end", "/api/front-end"})
 public class PtzController {
 
 	@Autowired

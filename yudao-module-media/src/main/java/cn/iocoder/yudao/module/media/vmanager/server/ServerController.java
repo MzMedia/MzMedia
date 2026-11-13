@@ -50,7 +50,7 @@ import java.util.*;
 @Tag(name = "服务控制")
 @Slf4j
 @RestController
-@RequestMapping("/api/server")
+@RequestMapping({"/admin-api/api/server", "/api/server"})
 public class ServerController {
 
     private static final String SECRET_MASK = "******";

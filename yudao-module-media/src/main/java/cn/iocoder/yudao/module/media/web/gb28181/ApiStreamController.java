@@ -33,7 +33,7 @@ import java.text.ParseException;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/v1/stream")
+@RequestMapping(value = {"/admin-api/api/v1/stream", "/api/v1/stream"})
 @Hidden
 public class ApiStreamController {
 

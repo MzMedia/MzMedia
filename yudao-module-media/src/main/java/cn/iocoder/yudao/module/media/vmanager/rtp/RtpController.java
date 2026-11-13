@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 @Tag(name = "第三方服务对接")
 @Slf4j
 @RestController
-@RequestMapping("/api/rtp")
+@RequestMapping({"/admin-api/api/rtp", "/api/rtp"})
 public class RtpController {
 
     @Autowired

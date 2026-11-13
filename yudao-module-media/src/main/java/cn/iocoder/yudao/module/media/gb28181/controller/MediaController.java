@@ -32,7 +32,7 @@ import java.net.URL;
 @Tag(name  = "媒体流相关")
 @RestController
 @Slf4j
-@RequestMapping(value = "/api/media")
+@RequestMapping(value = {"/admin-api/api/media", "/api/media"})
 public class MediaController {
 
     @Autowired
