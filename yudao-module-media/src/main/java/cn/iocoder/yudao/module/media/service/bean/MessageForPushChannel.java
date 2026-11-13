@@ -46,7 +46,7 @@ public class MessageForPushChannel {
     private String platFormName;
 
     /**
-     * WVP服务ID
+     * 视频服务节点ID
      */
     private String serverId;
 

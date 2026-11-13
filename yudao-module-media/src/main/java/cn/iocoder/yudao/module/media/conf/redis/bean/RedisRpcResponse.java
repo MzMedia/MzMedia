@@ -6,13 +6,13 @@ package cn.iocoder.yudao.module.media.conf.redis.bean;
 public class RedisRpcResponse {
 
     /**
-     * 来自的WVP ID
+     * 来自的视频服务节点 ID
      */
     private String fromId;
 
 
     /**
-     * 目标的WVP ID
+     * 目标的视频服务节点 ID
      */
     private String toId;
 

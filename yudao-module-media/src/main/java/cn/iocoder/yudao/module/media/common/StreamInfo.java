@@ -100,7 +100,7 @@ public class StreamInfo implements Serializable, Cloneable{
     @Schema(description = "转码后的视频流")
     private StreamInfo transcodeStream;
 
-    @Schema(description = "使用的WVP ID")
+    @Schema(description = "使用的视频信令服务节点 ID")
     private String serverId;
 
     @Schema(description = "流绑定的流媒体操作key")

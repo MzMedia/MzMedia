@@ -30,7 +30,7 @@ import cn.iocoder.yudao.module.media.streamProxy.bean.StreamProxy;
 import cn.iocoder.yudao.module.media.utils.DateUtil;
 import cn.iocoder.yudao.module.media.utils.redis.RedisUtil;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -332,7 +332,7 @@ public class MediaServerServiceImpl implements IMediaServerService {
     }
 
     /**
-     * 获取集群中的节点信息，不区分所属的wvp
+     * 获取集群中的节点信息，不区分所属的视频服务节点
      */
     @Override
     public MediaServer getOneFromCluster(String mediaServerId) {
@@ -674,12 +674,12 @@ public class MediaServerServiceImpl implements IMediaServerService {
     }
 
     @Override
-    public WVPResult<String> addStreamProxy(MediaServer mediaServer, String app, String stream, String url,
+    public MzResult<String> addStreamProxy(MediaServer mediaServer, String app, String stream, String url,
                                             boolean enableAudio, boolean enableMp4, String rtpType, Integer timeout) {
         IMediaNodeServerService mediaNodeServerService = nodeServerServiceMap.get(mediaServer.getType());
         if (mediaNodeServerService == null) {
             log.info("[addStreamProxy] 失败, mediaServer的类型： {}，未找到对应的实现类", mediaServer.getType());
-            return WVPResult.fail(ErrorCode.ERROR400);
+            return MzResult.fail(ErrorCode.ERROR400);
         }
         return mediaNodeServerService.addStreamProxy(mediaServer, app, stream, url, enableAudio, enableMp4, rtpType, timeout);
     }

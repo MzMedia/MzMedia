@@ -41,12 +41,12 @@ public class DateUtil {
     private static final String ISO8601_MILLISECOND_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     /**
-     * wvp内部统一时间格式
+     * 视频服务内部统一时间格式
      */
     public static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     /**
-     * wvp内部统一时间格式
+     * 视频服务内部统一时间格式
      */
     public static final String URL_PATTERN = "yyyyMMddHHmmss";
     public static final String PATTERN1078 = "yyMMddHHmmss";

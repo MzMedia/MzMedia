@@ -97,7 +97,7 @@ public class RtpController {
                 throw new ControllerException(ErrorCode.ERROR100.getCode(),"ssrc格式错误");
             }
         }
-        String receiveKey = VideoManagerConstants.WVP_OTHER_RECEIVE_RTP_INFO + userSetting.getServerId() + "_" + callId + "_"  + stream;
+        String receiveKey = VideoManagerConstants.VIDEO_OTHER_RECEIVE_RTP_INFO + userSetting.getServerId() + "_" + callId + "_"  + stream;
 
         RTPServerParam rtpServerParam = new RTPServerParam();
         rtpServerParam.setMediaServer(mediaServer);
@@ -144,7 +144,7 @@ public class RtpController {
         if (rtpServerPortForVideo == 0 || rtpServerPortForAudio == 0) {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "获取端口失败");
         }
-        String key = VideoManagerConstants.WVP_OTHER_SEND_RTP_INFO + userSetting.getServerId() + "_"  + callId;
+        String key = VideoManagerConstants.VIDEO_OTHER_SEND_RTP_INFO + userSetting.getServerId() + "_"  + callId;
         OtherRtpSendInfo otherRtpSendInfo = new OtherRtpSendInfo();
         otherRtpSendInfo.setReceiveIp(mediaServer.getSdpIp());
         otherRtpSendInfo.setReceivePortForVideo(rtpServerPortForVideo);
@@ -180,7 +180,7 @@ public class RtpController {
         MediaServer mediaServerItem = mediaServerService.getDefaultMediaServer();
         receiveRtpServerService.closeRTPServer(mediaServerItem, MediaStreamUtil.RTP_APP, stream);
         receiveRtpServerService.closeRTPServer(mediaServerItem, MediaStreamUtil.RTP_APP, stream+ "_a");
-        String receiveKey = VideoManagerConstants.WVP_OTHER_RECEIVE_RTP_INFO + userSetting.getServerId() + "_*_"  + stream;
+        String receiveKey = VideoManagerConstants.VIDEO_OTHER_RECEIVE_RTP_INFO + userSetting.getServerId() + "_*_"  + stream;
         List<Object> scan = RedisUtil.scan(redisTemplate, receiveKey);
         if (scan.size() > 0) {
             for (Object key : scan) {
@@ -241,7 +241,7 @@ public class RtpController {
             throw new ControllerException(ErrorCode.ERROR400.getCode(), "至少应该存在一组音频或视频发送参数");
         }
         MediaServer mediaServer = mediaServerService.getDefaultMediaServer();
-        String key = VideoManagerConstants.WVP_OTHER_SEND_RTP_INFO + userSetting.getServerId() + "_"  + callId;
+        String key = VideoManagerConstants.VIDEO_OTHER_SEND_RTP_INFO + userSetting.getServerId() + "_"  + callId;
         OtherRtpSendInfo sendInfo = (OtherRtpSendInfo)redisTemplate.opsForValue().get(key);
         if (sendInfo == null) {
             sendInfo = new OtherRtpSendInfo();
@@ -319,7 +319,7 @@ public class RtpController {
     @Parameter(name = "callId", description = "整个过程的唯一标识，不传则使用随机端口发流", required = true)
     public void closeSendRTP(String callId) {
         log.info("[第三方服务对接->关闭发送流] callId->{}", callId);
-        String key = VideoManagerConstants.WVP_OTHER_SEND_RTP_INFO + userSetting.getServerId() + "_"  + callId;
+        String key = VideoManagerConstants.VIDEO_OTHER_SEND_RTP_INFO + userSetting.getServerId() + "_"  + callId;
         OtherRtpSendInfo sendInfo = (OtherRtpSendInfo)redisTemplate.opsForValue().get(key);
         if (sendInfo == null){
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "未开启发流");

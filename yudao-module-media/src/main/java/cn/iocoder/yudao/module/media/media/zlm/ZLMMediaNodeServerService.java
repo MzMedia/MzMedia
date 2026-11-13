@@ -22,7 +22,7 @@ import cn.iocoder.yudao.module.media.service.bean.DownloadFileInfo;
 import cn.iocoder.yudao.module.media.service.bean.ErrorCallback;
 import cn.iocoder.yudao.module.media.streamProxy.bean.StreamProxy;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -272,17 +272,17 @@ public class ZLMMediaNodeServerService implements IMediaNodeServerService {
     }
 
     @Override
-    public WVPResult<String> addStreamProxy(MediaServer mediaServer, String app, String stream, String url,
+    public MzResult<String> addStreamProxy(MediaServer mediaServer, String app, String stream, String url,
                                             boolean enableAudio, boolean enableMp4, String rtpType, Integer timeout) {
         ZLMResult<StreamProxyResult> zlmResult = zlmresTfulUtils.addStreamProxy(mediaServer, app, stream, url, enableAudio, enableMp4, rtpType, timeout);
         if (zlmResult.getCode() != 0) {
-            return WVPResult.fail(ErrorCode.ERROR100.getCode(), "添加代理失败");
+            return MzResult.fail(ErrorCode.ERROR100.getCode(), "添加代理失败");
         }else {
             StreamProxyResult data = zlmResult.getData();
             if (data == null) {
-                return WVPResult.fail(ErrorCode.ERROR100.getCode(), "代理结果异常");
+                return MzResult.fail(ErrorCode.ERROR100.getCode(), "代理结果异常");
             }else {
-                return WVPResult.success(data.getKey());
+                return MzResult.success(data.getKey());
             }
         }
     }

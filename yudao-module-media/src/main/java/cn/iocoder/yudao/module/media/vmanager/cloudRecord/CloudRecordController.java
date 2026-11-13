@@ -17,7 +17,7 @@ import cn.iocoder.yudao.module.media.utils.DateUtil;
 import cn.iocoder.yudao.module.media.utils.HttpUtils;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
 import cn.iocoder.yudao.module.media.vmanager.bean.StreamContent;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import cn.iocoder.yudao.module.media.vmanager.cloudRecord.bean.CloudRecordUrl;
 import com.github.pagehelper.PageInfo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -256,28 +256,28 @@ public class CloudRecordController {
     @Parameter(name = "app", description = "应用名", required = true)
     @Parameter(name = "stream", description = "流ID", required = true)
     @Parameter(name = "cloudRecordId", description = "云端录像ID", required = true)
-    public DeferredResult<WVPResult<StreamContent>> loadRecord(
+    public DeferredResult<MzResult<StreamContent>> loadRecord(
             HttpServletRequest request,
             @RequestParam(required = true) String app,
             @RequestParam(required = true) String stream,
             @RequestParam(required = true) int cloudRecordId
             ) {
-        DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>();
+        DeferredResult<MzResult<StreamContent>> result = new DeferredResult<>();
 
         result.onTimeout(()->{
             log.info("[加载录像文件超时] app={}, stream={}, cloudRecordId={}", app, stream, cloudRecordId);
-            WVPResult<StreamContent> wvpResult = new WVPResult<>();
-            wvpResult.setCode(ErrorCode.ERROR100.getCode());
-            wvpResult.setMsg("加载录像文件超时");
-            result.setResult(wvpResult);
+            MzResult<StreamContent> mzResult = new MzResult<>();
+            mzResult.setCode(ErrorCode.ERROR100.getCode());
+            mzResult.setMsg("加载录像文件超时");
+            result.setResult(mzResult);
         });
 
         ErrorCallback<StreamInfo> callback = (code, msg, streamInfo) -> {
 
-            WVPResult<StreamContent> wvpResult = new WVPResult<>();
+            MzResult<StreamContent> mzResult = new MzResult<>();
             if (code == InviteErrorCode.SUCCESS.getCode()) {
-                wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-                wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
+                mzResult.setCode(ErrorCode.SUCCESS.getCode());
+                mzResult.setMsg(ErrorCode.SUCCESS.getMsg());
 
                 if (streamInfo != null) {
                     if (userSetting.getUseSourceIpAsStreamIp()) {
@@ -294,16 +294,16 @@ public class CloudRecordController {
                     if (!org.springframework.util.ObjectUtils.isEmpty(streamInfo.getMediaServer().getTranscodeSuffix()) && !"null".equalsIgnoreCase(streamInfo.getMediaServer().getTranscodeSuffix())) {
                         streamInfo.setStream(streamInfo.getStream() + "_" + streamInfo.getMediaServer().getTranscodeSuffix());
                     }
-                    wvpResult.setData(new StreamContent(streamInfo));
+                    mzResult.setData(new StreamContent(streamInfo));
                 }else {
-                    wvpResult.setCode(code);
-                    wvpResult.setMsg(msg);
+                    mzResult.setCode(code);
+                    mzResult.setMsg(msg);
                 }
             }else {
-                wvpResult.setCode(code);
-                wvpResult.setMsg(msg);
+                mzResult.setCode(code);
+                mzResult.setMsg(msg);
             }
-            result.setResult(wvpResult);
+            result.setResult(mzResult);
         };
 
         cloudRecordService.loadMP4File(app, stream, cloudRecordId, callback);
@@ -410,7 +410,7 @@ public class CloudRecordController {
 
 
 
-    /************************* 以下这些接口只适合wvp和zlm部署在同一台服务器的情况，且wvp只有一个zlm节点的情况 ***************************************/
+    /************************* 以下这些接口只适合视频服务和zlm部署在同一台服务器的情况，且只有一个zlm节点的情况 ***************************************/
 
     /**
      * 下载指定录像文件的压缩包

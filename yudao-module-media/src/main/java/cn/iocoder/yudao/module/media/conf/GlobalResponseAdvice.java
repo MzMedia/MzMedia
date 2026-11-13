@@ -3,7 +3,7 @@ package cn.iocoder.yudao.module.media.conf;
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import com.alibaba.fastjson2.JSON;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -43,9 +43,9 @@ public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
             return body;
         }
 
-        // 排除api文档的接口，以及标准管理端接口等不需要统一为 WVPResult 的接口
+        // 排除api文档的接口，以及标准管理端接口等不需要统一为 MzResult 的接口
         String path = request.getURI().getPath();
-        String[] excludePath = {"/v3/api-docs", "/api/v1", "/index/hook", "/api/video-"};
+        String[] excludePath = {"/v3/api-docs", "/api/v1", "/index/hook", "/api/video-", "/video/webhook", "/admin-api/video"};
         for (String p : excludePath) {
             if (path.startsWith(p)) {
                 return body;
@@ -56,17 +56,17 @@ public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
             return body;
         }
 
-        if (body instanceof WVPResult) {
+        if (body instanceof MzResult) {
             return body;
         }
 
         if (body instanceof ErrorCode) {
             ErrorCode errorCode = (ErrorCode) body;
-            return new WVPResult<>(errorCode.getCode(), errorCode.getMsg(), null);
+            return new MzResult<>(errorCode.getCode(), errorCode.getMsg(), null);
         }
 
         if (body instanceof String) {
-            return JSON.toJSONString(WVPResult.success(body));
+            return JSON.toJSONString(MzResult.success(body));
         }
 
         if (body instanceof LinkedHashMap) {
@@ -76,7 +76,7 @@ public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
             }
         }
 
-        return WVPResult.success(body);
+        return MzResult.success(body);
     }
 
     /**

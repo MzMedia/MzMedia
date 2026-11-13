@@ -75,19 +75,19 @@ cn.iocoder.yudao.module.media
 
 | 数据表名 | 实体业务定位 | 核心关键字段 | 说明与设计规范 |
 | :--- | :--- | :--- | :--- |
-| **`wvp_device`** | 国标/监控设备主表 | `device_id`, `name`, `ip`, `port`, `transport`, `on_line`, `keepalive_time` | 记录国标 20 位编码、SIP 通信协议（UDP/TCP）及心跳状态。 |
-| **`wvp_device_channel`** | 设备物理/逻辑通道 | `device_id`, `channel_id`, `name`, `ptz_type`, `status`, `data_type` | 全局统一通道表，`data_type` 标识具体协议（0:GB28181, 4:ONVIF, 5:海康, 6:大华, 7:萤石, 200:JT1078）。 |
-| **`wvp_media_server`** | ZLMediaKit 节点 | `id`, `ip`, `http_port`, `rtmp_port`, `rtp_proxy_port`, `secret`, `hook_ip` | 流媒体服务器配置，支持单机或多节点分布式挂载与负载均衡。 |
-| **`wvp_platform`** | 上级国标级联平台 | `server_gb_id`, `server_ip`, `server_port`, `username`, `password`, `enable` | 向上级应急、安防或公安平台级联推送设备目录与视频流。 |
-| **`wvp_stream_proxy`** | 拉流代理任务表 | `app`, `stream`, `src_url`, `enable_audio`, `enable_mp4`, `pulling` | 将第三方 RTSP/RTMP 摄像头拉取到 ZLMediaKit 统一转码分发。 |
-| **`wvp_stream_push`** | 自主推流任务表 | `app`, `stream`, `push_time`, `pushing` | 接收无人机、推流软件等 RTMP/RTSP 推流。 |
-| **`wvp_cloud_record`** | 云端录像记录 | `app`, `stream`, `file_path`, `file_size`, `start_time`, `end_time` | ZLMediaKit 云端 MP4 切片录像索引与检索。 |
-| **`wvp_record_plan`** | 定时录像计划 | `name`, `snap`, `create_time` | 针对特定通道配置 7x24 小时或按周定时录像策略。 |
-| **`wvp_device_onvif`** | ONVIF 设备配置表 | `name`, `ip`, `port`, `username`, `password`, `profiles`, `stream_uri` | ONVIF 协议自动探测与 RTSP 取流地址。 |
-| **`wvp_device_hik`** | 海康威视 ISAPI 表 | `name`, `ip`, `port`, `username`, `password`, `channels`, `device_info` | 海康威视专用设备管理与 ISAPI 信令交互。 |
-| **`wvp_device_dahua`** | 大华私有协议表 | `name`, `ip`, `port`, `username`, `password`, `channels`, `device_info` | 大华设备 RPC 交互与流媒体代理。 |
-| **`wvp_device_ezviz`** | 萤石云开放平台表 | `name`, `app_key`, `app_secret`, `device_serial`, `channel_no`, `live_address` | 萤石云 OpenAPI 实时流拉取。 |
-| **`wvp_device_jt1078`** | JT/T 1078 车载终端表 | `sim_number`, `channel`, `plate_number`, `terminal_id`, `stream_id` | 交通部车载音视频终端协议交互与转推。 |
+| **`mz_video_device`** | 国标/监控设备主表 | `device_id`, `name`, `ip`, `port`, `transport`, `on_line`, `keepalive_time` | 记录国标 20 位编码、SIP 通信协议（UDP/TCP）及心跳状态。继承 TenantBaseDO。 |
+| **`mz_video_channel`** | 设备物理/逻辑通道 | `device_id`, `channel_id`, `name`, `ptz_type`, `status`, `data_type` | 全局统一通道表，`data_type` 标识具体协议（1:GB28181, 4:ONVIF, 5:海康, 6:大华, 7:萤石, 200:JT1078）。 |
+| **`mz_video_media_server`** | ZLMediaKit 节点 | `id`, `ip`, `http_port`, `rtmp_port`, `rtp_proxy_port`, `secret`, `hook_ip` | 流媒体服务器配置，支持单机或多节点分布式挂载与负载均衡。 |
+| **`mz_video_platform`** | 上级国标级联平台 | `server_gb_id`, `server_ip`, `server_port`, `username`, `password`, `enable` | 向上级应急、安防或公安平台级联推送设备目录与视频流。 |
+| **`mz_video_stream_proxy`** | 拉流代理任务表 | `app`, `stream`, `src_url`, `enable_audio`, `enable_mp4`, `pulling` | 将第三方 RTSP/RTMP 摄像头拉取到 ZLMediaKit 统一转码分发。 |
+| **`mz_video_stream_push`** | 自主推流任务表 | `app`, `stream`, `push_time`, `pushing` | 接收无人机、推流软件等 RTMP/RTSP 推流。 |
+| **`mz_video_record`** | 云端录像记录 | `app`, `stream`, `file_path`, `file_size`, `start_time`, `end_time` | ZLMediaKit 云端 MP4 切片录像索引与检索。 |
+| **`mz_video_record_plan`** | 定时录像计划 | `name`, `snap`, `create_time` | 针对特定通道配置 7x24 小时或按周定时录像策略。 |
+| **`mz_video_device_onvif`** | ONVIF 设备配置表 | `name`, `ip`, `port`, `username`, `password`, `profiles`, `stream_uri` | ONVIF 协议自动探测与 RTSP 取流地址。 |
+| **`mz_video_device_hik`** | 海康威视 ISAPI 表 | `name`, `ip`, `port`, `username`, `password`, `channels`, `device_info` | 海康威视专用设备管理与 ISAPI 信令交互。 |
+| **`mz_video_device_dahua`** | 大华私有协议表 | `name`, `ip`, `port`, `username`, `password`, `channels`, `device_info` | 大华设备 RPC 交互与流媒体代理。 |
+| **`mz_video_device_ezviz`** | 萤石云开放平台表 | `name`, `app_key`, `app_secret`, `device_serial`, `channel_no`, `live_address` | 萤石云 OpenAPI 实时流拉取。 |
+| **`mz_video_device_jt1078`** | JT/T 1078 车载终端表 | `sim_number`, `channel`, `plate_number`, `terminal_id`, `stream_id` | 交通部车载音视频终端协议交互与转推。 |
 | **`iot_device.video_config`** | IoT 视频扩展字段 | `protocol`, `channel_id`, `device_id`, `stream_url`, `has_ptz` | IoT 传感器设备与视频监控的深度属性绑定。 |
 
 ---

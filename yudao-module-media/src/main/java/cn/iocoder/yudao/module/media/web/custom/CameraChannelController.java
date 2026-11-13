@@ -21,7 +21,7 @@ import cn.iocoder.yudao.module.media.utils.DateUtil;
 import cn.iocoder.yudao.module.media.utils.HttpUtils;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
 import cn.iocoder.yudao.module.media.vmanager.bean.StreamContent;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import cn.iocoder.yudao.module.media.vmanager.cloudRecord.bean.CloudRecordUrl;
 import cn.iocoder.yudao.module.media.web.custom.bean.*;
 import cn.iocoder.yudao.module.media.web.custom.service.CameraChannelService;
@@ -238,16 +238,16 @@ public class CameraChannelController {
     @Operation(summary = "播放摄像头", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "deviceId", description = "通道编号")
     @Parameter(name = "deviceCode", description = "摄像头设备国标编号, 对于非国标摄像头可以不设置此参数")
-    public DeferredResult<WVPResult<CameraStreamContent>> play(HttpServletRequest request, String deviceId, @RequestParam(required = false) String deviceCode) {
+    public DeferredResult<MzResult<CameraStreamContent>> play(HttpServletRequest request, String deviceId, @RequestParam(required = false) String deviceCode) {
 
         log.info("[SY-播放摄像头] API调用，deviceId：{} ，deviceCode：{} ",deviceId, deviceCode);
-        DeferredResult<WVPResult<CameraStreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
+        DeferredResult<MzResult<CameraStreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
 
         ErrorCallback<CameraStreamInfo> callback = (code, msg, cameraStreamInfo) -> {
             if (code == InviteErrorCode.SUCCESS.getCode()) {
                 StreamInfo streamInfo = cameraStreamInfo.getStreamInfo();
                 CommonGBChannel channel = cameraStreamInfo.getChannel();
-                WVPResult<CameraStreamContent> wvpResult = WVPResult.success();
+                MzResult<CameraStreamContent> mzResult = MzResult.success();
                 if (cameraStreamInfo.getStreamInfo() != null) {
                     if (userSetting.getUseSourceIpAsStreamIp()) {
                         streamInfo=streamInfo.clone();//深拷贝
@@ -273,14 +273,14 @@ public class CameraChannelController {
                         cameraStreamContent.setControlType(0);
                     }
 
-                    wvpResult.setData(cameraStreamContent);
+                    mzResult.setData(cameraStreamContent);
                 }else {
-                    wvpResult.setCode(code);
-                    wvpResult.setMsg(msg);
+                    mzResult.setCode(code);
+                    mzResult.setMsg(msg);
                 }
-                result.setResult(wvpResult);
+                result.setResult(mzResult);
             }else {
-                result.setResult(WVPResult.fail(code, msg));
+                result.setResult(MzResult.fail(code, msg));
             }
         };
         channelService.play(deviceId, deviceCode, callback);
@@ -303,23 +303,23 @@ public class CameraChannelController {
     @Parameter(name = "command", description = "控制指令,允许值: left, right, up, down, upleft, upright, downleft, downright, zoomin, zoomout, stop", required = true)
     @Parameter(name = "speed", description = "速度(0-100)", required = true)
     @GetMapping("/camera/control/ptz")
-    public DeferredResult<WVPResult<String>> ptz(String deviceId, @RequestParam(required = false) String deviceCode, String command, Integer speed){
+    public DeferredResult<MzResult<String>> ptz(String deviceId, @RequestParam(required = false) String deviceCode, String command, Integer speed){
 
         log.info("[SY-云台控制] API调用，deviceId：{} ，deviceCode：{} ，command：{} ，speed：{} ",deviceId, deviceCode, command, speed);
 
-        DeferredResult<WVPResult<String>> result = new DeferredResult<>();
+        DeferredResult<MzResult<String>> result = new DeferredResult<>();
 
         result.onTimeout(()->{
-            WVPResult<String> wvpResult = WVPResult.fail(ErrorCode.ERROR100.getCode(), "请求超时");
-            result.setResult(wvpResult);
+            MzResult<String> mzResult = MzResult.fail(ErrorCode.ERROR100.getCode(), "请求超时");
+            result.setResult(mzResult);
         });
 
         channelService.ptz(deviceId, deviceCode, command, speed, (code, msg, data) -> {
-            WVPResult<String> wvpResult = new WVPResult<>();
-            wvpResult.setCode(code);
-            wvpResult.setMsg(msg);
-            wvpResult.setData(data);
-            result.setResult(wvpResult);
+            MzResult<String> mzResult = new MzResult<>();
+            mzResult.setCode(code);
+            mzResult.setMsg(msg);
+            mzResult.setData(data);
+            result.setResult(mzResult);
         });
         // 设置时间间隔后自动发送停止
         if (!command.equalsIgnoreCase("stop")) {
@@ -350,7 +350,7 @@ public class CameraChannelController {
     @Parameter(name = "callId", description = "推流时携带的自定义鉴权ID", required = true)
     @GetMapping(value = "/push/play")
     @ResponseBody
-    public DeferredResult<WVPResult<StreamContent>> getStreamInfoByAppAndStream(HttpServletRequest request,
+    public DeferredResult<MzResult<StreamContent>> getStreamInfoByAppAndStream(HttpServletRequest request,
                                                                                 String app,
                                                                                 String stream,
                                                                                 String callId){
@@ -365,9 +365,9 @@ public class CameraChannelController {
             throw new ControllerException(ErrorCode.ERROR100.getCode(), "播放地址鉴权失败");
         }
 
-        DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
+        DeferredResult<MzResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
         result.onTimeout(()->{
-            WVPResult<StreamContent> fail = WVPResult.fail(ErrorCode.ERROR100.getCode(), "等待推流超时");
+            MzResult<StreamContent> fail = MzResult.fail(ErrorCode.ERROR100.getCode(), "等待推流超时");
             result.setResult(fail);
         });
 
@@ -382,7 +382,7 @@ public class CameraChannelController {
                     host=request.getLocalAddr();
                 }
                 streamInfo.changeStreamIp(host);
-                WVPResult<StreamContent> success = WVPResult.success(new StreamContent(streamInfo));
+                MzResult<StreamContent> success = MzResult.success(new StreamContent(streamInfo));
                 result.setResult(success);
             }
         }, null, null);
@@ -453,7 +453,7 @@ public class CameraChannelController {
         }
     }
 
-    /************************* 以下这些接口只适合wvp和zlm部署在同一台服务器的情况，且wvp只有一个zlm节点的情况 ***************************************/
+    /************************* 以下这些接口只适合视频服务和zlm部署在同一台服务器的情况，且只有一个zlm节点的情况 ***************************************/
 
     /**
      * 下载指定录像文件的压缩包

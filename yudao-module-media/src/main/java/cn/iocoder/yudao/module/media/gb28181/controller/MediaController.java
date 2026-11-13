@@ -13,7 +13,7 @@ import cn.iocoder.yudao.module.media.storager.IRedisCatchStorage;
 import cn.iocoder.yudao.module.media.streamProxy.service.IStreamProxyService;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
 import cn.iocoder.yudao.module.media.vmanager.bean.StreamContent;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -59,12 +59,12 @@ public class MediaController {
     @Parameter(name = "useSourceIpAsStreamIp", description = "是否使用请求IP作为返回的地址IP")
     @GetMapping(value = "/stream_info_by_app_and_stream")
     @ResponseBody
-    public DeferredResult<WVPResult<StreamContent>> getStreamInfoByAppAndStream(HttpServletRequest request, @RequestParam String app,
+    public DeferredResult<MzResult<StreamContent>> getStreamInfoByAppAndStream(HttpServletRequest request, @RequestParam String app,
                                                                                 @RequestParam String stream,
                                                                                 @RequestParam(required = false) String mediaServerId,
                                                                                 @RequestParam(required = false) String callId,
                                                                                 @RequestParam(required = false) Boolean useSourceIpAsStreamIp){
-        DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>();
+        DeferredResult<MzResult<StreamContent>> result = new DeferredResult<>();
         boolean authority = false;
         if (callId != null) {
             // 权限校验
@@ -94,13 +94,13 @@ public class MediaController {
         }
 
         if (streamInfo != null){
-            WVPResult<StreamContent> wvpResult = WVPResult.success();
-            wvpResult.setData(new StreamContent(streamInfo));
-            result.setResult(wvpResult);
+            MzResult<StreamContent> mzResult = MzResult.success();
+            mzResult.setData(new StreamContent(streamInfo));
+            result.setResult(mzResult);
         }else {
             ErrorCallback<StreamInfo> callback = (code, msg, streamInfoStoStart) -> {
                 if (code == InviteErrorCode.SUCCESS.getCode()) {
-                    WVPResult<StreamContent> wvpResult = WVPResult.success();
+                    MzResult<StreamContent> mzResult = MzResult.success();
                     if (useSourceIpAsStreamIp != null && useSourceIpAsStreamIp) {
                         String host;
                         try {
@@ -115,10 +115,10 @@ public class MediaController {
                             && !"null".equalsIgnoreCase(streamInfoStoStart.getMediaServer().getTranscodeSuffix())) {
                         streamInfoStoStart.setStream(streamInfoStoStart.getStream() + "_" + streamInfoStoStart.getMediaServer().getTranscodeSuffix());
                     }
-                    wvpResult.setData(new StreamContent(streamInfoStoStart));
-                    result.setResult(wvpResult);
+                    mzResult.setData(new StreamContent(streamInfoStoStart));
+                    result.setResult(mzResult);
                 }else {
-                    result.setResult(WVPResult.fail(code, msg));
+                    result.setResult(MzResult.fail(code, msg));
                 }
             };
             //获取流失败，重启拉流后重试一次

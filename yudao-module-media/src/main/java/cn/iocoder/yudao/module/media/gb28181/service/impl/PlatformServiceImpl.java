@@ -209,7 +209,7 @@ public class PlatformServiceImpl implements IPlatformService {
         }
     }
 
-    // 定时监听国标级联所进行的WVP服务是否正常， 如果异常则选择新的wvp执行
+    // 定时监听国标级联所进行的服务节点是否正常，如果异常则选择新的服务节点执行
     @Scheduled(fixedDelay = 2, timeUnit = TimeUnit.SECONDS)   //每3秒执行一次
     public void execute(){
         if (!userSetting.isAutoRegisterPlatform()) {
@@ -227,7 +227,7 @@ public class PlatformServiceImpl implements IPlatformService {
                 return;
             }
             log.info("[集群] 检测到 {} 已离线", serverId);
-            redisCatchStorage.removeOfflineWVPInfo(serverId);
+            redisCatchStorage.removeOfflineServerInfo(serverId);
             String chooseServerId = redisCatchStorage.chooseOneServer(serverId);
             if (!userSetting.getServerId().equals(chooseServerId)){
                 return;

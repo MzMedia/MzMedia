@@ -5,7 +5,7 @@ import cn.iocoder.yudao.module.media.common.StreamInfo;
 import cn.iocoder.yudao.module.media.gb28181.bean.*;
 import cn.iocoder.yudao.module.media.gb28181.controller.bean.ChannelListForRpcParam;
 import cn.iocoder.yudao.module.media.gb28181.event.subscribe.catalog.CatalogEvent;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ public interface IRedisRpcService {
 
     SendRtpInfo getSendRtpItem(String callId);
 
-    WVPResult startSendRtp(String callId, SendRtpInfo sendRtpItem);
+    MzResult startSendRtp(String callId, SendRtpInfo sendRtpItem);
 
-    WVPResult stopSendRtp(String callId);
+    MzResult stopSendRtp(String callId);
 
     long waitePushStreamOnline(SendRtpInfo sendRtpItem, CommonCallback<Integer> callback);
 
@@ -49,39 +49,39 @@ public interface IRedisRpcService {
 
     void catalogEventPublish(String serverId, CatalogEvent catalogEvent);
 
-    WVPResult<SyncStatus> devicesSync(String serverId, String deviceId);
+    MzResult<SyncStatus> devicesSync(String serverId, String deviceId);
 
     SyncStatus getChannelSyncStatus(String serverId, String deviceId);
 
-    WVPResult<String> deviceBasicConfig(String serverId, Device device, BasicParam basicParam);
+    MzResult<String> deviceBasicConfig(String serverId, Device device, BasicParam basicParam);
 
-    WVPResult<String> deviceVideoParamConfig(String serverId, Device device, VideoParamOpt videoParamOpt);
+    MzResult<String> deviceVideoParamConfig(String serverId, Device device, VideoParamOpt videoParamOpt);
 
-    WVPResult<Object> deviceConfigQuery(String serverId, Device device, String channelId, String configType);
+    MzResult<Object> deviceConfigQuery(String serverId, Device device, String channelId, String configType);
 
     void teleboot(String serverId, Device device);
 
-    WVPResult<String> recordControl(String serverId, Device device, String channelId, String recordCmdStr);
+    MzResult<String> recordControl(String serverId, Device device, String channelId, String recordCmdStr);
 
-    WVPResult<String> guard(String serverId, Device device, String guardCmdStr);
+    MzResult<String> guard(String serverId, Device device, String guardCmdStr);
 
-    WVPResult<String> resetAlarm(String serverId, Device device, String channelId, String alarmMethod, String alarmType);
+    MzResult<String> resetAlarm(String serverId, Device device, String channelId, String alarmMethod, String alarmType);
 
     void iFrame(String serverId, Device device, String channelId);
 
-    WVPResult<String> homePosition(String serverId, Device device, String channelId, Boolean enabled, Integer resetTime, Integer presetIndex);
+    MzResult<String> homePosition(String serverId, Device device, String channelId, Boolean enabled, Integer resetTime, Integer presetIndex);
 
     void dragZoomIn(String serverId, Device device, String channelId, int length, int width, int midPointX, int midPointY, int lengthX, int lengthY);
 
     void dragZoomOut(String serverId, Device device, String channelId, int length, int width, int midPointX, int midPointY, int lengthX, int lengthY);
 
-    WVPResult<String> deviceStatus(String serverId, Device device);
+    MzResult<String> deviceStatus(String serverId, Device device);
 
-    WVPResult<String> alarm(String serverId, Device device, String startPriority, String endPriority, String alarmMethod, String alarmType, String startTime, String endTime);
+    MzResult<String> alarm(String serverId, Device device, String startPriority, String endPriority, String alarmMethod, String alarmType, String startTime, String endTime);
 
-    WVPResult<Object> deviceInfo(String serverId, Device device);
+    MzResult<Object> deviceInfo(String serverId, Device device);
 
-    WVPResult<List<Preset>> queryPreset(String serverId, Device device, String channelId);
+    MzResult<List<Preset>> queryPreset(String serverId, Device device, String channelId);
 
     void subscribeAlarm(int id, int cycle);
 }

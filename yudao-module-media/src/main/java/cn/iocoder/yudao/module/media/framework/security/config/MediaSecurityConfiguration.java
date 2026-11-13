@@ -21,6 +21,7 @@ public class MediaSecurityConfiguration {
                 // 放行 ZLMediaKit Webhook 接口 (由 ZLM secret 进行认证校验)
                 registry.requestMatchers("/index/hook/**").permitAll();
                 registry.requestMatchers("/admin-api/media/hook/**").permitAll();
+                registry.requestMatchers("/admin-api/video/webhook/**").permitAll();
             }
         };
     }

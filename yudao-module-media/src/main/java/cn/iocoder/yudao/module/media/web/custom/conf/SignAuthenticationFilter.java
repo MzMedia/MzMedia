@@ -6,7 +6,7 @@ import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.symmetric.SM4;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -220,10 +220,10 @@ public class SignAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getErrorResult(Integer code, String message) {
-        WVPResult<Object> wvpResult = new WVPResult<>();
-        wvpResult.setCode(code);
-        wvpResult.setMsg(message);
-        return JSON.toJSONString(wvpResult);
+        MzResult<Object> mzResult = new MzResult<>();
+        mzResult.setCode(code);
+        mzResult.setMsg(message);
+        return JSON.toJSONString(mzResult);
     }
 
 }

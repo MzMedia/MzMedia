@@ -18,7 +18,7 @@ import cn.iocoder.yudao.module.media.service.bean.InviteErrorCode;
 import cn.iocoder.yudao.module.media.utils.DateUtil;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
 import cn.iocoder.yudao.module.media.vmanager.bean.StreamContent;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -65,10 +65,10 @@ public class GBRecordController {
 	@Parameter(name = "startTime", description = "开始时间", required = true)
 	@Parameter(name = "endTime", description = "结束时间", required = true)
 	@GetMapping("/query/{deviceId}/{channelId}")
-	public DeferredResult<WVPResult<RecordInfo>> recordinfo(@PathVariable String deviceId, @PathVariable String channelId, String startTime, String endTime){
+	public DeferredResult<MzResult<RecordInfo>> recordinfo(@PathVariable String deviceId, @PathVariable String channelId, String startTime, String endTime){
 
 
-		DeferredResult<WVPResult<RecordInfo>> result = new DeferredResult<>(Long.valueOf(userSetting.getRecordInfoTimeout()), TimeUnit.MILLISECONDS);
+		DeferredResult<MzResult<RecordInfo>> result = new DeferredResult<>(Long.valueOf(userSetting.getRecordInfoTimeout()), TimeUnit.MILLISECONDS);
 		if (!DateUtil.verification(startTime, DateUtil.formatter)){
 			throw new ControllerException(ErrorCode.ERROR100.getCode(), "startTime格式为" + DateUtil.PATTERN);
 		}
@@ -85,17 +85,17 @@ public class GBRecordController {
 			throw new ControllerException(ErrorCode.ERROR100.getCode(), channelId + " 不存在");
 		}
 		channelService.queryRecordInfo(device, channel, startTime, endTime, (code, msg, data)->{
-			WVPResult<RecordInfo> wvpResult = new WVPResult<>();
-			wvpResult.setCode(code);
-			wvpResult.setMsg(msg);
-			wvpResult.setData(data);
-			result.setResult(wvpResult);
+			MzResult<RecordInfo> mzResult = new MzResult<>();
+			mzResult.setCode(code);
+			mzResult.setMsg(msg);
+			mzResult.setData(data);
+			result.setResult(mzResult);
 		});
 		result.onTimeout(()->{
-			WVPResult<RecordInfo> wvpResult = new WVPResult<>();
-			wvpResult.setCode(ErrorCode.ERROR100.getCode());
-			wvpResult.setMsg("timeout");
-			result.setResult(wvpResult);
+			MzResult<RecordInfo> mzResult = new MzResult<>();
+			mzResult.setCode(ErrorCode.ERROR100.getCode());
+			mzResult.setMsg("timeout");
+			result.setResult(mzResult);
 		});
         return result;
 	}
@@ -108,14 +108,14 @@ public class GBRecordController {
 	@Parameter(name = "endTime", description = "结束时间", required = true)
 	@Parameter(name = "downloadSpeed", description = "下载倍速", required = true)
 	@GetMapping("/download/start/{deviceId}/{channelId}")
-	public DeferredResult<WVPResult<StreamContent>> download(HttpServletRequest request, @PathVariable String deviceId, @PathVariable String channelId,
+	public DeferredResult<MzResult<StreamContent>> download(HttpServletRequest request, @PathVariable String deviceId, @PathVariable String channelId,
 															 String startTime, String endTime, String downloadSpeed) {
 
 		log.info("[开始历史媒体下载] deviceId: {}, channelId: {}, startTime: {}, endTime: {}, downloadSpeed: {}", deviceId, channelId, startTime, endTime, downloadSpeed);
 
 		String uuid = UUID.randomUUID().toString();
 		String key = DeferredResultHolder.CALLBACK_CMD_DOWNLOAD + deviceId + channelId;
-		DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>(30000L);
+		DeferredResult<MzResult<StreamContent>> result = new DeferredResult<>(30000L);
 		resultHolder.put(key, uuid, result);
 		RequestMessage requestMessage = new RequestMessage();
 		requestMessage.setId(uuid);
@@ -135,23 +135,23 @@ public class GBRecordController {
 		playService.download(device, channel, startTime, endTime, Integer.parseInt(downloadSpeed),
 		(code, msg, data)->{
 
-			WVPResult<StreamContent> wvpResult = new WVPResult<>();
+			MzResult<StreamContent> mzResult = new MzResult<>();
 			if (code == InviteErrorCode.SUCCESS.getCode()) {
-				wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-				wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
+				mzResult.setCode(ErrorCode.SUCCESS.getCode());
+				mzResult.setMsg(ErrorCode.SUCCESS.getMsg());
 
 				if (data != null) {
 					StreamInfo streamInfo = (StreamInfo)data;
 					if (userSetting.getUseSourceIpAsStreamIp()) {
 						streamInfo.changeStreamIp(request.getLocalAddr());
 					}
-					wvpResult.setData(new StreamContent(streamInfo));
+					mzResult.setData(new StreamContent(streamInfo));
 				}
 			}else {
-				wvpResult.setCode(code);
-				wvpResult.setMsg(msg);
+				mzResult.setCode(code);
+				mzResult.setMsg(msg);
 			}
-			requestMessage.setData(wvpResult);
+			requestMessage.setData(mzResult);
 			resultHolder.invokeResult(requestMessage);
 		});
 

@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Schema(description = "已有云录像的独立观看会话")
 public class CloudRecordSessionContent {
-    @Schema(description = "独立会话ID，控制请求须回到创建它的WVP实例")
+    @Schema(description = "独立会话ID，控制请求须回到创建它的视频服务节点")
     private String sessionId;
     @Schema(description = "云录像记录ID")
     private int cloudRecordId;
@@ -20,7 +20,7 @@ public class CloudRecordSessionContent {
     private long durationMs;
     @Schema(description = "会话过期的Unix毫秒时间；查询不续期")
     private long expiresAt;
-    @Schema(description = "持有会话的WVP实例ID")
+    @Schema(description = "持有会话的视频服务节点ID")
     private String serverId;
     @Schema(description = "当前媒体地址；暂停时为空，定位和恢复后须替换播放器地址")
     private StreamContent playback;

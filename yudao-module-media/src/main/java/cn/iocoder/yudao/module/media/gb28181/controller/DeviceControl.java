@@ -11,7 +11,7 @@ import cn.iocoder.yudao.module.media.conf.security.JwtUtils;
 import cn.iocoder.yudao.module.media.gb28181.bean.Device;
 import cn.iocoder.yudao.module.media.gb28181.service.IDeviceService;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -50,20 +50,20 @@ public class DeviceControl {
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "recordCmdStr", description = "命令， 可选值：Record（手动录像），StopRecord（停止手动录像）", required = true)
     @GetMapping("/record")
-    public DeferredResult<WVPResult<String>> recordApi(String deviceId, String recordCmdStr, String channelId) {
+    public DeferredResult<MzResult<String>> recordApi(String deviceId, String recordCmdStr, String channelId) {
         if (log.isDebugEnabled()) {
             log.debug("开始/停止录像API调用");
         }
         Device device = deviceService.getDeviceByDeviceId(deviceId);
 		Assert.notNull(device, "设备不存在");
-		DeferredResult<WVPResult<String>> deferredResult = new DeferredResult<>();
+		DeferredResult<MzResult<String>> deferredResult = new DeferredResult<>();
 
 		deviceService.record(device, channelId, recordCmdStr, (code, msg, data) -> {
-			deferredResult.setResult(new WVPResult<>(code, msg, data));
+			deferredResult.setResult(new MzResult<>(code, msg, data));
 		});
 		deferredResult.onTimeout(() -> {
 			log.warn("[开始/停止录像] 操作超时, 设备未返回应答指令, {}", deviceId);
-			deferredResult.setResult(WVPResult.fail(ErrorCode.ERROR100.getCode(), "操作超时, 设备未应答"));
+			deferredResult.setResult(MzResult.fail(ErrorCode.ERROR100.getCode(), "操作超时, 设备未应答"));
 		});
 		return deferredResult;
 	}
@@ -72,17 +72,17 @@ public class DeviceControl {
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)
 	@Parameter(name = "guardCmd", description = "命令， 可选值：SetGuard（布防），ResetGuard（撤防）", required = true)
 	@GetMapping("/guard")
-	public DeferredResult<WVPResult<String>> guardApi(String deviceId, String guardCmd) {
+	public DeferredResult<MzResult<String>> guardApi(String deviceId, String guardCmd) {
 		log.info("[布防/撤防] API调用, deviceId: {}, guardCmd: {}", deviceId, guardCmd);
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
 		Assert.notNull(device, "设备不存在");
-		DeferredResult<WVPResult<String>> result = new DeferredResult<>();
+		DeferredResult<MzResult<String>> result = new DeferredResult<>();
 		deviceService.guard(device, guardCmd, (code, msg, data) -> {
-			result.setResult(new WVPResult<>(code, msg, data));
+			result.setResult(new MzResult<>(code, msg, data));
 		});
 		result.onTimeout(() -> {
 			log.warn("[布防/撤防] 操作超时, 设备未返回应答指令, {}", deviceId);
-			result.setResult(WVPResult.fail(ErrorCode.ERROR100.getCode(), "操作超时, 设备未应答"));
+			result.setResult(MzResult.fail(ErrorCode.ERROR100.getCode(), "操作超时, 设备未应答"));
 		});
 		return result;
 	}
@@ -104,19 +104,19 @@ public class DeviceControl {
 			"报警方式为6时,取值如下:" +
 			"1-存储设备磁盘故障报警;2-存储设备风扇故障报警")
 	@GetMapping("/reset_alarm")
-	public DeferredResult<WVPResult<String>> resetAlarm(String deviceId, String channelId,
+	public DeferredResult<MzResult<String>> resetAlarm(String deviceId, String channelId,
 																@RequestParam(required = false) String alarmMethod,
 																@RequestParam(required = false) String alarmType) {
 		log.info("[报警复位] deviceId: {}, channelId: {}, alarmMethod: {}, alarmType: {}", deviceId, channelId, alarmMethod, alarmType);
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
 		Assert.notNull(device, "设备不存在");
-		DeferredResult<WVPResult<String>> result = new DeferredResult<>();
+		DeferredResult<MzResult<String>> result = new DeferredResult<>();
 		deviceService.resetAlarm(device, channelId, alarmMethod, alarmType, (code, msg, data) -> {
-			result.setResult(new WVPResult<>(code, msg, data));
+			result.setResult(new MzResult<>(code, msg, data));
 		});
 		result.onTimeout(() -> {
 			log.warn("[布防/撤防] 操作超时, 设备未返回应答指令, {}", deviceId);
-			result.setResult(WVPResult.fail(ErrorCode.ERROR100.getCode(), "操作超时, 设备未应答"));
+			result.setResult(MzResult.fail(ErrorCode.ERROR100.getCode(), "操作超时, 设备未应答"));
 		});
 		return result;
 	}
@@ -141,7 +141,7 @@ public class DeviceControl {
 	@Parameter(name = "presetIndex", description = "调用预置位编号")
 	@Parameter(name = "resetTime", description = "自动归位时间间隔 单位：秒")
 	@GetMapping("/home_position")
-	public DeferredResult<WVPResult<String>> homePositionApi(String deviceId, String channelId, Boolean enabled,
+	public DeferredResult<MzResult<String>> homePositionApi(String deviceId, String channelId, Boolean enabled,
 												  @RequestParam(required = false) Integer resetTime,
 												  @RequestParam(required = false) Integer presetIndex) {
         if (log.isDebugEnabled()) {
@@ -149,13 +149,13 @@ public class DeviceControl {
 		}
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
 		Assert.notNull(device, "设备不存在");
-		DeferredResult<WVPResult<String>> result = new DeferredResult<>();
+		DeferredResult<MzResult<String>> result = new DeferredResult<>();
 		deviceService.homePosition(device, channelId, enabled, resetTime, presetIndex, (code, msg, data) -> {
-			result.setResult(new WVPResult<>(code, msg, data));
+			result.setResult(new MzResult<>(code, msg, data));
 		});
 		result.onTimeout(() -> {
 			log.warn("[看守位设置] 操作超时, 设备未返回应答指令, {}", deviceId);
-			result.setResult(WVPResult.fail(ErrorCode.ERROR100.getCode(), "操作超时, 设备未应答"));
+			result.setResult(MzResult.fail(ErrorCode.ERROR100.getCode(), "操作超时, 设备未应答"));
 		});
 		return result;
 	}

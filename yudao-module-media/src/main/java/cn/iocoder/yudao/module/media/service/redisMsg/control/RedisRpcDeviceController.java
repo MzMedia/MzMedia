@@ -14,7 +14,7 @@ import cn.iocoder.yudao.module.media.service.redisMsg.dto.RedisRpcMapping;
 import cn.iocoder.yudao.module.media.service.redisMsg.dto.RpcController;
 import cn.iocoder.yudao.module.media.streamProxy.service.IStreamProxyService;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -65,7 +65,7 @@ public class RedisRpcDeviceController extends RpcController {
             response.setBody("设备尚未注册过");
             return response;
         }
-        WVPResult<SyncStatus> result = deviceService.devicesSync(device);
+        MzResult<SyncStatus> result = deviceService.devicesSync(device);
         response.setStatusCode(ErrorCode.SUCCESS.getCode());
         response.setBody(JSONObject.toJSONString(result));
         return response;
@@ -106,7 +106,7 @@ public class RedisRpcDeviceController extends RpcController {
         }
         deviceService.deviceBasicConfig(device, basicParam, (code, msg, data) -> {
                     response.setStatusCode(code);
-                    response.setBody(new WVPResult<>(code, msg, data));
+                    response.setBody(new MzResult<>(code, msg, data));
                     // 手动发送结果
                     sendResponse(response);
                 });
@@ -127,7 +127,7 @@ public class RedisRpcDeviceController extends RpcController {
         }
         deviceService.deviceVideoParamConfig(device, videoParamOpt, (code, msg, data) -> {
                     response.setStatusCode(code);
-                    response.setBody(new WVPResult<>(code, msg, data));
+                    response.setBody(new MzResult<>(code, msg, data));
                     sendResponse(response);
                 });
         return null;
@@ -159,7 +159,7 @@ public class RedisRpcDeviceController extends RpcController {
             Class<? extends DeviceConfigAware> configClass = rawClass.asSubclass(DeviceConfigAware.class);
             deviceService.deviceConfigQuery(device, channelId, configClass, (code, msg, data) -> {
                 response.setStatusCode(code);
-                response.setBody(new WVPResult<>(code, msg, data));
+                response.setBody(new MzResult<>(code, msg, data));
                 sendResponse(response);
             });
         } catch (ClassNotFoundException e) {
@@ -186,11 +186,11 @@ public class RedisRpcDeviceController extends RpcController {
             deviceService.teleboot(device);
         }catch (ControllerException e) {
             response.setStatusCode(e.getCode());
-            response.setBody(WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
+            response.setBody(MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
             return response;
         }
         response.setStatusCode(ErrorCode.SUCCESS.getCode());
-        response.setBody(WVPResult.success());
+        response.setBody(MzResult.success());
         return response;
     }
 
@@ -212,13 +212,13 @@ public class RedisRpcDeviceController extends RpcController {
         try {
             deviceService.record(device, channelId, recordCmdStr, (code, msg, data) -> {
                 response.setStatusCode(ErrorCode.SUCCESS.getCode());
-                response.setBody(new WVPResult<>(code, msg, data));
+                response.setBody(new MzResult<>(code, msg, data));
                 // 手动发送结果
                 sendResponse(response);
             });
         }catch (ControllerException e) {
             response.setStatusCode(e.getCode());
-            response.setBody(WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
+            response.setBody(MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
             sendResponse(response);
         }
         return null;
@@ -241,13 +241,13 @@ public class RedisRpcDeviceController extends RpcController {
         try {
             deviceService.guard(device, guardCmdStr, (code, msg, data) -> {
                 response.setStatusCode(ErrorCode.SUCCESS.getCode());
-                response.setBody(new WVPResult<>(code, msg, data));
+                response.setBody(new MzResult<>(code, msg, data));
                 // 手动发送结果
                 sendResponse(response);
             });
         }catch (ControllerException e) {
             response.setStatusCode(e.getCode());
-            response.setBody(WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
+            response.setBody(MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
             sendResponse(response);
         }
         return null;
@@ -272,13 +272,13 @@ public class RedisRpcDeviceController extends RpcController {
         try {
             deviceService.resetAlarm(device, channelId, alarmMethod, alarmType, (code, msg, data) -> {
                 response.setStatusCode(ErrorCode.SUCCESS.getCode());
-                response.setBody(new WVPResult<>(code, msg, data));
+                response.setBody(new MzResult<>(code, msg, data));
                 // 手动发送结果
                 sendResponse(response);
             });
         }catch (ControllerException e) {
             response.setStatusCode(e.getCode());
-            response.setBody(WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
+            response.setBody(MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
             sendResponse(response);
         }
         return null;
@@ -302,7 +302,7 @@ public class RedisRpcDeviceController extends RpcController {
             deviceService.iFrame(device, channelId);
         }catch (ControllerException e) {
             response.setStatusCode(e.getCode());
-            response.setBody(WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
+            response.setBody(MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
             sendResponse(response);
         }
         return null;
@@ -329,13 +329,13 @@ public class RedisRpcDeviceController extends RpcController {
         try {
             deviceService.homePosition(device, channelId, enabled, resetTime, presetIndex, (code, msg, data) -> {
                 response.setStatusCode(ErrorCode.SUCCESS.getCode());
-                response.setBody(new WVPResult<>(code, msg, data));
+                response.setBody(new MzResult<>(code, msg, data));
                 // 手动发送结果
                 sendResponse(response);
             });
         }catch (ControllerException e) {
             response.setStatusCode(e.getCode());
-            response.setBody(WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
+            response.setBody(MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
             sendResponse(response);
         }
         return null;
@@ -365,11 +365,11 @@ public class RedisRpcDeviceController extends RpcController {
             deviceService.dragZoomIn(device, channelId, length, width, midPointX, midPointY, lengthX, lengthY);
         }catch (ControllerException e) {
             response.setStatusCode(e.getCode());
-            response.setBody(WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
+            response.setBody(MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
             return response;
         }
         response.setStatusCode(ErrorCode.SUCCESS.getCode());
-        response.setBody(WVPResult.success());
+        response.setBody(MzResult.success());
         return response;
     }
 
@@ -397,11 +397,11 @@ public class RedisRpcDeviceController extends RpcController {
             deviceService.dragZoomOut(device, channelId, length, width, midPointX, midPointY, lengthX, lengthY);
         }catch (ControllerException e) {
             response.setStatusCode(e.getCode());
-            response.setBody(WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
+            response.setBody(MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
             return response;
         }
         response.setStatusCode(ErrorCode.SUCCESS.getCode());
-        response.setBody(WVPResult.success());
+        response.setBody(MzResult.success());
         return response;
     }
 
@@ -428,13 +428,13 @@ public class RedisRpcDeviceController extends RpcController {
         try {
             deviceService.alarm(device, startPriority, endPriority, alarmMethod, alarmType, startTime, endTime, (code, msg, data) -> {
                 response.setStatusCode(ErrorCode.SUCCESS.getCode());
-                response.setBody(new WVPResult<>(code, msg, data));
+                response.setBody(new MzResult<>(code, msg, data));
                 // 手动发送结果
                 sendResponse(response);
             });
         }catch (ControllerException e) {
             response.setStatusCode(e.getCode());
-            response.setBody(WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
+            response.setBody(MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
             sendResponse(response);
         }
         return null;
@@ -455,13 +455,13 @@ public class RedisRpcDeviceController extends RpcController {
         try {
             deviceService.deviceStatus(device, (code, msg, data) -> {
                 response.setStatusCode(ErrorCode.SUCCESS.getCode());
-                response.setBody(new WVPResult<>(code, msg, data));
+                response.setBody(new MzResult<>(code, msg, data));
                 // 手动发送结果
                 sendResponse(response);
             });
         }catch (ControllerException e) {
             response.setStatusCode(e.getCode());
-            response.setBody(WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
+            response.setBody(MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
             sendResponse(response);
         }
         return null;
@@ -482,13 +482,13 @@ public class RedisRpcDeviceController extends RpcController {
         try {
             deviceService.deviceInfo(device, (code, msg, data) -> {
                 response.setStatusCode(ErrorCode.SUCCESS.getCode());
-                response.setBody(new WVPResult<>(code, msg, data));
+                response.setBody(new MzResult<>(code, msg, data));
                 // 手动发送结果
                 sendResponse(response);
             });
         }catch (ControllerException e) {
             response.setStatusCode(e.getCode());
-            response.setBody(WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
+            response.setBody(MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
             sendResponse(response);
         }
         return null;
@@ -511,13 +511,13 @@ public class RedisRpcDeviceController extends RpcController {
         try {
             deviceService.queryPreset(device, channelId, (code, msg, data) -> {
                 response.setStatusCode(ErrorCode.SUCCESS.getCode());
-                response.setBody(new WVPResult<>(code, msg, data));
+                response.setBody(new MzResult<>(code, msg, data));
                 // 手动发送结果
                 sendResponse(response);
             });
         }catch (ControllerException e) {
             response.setStatusCode(e.getCode());
-            response.setBody(WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
+            response.setBody(MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMsg()));
             sendResponse(response);
         }
         return null;

@@ -12,10 +12,10 @@ if ($Target -eq "abl") {
     $PlayRtsp  = "rtsp://127.0.0.1:5544/live/test"
     $Name      = "ABLMediaServer"
 } else {
-    $StreamUrl = "rtmp://127.0.0.1:1935/live/test"
+    $StreamUrl = if ($env:ZLM_RTMP_PORT) { "rtmp://127.0.0.1:$($env:ZLM_RTMP_PORT)/live/test" } else { "rtmp://127.0.0.1:19350/live/test" }
     $PlayFlv   = "http://127.0.0.1:18080/live/test.live.flv"
     $PlayWs    = "ws://127.0.0.1:18080/live/test.live.flv"
-    $PlayRtsp  = "rtsp://127.0.0.1:554/live/test"
+    $PlayRtsp  = if ($env:ZLM_RTSP_PORT) { "rtsp://127.0.0.1:$($env:ZLM_RTSP_PORT)/live/test" } else { "rtsp://127.0.0.1:8554/live/test" }
     $Name      = "ZLMediaKit"
 }
 

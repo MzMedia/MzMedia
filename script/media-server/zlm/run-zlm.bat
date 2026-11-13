@@ -8,10 +8,10 @@ set "SCRIPT_DIR=%~dp0"
 set "SCRIPT_DIR=%SCRIPT_DIR:~0,-1%"
 
 if "%ZLM_HTTP_PORT%"=="" set "ZLM_HTTP_PORT=18080"
-if "%ZLM_RTSP_PORT%"=="" set "ZLM_RTSP_PORT=554"
-if "%ZLM_RTMP_PORT%"=="" set "ZLM_RTMP_PORT=1935"
-if "%ZLM_RTC_PORT%"=="" set "ZLM_RTC_PORT=8000"
-if "%ZLM_RTP_PORT%"=="" set "ZLM_RTP_PORT=10000"
+if "%ZLM_RTSP_PORT%"=="" set "ZLM_RTSP_PORT=8554"
+if "%ZLM_RTMP_PORT%"=="" set "ZLM_RTMP_PORT=19350"
+if "%ZLM_RTC_PORT%"=="" set "ZLM_RTC_PORT=8005"
+if "%ZLM_RTP_PORT%"=="" set "ZLM_RTP_PORT=10005"
 
 echo ==========================================================
 echo  正在启动 ZLMediaKit 流媒体服务器 (Docker 容器模式)...
@@ -40,7 +40,7 @@ docker run -d ^
   -p %ZLM_RTC_PORT%:8000/udp ^
   -p %ZLM_RTP_PORT%:10000 ^
   -p %ZLM_RTP_PORT%:10000/udp ^
-  -p 30000-30050:30000-30050/udp ^
+  -p 32000-32050:32000-32050/udp ^
   -v "%SCRIPT_DIR%\config.ini:/opt/media/conf/config.ini:ro" ^
   -v "%SCRIPT_DIR%\data\record:/opt/media/bin/www/record" ^
   -v "%SCRIPT_DIR%\data\snap:/opt/media/bin/www/snap" ^
@@ -49,5 +49,5 @@ docker run -d ^
 echo.
 echo ZLMediaKit 启动完成！
 echo 检查状态: docker ps -f name=mz-zlm
-echo API 验证: curl http://127.0.0.1:%ZLM_HTTP_PORT%/index/api/getServerConfig?secret=035c73f7-bb6b-4889-a715-d9eb2d1925cc
+echo API 验证: curl http://127.0.0.1:%ZLM_HTTP_PORT%/index/api/getServerConfig?secret=mzmedia_zlm_secret_2026_test_key
 pause

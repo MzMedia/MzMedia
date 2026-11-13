@@ -12,10 +12,10 @@ if [ "${TARGET}" == "abl" ]; then
     PLAY_RTSP="rtsp://127.0.0.1:5544/live/test"
     NAME="ABLMediaServer"
 else
-    STREAM_URL="rtmp://127.0.0.1:1935/live/test"
+    STREAM_URL="rtmp://127.0.0.1:${ZLM_RTMP_PORT:-19350}/live/test"
     PLAY_FLV="http://127.0.0.1:18080/live/test.live.flv"
     PLAY_WS="ws://127.0.0.1:18080/live/test.live.flv"
-    PLAY_RTSP="rtsp://127.0.0.1:554/live/test"
+    PLAY_RTSP="rtsp://127.0.0.1:${ZLM_RTSP_PORT:-8554}/live/test"
     NAME="ZLMediaKit"
 fi
 

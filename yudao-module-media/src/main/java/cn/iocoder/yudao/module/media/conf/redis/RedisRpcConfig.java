@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisRpcConfig implements MessageListener {
 
-    public final static String REDIS_REQUEST_CHANNEL_KEY = "WVP_REDIS_REQUEST_CHANNEL_KEY";
+    public final static String REDIS_REQUEST_CHANNEL_KEY = "MZ_VIDEO_REDIS_REQUEST_CHANNEL_KEY";
 
     private final Random random = new Random();
 
@@ -127,7 +127,7 @@ public class RedisRpcConfig implements MessageListener {
             }
             RpcController controller = redisRpcClassHandler.getController();
             Method method = redisRpcClassHandler.getMethod();
-            // 没有携带目标ID的可以理解为哪个wvp有结果就哪个回复，携带目标ID，但是如果是不存在的uri则直接回复404
+            // 没有携带目标ID的可以理解为哪个视频节点有结果就哪个回复，携带目标ID，但是如果是不存在的uri则直接回复404
             if (userSetting.getServerId().equals(request.getToId())) {
                 if (method == null) {
                     // 回复404结果

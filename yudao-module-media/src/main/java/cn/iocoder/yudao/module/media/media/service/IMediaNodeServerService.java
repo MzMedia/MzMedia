@@ -10,7 +10,7 @@ import cn.iocoder.yudao.module.media.media.bean.RecordInfo;
 import cn.iocoder.yudao.module.media.service.bean.DownloadFileInfo;
 import cn.iocoder.yudao.module.media.service.bean.ErrorCallback;
 import cn.iocoder.yudao.module.media.streamProxy.bean.StreamProxy;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 
 import java.util.List;
 import java.util.Map;
@@ -63,7 +63,7 @@ public interface IMediaNodeServerService {
 
     String getFfmpegCmd(MediaServer mediaServer, String cmdKey);
 
-    WVPResult<String> addStreamProxy(MediaServer mediaServer, String app, String stream, String url, boolean enableAudio, boolean enableMp4, String rtpType, Integer timeout);
+    MzResult<String> addStreamProxy(MediaServer mediaServer, String app, String stream, String url, boolean enableAudio, boolean enableMp4, String rtpType, Integer timeout);
 
     Boolean delFFmpegSource(MediaServer mediaServer, String streamKey);
 

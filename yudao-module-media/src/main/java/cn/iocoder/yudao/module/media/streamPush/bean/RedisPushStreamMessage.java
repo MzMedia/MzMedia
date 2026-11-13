@@ -12,7 +12,7 @@ public class RedisPushStreamMessage {
     private Boolean status;
     // 终端所属的虚拟组织
     private String groupGbId;
-    // 终端所属的虚拟组织别名 可选，可作为地方同步组织结构到wvp时的关联关系
+    // 终端所属的虚拟组织别名 可选，可作为地方同步组织结构到视频服务时的关联关系
     private String groupAlias;
     // 生产商
     private String manufacturer;

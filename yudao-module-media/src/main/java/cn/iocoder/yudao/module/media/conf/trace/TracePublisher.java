@@ -38,7 +38,7 @@ public class TracePublisher implements DisposableBean {
      * 独立线程发布，避免阻塞 SIP / Redis 处理流程
      */
     private final ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
-        Thread thread = new Thread(r, "wvp-trace-publisher");
+        Thread thread = new Thread(r, "video-trace-publisher");
         thread.setDaemon(true);
         return thread;
     });

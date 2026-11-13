@@ -23,24 +23,33 @@ fi
 
 INI_FILE="${WORK_DIR}/ABLMediaServer.ini"
 
+# 安全修改配置文件内容（避免 bind-mount 下 sed -i 触发 Device or resource busy 错误）
+safe_sed() {
+    local pattern="$1"
+    local target="$2"
+    if [ -f "${target}" ]; then
+        sed -E "${pattern}" "${target}" > /tmp/ini_replace.tmp && cat /tmp/ini_replace.tmp > "${target}" && rm -f /tmp/ini_replace.tmp
+    fi
+}
+
 # 如果配置了 SERVER_IP，动态更新 ini
 if [ -n "${SERVER_IP}" ] && [ -f "${INI_FILE}" ]; then
     echo "🔧 动态更新 ServerIP 与 localipAddress 为: ${SERVER_IP}"
-    sed -i "s/^ServerIP=.*/ServerIP=${SERVER_IP}/g" "${INI_FILE}"
-    sed -i "s/^localipAddress=.*/localipAddress=${SERVER_IP}/g" "${INI_FILE}"
-    sed -i "s/^rtc.external-ip=.*/rtc.external-ip=${SERVER_IP}/g" "${INI_FILE}"
+    safe_sed "s/^ServerIP=.*/ServerIP=${SERVER_IP}/g" "${INI_FILE}"
+    safe_sed "s/^localipAddress=.*/localipAddress=${SERVER_IP}/g" "${INI_FILE}"
+    safe_sed "s/^rtc.external-ip=.*/rtc.external-ip=${SERVER_IP}/g" "${INI_FILE}"
 fi
 
-# 如果配置了 HOOK_HOST，动态更新 Hook 回调主机地址
+# 如果配置了 HOOK_HOST，动态更新 Hook 回调主机地址（保留已有端口）
 if [ -n "${HOOK_HOST}" ] && [ -f "${INI_FILE}" ]; then
     echo "🔧 动态更新 Hook 回调主机为: ${HOOK_HOST}"
-    sed -i "s|http://host.docker.internal:[0-9]*|http://${HOOK_HOST}|g" "${INI_FILE}"
+    safe_sed "s|http://[^:/]+(:[0-9]+)?/index/hook|http://${HOOK_HOST}\1/index/hook|g" "${INI_FILE}"
 fi
 
 # 如果配置了 HOOK_PORT，动态更新 Hook 回调端口
 if [ -n "${HOOK_PORT}" ] && [ -f "${INI_FILE}" ]; then
     echo "🔧 动态更新 Hook 回调端口为: ${HOOK_PORT}"
-    sed -i -E "s|(:[0-9]+)(/index/hook)|:${HOOK_PORT}\2|g" "${INI_FILE}"
+    safe_sed "s|(:[0-9]+)?/index/hook|:${HOOK_PORT}/index/hook|g" "${INI_FILE}"
 fi
 
 echo "=========================================================="

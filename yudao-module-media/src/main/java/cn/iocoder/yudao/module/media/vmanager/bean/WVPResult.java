@@ -1,32 +1,25 @@
 package cn.iocoder.yudao.module.media.vmanager.bean;
 
-
+import cn.iocoder.yudao.framework.common.pojo.CommonResult;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
-@Getter
-@Schema(description = "统一返回结果")
-public class WVPResult<T> implements Cloneable{
+/**
+ * 历史 WVP 响应类
+ *
+ * @deprecated 建议优先使用 {@link MzResult} 或 ruoyi-vue-pro 标准 {@link CommonResult}。
+ * @param <T> 响应数据类型
+ */
+@Deprecated
+@Schema(description = "历史统一返回结果（已废弃）")
+public class WVPResult<T> extends MzResult<T> {
 
     public WVPResult() {
+        super();
     }
 
     public WVPResult(int code, String msg, T data) {
-        this.code = code;
-        this.msg = msg;
-        this.data = data;
+        super(code, msg, data);
     }
-
-
-    @Schema(description = "错误码，0为成功")
-    private int code;
-    @Schema(description = "描述，错误时描述错误原因")
-    private String msg;
-    @Schema(description = "数据")
-    private T data;
-
 
     public static <T> WVPResult<T> success(T t, String msg) {
         return new WVPResult<>(ErrorCode.SUCCESS.getCode(), msg, t);
@@ -48,8 +41,7 @@ public class WVPResult<T> implements Cloneable{
         return fail(errorCode.getCode(), errorCode.getMsg());
     }
 
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public static <T> WVPResult<T> fail(ErrorCode errorCode, String msg) {
+        return new WVPResult<>(errorCode.getCode(), msg, null);
     }
 }

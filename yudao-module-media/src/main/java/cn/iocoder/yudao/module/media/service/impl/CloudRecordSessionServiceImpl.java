@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Semaphore;
 
 /**
- * 将同一份已有MP4映射为互不干扰的观看会话；会话仅保存在创建它的WVP实例。
+ * 将同一份已有MP4映射为互不干扰的观看会话；会话仅保存在创建它的视频服务节点。
  * 暂停释放媒体源并保留调用方位置，恢复创建新流，因此不依赖ZLM的零倍速能力。
  */
 @Slf4j
@@ -304,7 +304,7 @@ public class CloudRecordSessionServiceImpl implements ICloudRecordSessionService
         }
     }
 
-    /** 查找归当前WVP用户持有的会话，未知会话不触发媒体操作。 */
+    /** 查找归当前用户持有的会话，未知会话不触发媒体操作。 */
     private Session find(int userId, String sessionId) {
         Session session = sessions.get(sessionId);
         if (session == null) {

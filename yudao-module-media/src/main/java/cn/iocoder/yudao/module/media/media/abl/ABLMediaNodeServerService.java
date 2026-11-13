@@ -27,7 +27,7 @@ import cn.iocoder.yudao.module.media.storager.dao.CloudRecordServiceMapper;
 import cn.iocoder.yudao.module.media.streamProxy.bean.StreamProxy;
 import cn.iocoder.yudao.module.media.utils.DateUtil;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -374,13 +374,13 @@ public class ABLMediaNodeServerService implements IMediaNodeServerService {
     }
 
     @Override
-    public WVPResult<String> addStreamProxy(MediaServer mediaServer, String app, String stream, String url, boolean enableAudio, boolean enableMp4, String rtpType, Integer timeout) {
+    public MzResult<String> addStreamProxy(MediaServer mediaServer, String app, String stream, String url, boolean enableAudio, boolean enableMp4, String rtpType, Integer timeout) {
 
         ABLResult result = ablresTfulUtils.addStreamProxy(mediaServer, app, stream, url, !enableAudio, enableMp4, rtpType, timeout);
         if (result.getCode() != 0) {
-            return WVPResult.fail(ErrorCode.ERROR100.getCode(), result.getMemo());
+            return MzResult.fail(ErrorCode.ERROR100.getCode(), result.getMemo());
         }else {
-            return WVPResult.success(result.getKey());
+            return MzResult.success(result.getKey());
         }
     }
 

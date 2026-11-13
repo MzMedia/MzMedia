@@ -13,7 +13,7 @@
 
     <name>${project.artifactId}</name>
     <description>
-        视频监控模块：深度融合 WVP-GB28181-Pro 视频监控能力。
+        视频流媒体监控中心 (mz-module-video)：深度对齐 ruoyi-vue-pro 规范。
         支持 GB28181 国标设备接入与控制 (JAIN-SIP)、ZLMediaKit 流媒体集群集成与 Webhook 处理、
         实时直播/多分屏点播、云台控制 (PTZ)、语音对讲、本地与云端录像检索/回放、拉流代理、推流管理、国标级联等。
     </description>
@@ -114,6 +114,13 @@
         <dependency>
             <groupId>no.ecc.vectortile</groupId>
             <artifactId>java-vector-tile</artifactId>
+        </dependency>
+
+        <!-- 单元测试依赖 -->
+        <dependency>
+            <groupId>cn.iocoder.boot</groupId>
+            <artifactId>yudao-spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

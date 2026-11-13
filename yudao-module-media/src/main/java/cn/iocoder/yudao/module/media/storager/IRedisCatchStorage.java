@@ -24,11 +24,14 @@ public interface IRedisCatchStorage {
     Long getCSEQ();
 
     /**
-     * 在redis添加wvp的信息
+     * 在 redis 添加服务节点信息 (心跳)
      */
-    void updateWVPInfo(ServerInfo serverInfo, int time);
+    void updateServerInfo(ServerInfo serverInfo, int time);
 
-    void removeOfflineWVPInfo(String serverId);
+    /**
+     * 从 redis 移除离线服务节点
+     */
+    void removeOfflineServerInfo(String serverId);
 
     /**
      * 发送推流生成与推流消失消息

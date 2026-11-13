@@ -75,7 +75,7 @@ public class SipUtils {
 
     public static UserAgentHeader createUserAgentHeader(GitUtil gitUtil) throws PeerUnavailableException, ParseException {
         List<String> agentParam = new ArrayList<>();
-        agentParam.add("WVP-Pro ");
+        agentParam.add("MZ-Media-Pro ");
         if (gitUtil != null ) {
             if (!ObjectUtils.isEmpty(gitUtil.getBuildVersion())) {
                 agentParam.add("v");

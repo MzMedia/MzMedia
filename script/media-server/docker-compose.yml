@@ -21,13 +21,13 @@ services:
     ports:
       - "${ZLM_HTTP_PORT:-18080}:80"
       - "${ZLM_HTTPS_PORT:-18443}:443"
-      - "${ZLM_RTSP_PORT:-554}:554"
-      - "${ZLM_RTMP_PORT:-1935}:1935"
-      - "${ZLM_RTC_PORT:-8000}:8000/udp"
-      - "${ZLM_RTP_PORT:-10000}:10000"
-      - "${ZLM_RTP_PORT:-10000}:10000/udp"
-      # 国标 GB28181 多端口收流范围 (测试开放 50 个端口，避免过多占用)
-      - "30000-30050:30000-30050/udp"
+      - "${ZLM_RTSP_PORT:-8554}:554"
+      - "${ZLM_RTMP_PORT:-19350}:1935"
+      - "${ZLM_RTC_PORT:-8005}:8000/udp"
+      - "${ZLM_RTP_PORT:-10005}:10000"
+      - "${ZLM_RTP_PORT:-10005}:10000/udp"
+      # 国标 GB28181 多端口收流范围 (采用独立 32000-32050 避免与宿主机其它 ZLM 实例冲突)
+      - "32000-32050:32000-32050/udp"
     volumes:
       - ./zlm/config.ini:/opt/media/conf/config.ini:ro
       - zlm-record:/opt/media/bin/www/record
@@ -65,7 +65,8 @@ services:
       - "${ABL_RTMP_PORT:-1936}:1936"
       - "${ABL_RTP_PORT:-10002}:10002"
       - "${ABL_JT_PORT:-7078}:7078"
-      - "${ABL_RTC_PORT:-9005}:9005/udp"
+      - "${ABL_RTC_PORT:-8289}:8289"
+      - "9005:9005/udp"
       # ABL WebRTC / RTP 端口范围
       - "31000-31050:31000-31050/udp"
     volumes:

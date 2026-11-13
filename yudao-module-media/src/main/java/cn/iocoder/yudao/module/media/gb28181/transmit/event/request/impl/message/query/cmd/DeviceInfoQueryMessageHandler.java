@@ -70,7 +70,7 @@ public class DeviceInfoQueryMessageHandler extends SIPRequestProcessorParent imp
 
         String sn = rootElement.element("SN").getText();
 
-        /*根据WVP原有的数据结构，设备和通道是分开放置，设备信息都是存放在设备表里，通道表里的设备信息不可作为真实信息处理
+        /*根据系统原有的数据结构，设备和通道是分开放置，设备信息都是存放在设备表里，通道表里的设备信息不可作为真实信息处理
         大部分NVR/IPC设备对他的通道信息实现都是返回默认的值没有什么参考价值。NVR/IPC通道我们统一使用设备表的设备信息来作为返回。
         我们这里使用查询数据库的方式来实现这个设备信息查询的功能，在其他地方对设备信息更新达到正确的目的。*/
 

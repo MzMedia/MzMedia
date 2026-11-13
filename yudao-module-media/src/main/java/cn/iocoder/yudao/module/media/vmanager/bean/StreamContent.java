@@ -111,7 +111,7 @@ public class StreamContent {
     @Schema(description = "拉流代理返回的KEY")
     private String key;
 
-    @Schema(description = "使用的WVP ID")
+    @Schema(description = "使用的视频信令服务节点 ID")
     private String serverId;
 
     public StreamContent(StreamInfo streamInfo) {

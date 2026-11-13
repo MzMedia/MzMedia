@@ -24,7 +24,7 @@ public interface IInviteStreamService {
      *
      * <p>用于“流已经离开，但仍需保留会话信息”的场景：录像下载结束后 ZLM 会先注销流、再回调
      * on_record_mp4，下载地址只能在钩子里写入，因此流离开时不能立即删除会话，改为保留一段时间，
-     * 到期由 {@code InviteStreamServiceImpl.execute()} 回收。保留窗口是绝对时间戳，即使 WVP 重启
+     * 到期由 {@code InviteStreamServiceImpl.execute()} 回收。保留窗口是绝对时间戳，即使视频服务节点重启
      * 也不会丢失。</p>
      *
      * @param inviteInfo 目标会话（使用 type/channelId/stream 定位缓存条目）

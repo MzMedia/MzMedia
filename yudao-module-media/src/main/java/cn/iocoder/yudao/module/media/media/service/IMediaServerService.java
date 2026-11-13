@@ -9,7 +9,7 @@ import cn.iocoder.yudao.module.media.media.bean.MediaServer;
 import cn.iocoder.yudao.module.media.media.bean.RecordInfo;
 import cn.iocoder.yudao.module.media.service.bean.*;
 import cn.iocoder.yudao.module.media.streamProxy.bean.StreamProxy;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 
 import java.util.List;
 import java.util.Map;
@@ -104,7 +104,7 @@ public interface IMediaServerService {
 
     void closeStreams(MediaServer mediaServerItem, String app, String stream);
 
-    WVPResult<String> addStreamProxy(MediaServer mediaServerItem, String app, String stream, String url, boolean enableAudio, boolean enableMp4, String rtpType, Integer timeout);
+    MzResult<String> addStreamProxy(MediaServer mediaServerItem, String app, String stream, String url, boolean enableAudio, boolean enableMp4, String rtpType, Integer timeout);
 
     Boolean delFFmpegSource(MediaServer mediaServerItem, String streamKey);
 
@@ -122,7 +122,7 @@ public interface IMediaServerService {
 
 
     /**
-     * 根据应用名和流ID获取播放地址, 通过zlm接口检查是否存在, 返回的ip使用远程访问ip，适用与zlm与wvp在一台主机的情况
+     * 根据应用名和流ID获取播放地址, 通过zlm接口检查是否存在, 返回的ip使用远程访问ip，适用于zlm与视频服务在一台主机的情况
      * @param app
      * @param stream
      * @return
@@ -138,7 +138,7 @@ public interface IMediaServerService {
     StreamInfo getStreamInfoByAppAndStream(MediaServer mediaServerItem, String app, String stream, MediaInfo mediaInfo, String callId);
 
     /**
-     * 根据应用名和流ID获取播放地址, 只是地址拼接，返回的ip使用远程访问ip，适用与zlm与wvp在一台主机的情况
+     * 根据应用名和流ID获取播放地址, 只是地址拼接，返回的ip使用远程访问ip，适用于zlm与视频服务在一台主机的情况
      * @param app
      * @param stream
      * @return

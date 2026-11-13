@@ -1175,7 +1175,7 @@ public class PlayServiceImpl implements IPlayService {
                                     // 流离开后会话由 cleanTime 保留窗口控制回收（见 PlayServiceImpl 的 DOWNLOAD_INVITE_KEEP_MS）
                                     inviteStreamService.updateInviteInfo(inviteInfoForNew, 60*15L);
                                 } else {
-                                    // 会话已被清理（例如 WVP 重启、保留窗口到期），地址无法写入缓存，
+                                    // 会话已被清理（例如服务重启、保留窗口到期），地址无法写入缓存，
                                     // 此时查询下载进度会走 cloud_record 表兜底，这里留日志便于排查
                                     log.warn("[录像下载] 下载地址写入失败，未查询到下载会话: stream={}, deviceId={}, channelId={}",
                                             ssrcInfo.getStream(), inviteInfo.getDeviceId(), inviteInfo.getChannelId());

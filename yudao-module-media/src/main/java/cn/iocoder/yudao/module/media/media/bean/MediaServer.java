@@ -17,7 +17,7 @@ public class MediaServer {
     @Schema(description = "IP")
     private String ip;
 
-    @Schema(description = "hook使用的IP（zlm访问WVP使用的IP）")
+    @Schema(description = "hook使用的IP（zlm访问视频服务使用的IP）")
     private String hookIp = "127.0.0.1";
 
     @Schema(description = "SDP IP")

@@ -83,7 +83,7 @@ public class SyServiceImpl implements IMapService {
         // 读取redis 图标信息
         /*
           {
-              "brand": "WVP",
+              "brand": "MZ",
               "createdTime": 1715845840000,
               "displayInSelect": true,
               "id": 12,

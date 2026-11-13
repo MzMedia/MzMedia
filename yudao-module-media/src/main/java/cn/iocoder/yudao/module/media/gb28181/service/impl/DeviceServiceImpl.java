@@ -37,7 +37,7 @@ import cn.iocoder.yudao.module.media.storager.IRedisCatchStorage;
 import cn.iocoder.yudao.module.media.utils.DateUtil;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
 import cn.iocoder.yudao.module.media.vmanager.bean.ResourceBaseInfo;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import gov.nist.javax.sip.message.SIPResponse;
@@ -1129,38 +1129,38 @@ public class DeviceServiceImpl implements IDeviceService {
     }
 
     @Override
-    public WVPResult<SyncStatus> devicesSync(Device device) {
+    public MzResult<SyncStatus> devicesSync(Device device) {
         if (device.getServerId() != null && !userSetting.getServerId().equals(device.getServerId())) {
             return redisRpcService.devicesSync(device.getServerId(), device.getDeviceId());
         }
         // 已存在则返回进度
         if (isSyncRunning(device.getDeviceId())) {
             SyncStatus channelSyncStatus = getChannelSyncStatus(device.getDeviceId());
-            WVPResult<SyncStatus> wvpResult = new WVPResult();
+            MzResult<SyncStatus> mzResult = new MzResult();
             if (channelSyncStatus.getErrorMsg() != null) {
-                wvpResult.setCode(ErrorCode.ERROR100.getCode());
-                wvpResult.setMsg(channelSyncStatus.getErrorMsg());
+                mzResult.setCode(ErrorCode.ERROR100.getCode());
+                mzResult.setMsg(channelSyncStatus.getErrorMsg());
             }else if (channelSyncStatus.getTotal() == null || channelSyncStatus.getTotal() == 0){
-                wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-                wvpResult.setMsg("等待通道信息...");
+                mzResult.setCode(ErrorCode.SUCCESS.getCode());
+                mzResult.setMsg("等待通道信息...");
             }else {
-                wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-                wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
-                wvpResult.setData(channelSyncStatus);
+                mzResult.setCode(ErrorCode.SUCCESS.getCode());
+                mzResult.setMsg(ErrorCode.SUCCESS.getMsg());
+                mzResult.setData(channelSyncStatus);
             }
-            return wvpResult;
+            return mzResult;
         }
         sync(device);
-        WVPResult<SyncStatus> wvpResult = new WVPResult<>();
-        wvpResult.setCode(0);
-        wvpResult.setMsg("开始同步");
-        return wvpResult;
+        MzResult<SyncStatus> mzResult = new MzResult<>();
+        mzResult.setCode(0);
+        mzResult.setMsg("开始同步");
+        return mzResult;
     }
 
     @Override
     public void deviceBasicConfig(Device device, BasicParam basicParam, ErrorCallback<String> callback) {
         if (!userSetting.getServerId().equals(device.getServerId())) {
-            WVPResult<String> result = redisRpcService.deviceBasicConfig(device.getServerId(), device, basicParam);
+            MzResult<String> result = redisRpcService.deviceBasicConfig(device.getServerId(), device, basicParam);
             if (result.getCode() == ErrorCode.SUCCESS.getCode()) {
                 callback.run(result.getCode(), result.getMsg(), result.getData());
             }
@@ -1179,7 +1179,7 @@ public class DeviceServiceImpl implements IDeviceService {
     @Override
     public void deviceVideoParamConfig(Device device, VideoParamOpt videoParamOpt, ErrorCallback<String> callback) {
         if (!userSetting.getServerId().equals(device.getServerId())) {
-            WVPResult<String> result = redisRpcService.deviceVideoParamConfig(device.getServerId(), device, videoParamOpt);
+            MzResult<String> result = redisRpcService.deviceVideoParamConfig(device.getServerId(), device, videoParamOpt);
             if (result.getCode() == ErrorCode.SUCCESS.getCode()) {
                 callback.run(result.getCode(), result.getMsg(), result.getData());
             }
@@ -1199,7 +1199,7 @@ public class DeviceServiceImpl implements IDeviceService {
     public <T extends DeviceConfigAware> void deviceConfigQuery(Device device, String channelId, Class<T> configClass, ErrorCallback<T> callback) {
 
         if (!userSetting.getServerId().equals(device.getServerId())) {
-            WVPResult<Object> result = redisRpcService.deviceConfigQuery(device.getServerId(), device, channelId, configClass.getName());
+            MzResult<Object> result = redisRpcService.deviceConfigQuery(device.getServerId(), device, channelId, configClass.getName());
             if (result.getData() instanceof JSONObject) {
                 T obj = ((JSONObject) result.getData()).toJavaObject(configClass);
                 callback.run(result.getCode(), result.getMsg(), obj);
@@ -1236,7 +1236,7 @@ public class DeviceServiceImpl implements IDeviceService {
     public void record(Device device, String channelId, String recordCmdStr, ErrorCallback<String> callback) {
 
         if (!userSetting.getServerId().equals(device.getServerId())) {
-            WVPResult<String> result = redisRpcService.recordControl(device.getServerId(), device, channelId, recordCmdStr);
+            MzResult<String> result = redisRpcService.recordControl(device.getServerId(), device, channelId, recordCmdStr);
             callback.run(result.getCode(), result.getMsg(), result.getData());
             return;
         }
@@ -1253,7 +1253,7 @@ public class DeviceServiceImpl implements IDeviceService {
     @Override
     public void guard(Device device, String guardCmdStr, ErrorCallback<String> callback) {
         if (!userSetting.getServerId().equals(device.getServerId())) {
-            WVPResult<String> result = redisRpcService.guard(device.getServerId(), device, guardCmdStr);
+            MzResult<String> result = redisRpcService.guard(device.getServerId(), device, guardCmdStr);
             callback.run(result.getCode(), result.getMsg(), result.getData());
             return;
         }
@@ -1270,7 +1270,7 @@ public class DeviceServiceImpl implements IDeviceService {
     @Override
     public void resetAlarm(Device device, String channelId, String alarmMethod, String alarmType, ErrorCallback<String> callback) {
         if (!userSetting.getServerId().equals(device.getServerId())) {
-            WVPResult<String> result = redisRpcService.resetAlarm(device.getServerId(), device, channelId, alarmMethod, alarmType);
+            MzResult<String> result = redisRpcService.resetAlarm(device.getServerId(), device, channelId, alarmMethod, alarmType);
             callback.run(result.getCode(), result.getMsg(), result.getData());
             return;
         }
@@ -1302,7 +1302,7 @@ public class DeviceServiceImpl implements IDeviceService {
     @Override
     public void homePosition(Device device, String channelId, Boolean enabled, Integer resetTime, Integer presetIndex, ErrorCallback<String> callback) {
         if (!userSetting.getServerId().equals(device.getServerId())) {
-            WVPResult<String> result = redisRpcService.homePosition(device.getServerId(), device, channelId, enabled, resetTime, presetIndex);
+            MzResult<String> result = redisRpcService.homePosition(device.getServerId(), device, channelId, enabled, resetTime, presetIndex);
             callback.run(result.getCode(), result.getMsg(), result.getData());
             return;
         }
@@ -1368,7 +1368,7 @@ public class DeviceServiceImpl implements IDeviceService {
     public void deviceStatus(Device device, ErrorCallback<String> callback) {
 
         if (!userSetting.getServerId().equals(device.getServerId())) {
-            WVPResult<String> result = redisRpcService.deviceStatus(device.getServerId(), device);
+            MzResult<String> result = redisRpcService.deviceStatus(device.getServerId(), device);
             callback.run(result.getCode(), result.getMsg(), result.getData());
             return;
         }
@@ -1394,7 +1394,7 @@ public class DeviceServiceImpl implements IDeviceService {
     @Override
     public void alarm(Device device, String startPriority, String endPriority, String alarmMethod, String alarmType, String startTime, String endTime, ErrorCallback<Object> callback) {
         if (!userSetting.getServerId().equals(device.getServerId())) {
-            WVPResult<String> result = redisRpcService.alarm(device.getServerId(), device, startPriority, endPriority, alarmMethod, alarmType, startTime, endTime);
+            MzResult<String> result = redisRpcService.alarm(device.getServerId(), device, startPriority, endPriority, alarmMethod, alarmType, startTime, endTime);
             callback.run(result.getCode(), result.getMsg(), result.getData());
             return;
         }
@@ -1420,7 +1420,7 @@ public class DeviceServiceImpl implements IDeviceService {
     @Override
     public void deviceInfo(Device device, ErrorCallback<Object> callback) {
         if (!userSetting.getServerId().equals(device.getServerId())) {
-            WVPResult<Object> result = redisRpcService.deviceInfo(device.getServerId(), device);
+            MzResult<Object> result = redisRpcService.deviceInfo(device.getServerId(), device);
             callback.run(result.getCode(), result.getMsg(), result.getData());
             return;
         }
@@ -1437,7 +1437,7 @@ public class DeviceServiceImpl implements IDeviceService {
     @Override
     public void queryPreset(Device device, String channelId, ErrorCallback<List<Preset>> callback) {
         if (!userSetting.getServerId().equals(device.getServerId())) {
-            WVPResult<List<Preset>> result = redisRpcService.queryPreset(device.getServerId(), device, channelId);
+            MzResult<List<Preset>> result = redisRpcService.queryPreset(device.getServerId(), device, channelId);
             callback.run(result.getCode(), result.getMsg(), result.getData());
             return;
         }

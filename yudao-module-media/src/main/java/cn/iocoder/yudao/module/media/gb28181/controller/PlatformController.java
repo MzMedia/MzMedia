@@ -12,7 +12,7 @@ import cn.iocoder.yudao.module.media.gb28181.service.IPlatformChannelService;
 import cn.iocoder.yudao.module.media.gb28181.service.IPlatformService;
 import cn.iocoder.yudao.module.media.utils.DateUtil;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import com.github.pagehelper.PageInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -156,16 +156,16 @@ public class PlatformController {
     @Parameter(name = "id", description = "上级平台ID")
     @DeleteMapping("/delete")
     @ResponseBody
-    public WVPResult<?> deletePlatform(Integer id) {
+    public MzResult<?> deletePlatform(Integer id) {
 
         if (log.isDebugEnabled()) {
             log.debug("删除上级平台API调用");
         }
         boolean result = platformService.delete(id);
         if (result) {
-            return WVPResult.success();
+            return MzResult.success();
         }else {
-            return  WVPResult.fail(ErrorCode.ERROR100);
+            return  MzResult.fail(ErrorCode.ERROR100);
         }
     }
 

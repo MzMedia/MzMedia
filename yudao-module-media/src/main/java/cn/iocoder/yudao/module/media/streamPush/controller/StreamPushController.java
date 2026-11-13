@@ -20,7 +20,7 @@ import cn.iocoder.yudao.module.media.streamPush.service.IStreamPushPlayService;
 import cn.iocoder.yudao.module.media.streamPush.service.IStreamPushService;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
 import cn.iocoder.yudao.module.media.vmanager.bean.StreamContent;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import com.github.pagehelper.PageInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -107,36 +107,36 @@ public class StreamPushController {
 
     @PostMapping(value = "upload")
     @ResponseBody
-    public DeferredResult<ResponseEntity<WVPResult<Object>>> uploadChannelFile(@RequestParam(value = "file") MultipartFile file){
+    public DeferredResult<ResponseEntity<MzResult<Object>>> uploadChannelFile(@RequestParam(value = "file") MultipartFile file){
 
         // 最多处理文件一个小时
-        DeferredResult<ResponseEntity<WVPResult<Object>>> result = new DeferredResult<>(60*60*1000L);
+        DeferredResult<ResponseEntity<MzResult<Object>>> result = new DeferredResult<>(60*60*1000L);
         // 录像查询以channelId作为deviceId查询
         String key = DeferredResultHolder.UPLOAD_FILE_CHANNEL;
         String uuid = UUID.randomUUID().toString();
         log.info("通道导入文件类型: {}",file.getContentType() );
         if (file.isEmpty()) {
             log.warn("通道导入文件为空");
-            WVPResult<Object> wvpResult = new WVPResult<>();
-            wvpResult.setCode(-1);
-            wvpResult.setMsg("文件为空");
-            result.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(wvpResult));
+            MzResult<Object> mzResult = new MzResult<>();
+            mzResult.setCode(-1);
+            mzResult.setMsg("文件为空");
+            result.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mzResult));
             return result;
         }
         if (file.getContentType() == null) {
-            WVPResult<Object> wvpResult = new WVPResult<>();
-            wvpResult.setCode(-1);
-            wvpResult.setMsg("无法识别文件类型");
-            result.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(wvpResult));
+            MzResult<Object> mzResult = new MzResult<>();
+            mzResult.setCode(-1);
+            mzResult.setMsg("无法识别文件类型");
+            result.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mzResult));
             return result;
         }
         // 同时只处理一个文件
         if (resultHolder.exist(key, null)) {
             log.warn("已有导入任务正在执行");
-            WVPResult<Object> wvpResult = new WVPResult<>();
-            wvpResult.setCode(-1);
-            wvpResult.setMsg("已有导入任务正在执行");
-            result.setResult(ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(wvpResult));
+            MzResult<Object> mzResult = new MzResult<>();
+            mzResult.setCode(-1);
+            mzResult.setMsg("已有导入任务正在执行");
+            result.setResult(ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(mzResult));
             return result;
         }
 
@@ -145,10 +145,10 @@ public class StreamPushController {
             log.warn("通道导入超时，可能文件过大");
             RequestMessage msg = new RequestMessage();
             msg.setKey(key);
-            WVPResult<Object> wvpResult = new WVPResult<>();
-            wvpResult.setCode(-1);
-            wvpResult.setMsg("导入超时，可能文件过大");
-            msg.setData(wvpResult);
+            MzResult<Object> mzResult = new MzResult<>();
+            mzResult.setCode(-1);
+            mzResult.setMsg("导入超时，可能文件过大");
+            msg.setData(mzResult);
             resultHolder.invokeAllResult(msg);
         });
         //获取文件流
@@ -166,19 +166,19 @@ public class StreamPushController {
                         log.info("通道导入成功，存在重复App+Stream为{}个，存在国标ID为{}个", errorStreams.size(), errorGBs.size());
                         RequestMessage msg = new RequestMessage();
                         msg.setKey(key);
-                        WVPResult<Map<String, List<String>>> wvpResult = new WVPResult<>();
+                        MzResult<Map<String, List<String>>> mzResult = new MzResult<>();
                         if (errorStreams.isEmpty() && errorGBs.isEmpty()) {
-                            wvpResult.setCode(0);
-                            wvpResult.setMsg("成功");
+                            mzResult.setCode(0);
+                            mzResult.setMsg("成功");
                         }else {
-                            wvpResult.setCode(1);
-                            wvpResult.setMsg("导入成功。但是存在重复数据");
+                            mzResult.setCode(1);
+                            mzResult.setMsg("导入成功。但是存在重复数据");
                             Map<String, List<String>> errorData = new HashMap<>();
                             errorData.put("gbId", errorGBs);
                             errorData.put("stream", errorStreams);
-                            wvpResult.setData(errorData);
+                            mzResult.setData(errorData);
                         }
-                        msg.setData(wvpResult);
+                        msg.setData(mzResult);
                         resultHolder.invokeAllResult(msg);
                     })).build();
             ReadSheet readSheet = EasyExcel.readSheet(0).build();
@@ -188,19 +188,19 @@ public class StreamPushController {
             log.error("通道导入失败：行： {}， 列： {}, 内容： {}", e.getRowIndex(), e.getColumnIndex(), e.getCellData().getStringValue());
             RequestMessage msg = new RequestMessage();
             msg.setKey(key);
-            WVPResult<Object> wvpResult = new WVPResult<>();
-            wvpResult.setCode(ErrorCode.ERROR100.getCode());
-            wvpResult.setMsg("数据异常: " + e.getRowIndex() +"行" + e.getColumnIndex() + "列, 内容：" + e.getCellData().getStringValue() );
-            msg.setData(wvpResult);
+            MzResult<Object> mzResult = new MzResult<>();
+            mzResult.setCode(ErrorCode.ERROR100.getCode());
+            mzResult.setMsg("数据异常: " + e.getRowIndex() +"行" + e.getColumnIndex() + "列, 内容：" + e.getCellData().getStringValue() );
+            msg.setData(mzResult);
             resultHolder.invokeAllResult(msg);
         }catch (Exception e) {
             log.warn("通道导入失败：", e);
             RequestMessage msg = new RequestMessage();
             msg.setKey(key);
-            WVPResult<Object> wvpResult = new WVPResult<>();
-            wvpResult.setCode(ErrorCode.ERROR100.getCode());
-            wvpResult.setMsg("通道导入失败: " + e.getMessage() );
-            msg.setData(wvpResult);
+            MzResult<Object> mzResult = new MzResult<>();
+            mzResult.setCode(ErrorCode.ERROR100.getCode());
+            mzResult.setMsg("通道导入失败: " + e.getMessage() );
+            msg.setData(mzResult);
             resultHolder.invokeAllResult(msg);
         }
 
@@ -258,11 +258,11 @@ public class StreamPushController {
     @GetMapping(value = "/start")
     @ResponseBody
     @Operation(summary = "开始播放", security = @SecurityRequirement(name = JwtUtils.HEADER))
-    public DeferredResult<WVPResult<StreamContent>> start(HttpServletRequest request, Integer id){
+    public DeferredResult<MzResult<StreamContent>> start(HttpServletRequest request, Integer id){
         Assert.notNull(id, "推流ID不可为NULL");
-        DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
+        DeferredResult<MzResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
         result.onTimeout(()->{
-            WVPResult<StreamContent> fail = WVPResult.fail(ErrorCode.ERROR100.getCode(), "等待推流超时");
+            MzResult<StreamContent> fail = MzResult.fail(ErrorCode.ERROR100.getCode(), "等待推流超时");
             result.setResult(fail);
         });
         streamPushPlayService.start(id, (code, msg, streamInfo) -> {
@@ -278,7 +278,7 @@ public class StreamPushController {
                     }
                     streamInfo.changeStreamIp(host);
                 }
-                WVPResult<StreamContent> success = WVPResult.success(new StreamContent(streamInfo));
+                MzResult<StreamContent> success = MzResult.success(new StreamContent(streamInfo));
                 result.setResult(success);
             }
         }, null, null);

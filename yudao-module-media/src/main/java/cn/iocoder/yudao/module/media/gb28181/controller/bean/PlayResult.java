@@ -2,21 +2,21 @@ package cn.iocoder.yudao.module.media.gb28181.controller.bean;
 
 import cn.iocoder.yudao.module.media.common.StreamInfo;
 import cn.iocoder.yudao.module.media.gb28181.bean.Device;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import org.springframework.web.context.request.async.DeferredResult;
 
 public class PlayResult {
 
-    private DeferredResult<WVPResult<StreamInfo>> result;
+    private DeferredResult<MzResult<StreamInfo>> result;
     private String uuid;
 
     private Device device;
 
-    public DeferredResult<WVPResult<StreamInfo>> getResult() {
+    public DeferredResult<MzResult<StreamInfo>> getResult() {
         return result;
     }
 
-    public void setResult(DeferredResult<WVPResult<StreamInfo>> result) {
+    public void setResult(DeferredResult<MzResult<StreamInfo>> result) {
         this.result = result;
     }
 

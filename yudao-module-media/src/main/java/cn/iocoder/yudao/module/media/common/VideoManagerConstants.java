@@ -8,11 +8,11 @@ package cn.iocoder.yudao.module.media.common;
  */
 public class VideoManagerConstants {
 
-	public static final String WVP_SERVER_PREFIX = "VMP_SIGNALLING_SERVER_INFO_";
+	public static final String VIDEO_SERVER_PREFIX = "VMP_SIGNALLING_SERVER_INFO_";
 
-	public static final String WVP_SERVER_LIST = "VMP_SERVER_LIST";
+	public static final String VIDEO_SERVER_LIST = "VMP_SERVER_LIST";
 
-	public static final String WVP_SERVER_STREAM_PREFIX = "VMP_SIGNALLING_STREAM_";
+	public static final String VIDEO_SERVER_STREAM_PREFIX = "VMP_SIGNALLING_STREAM_";
 
 	public static final String MEDIA_SERVER_PREFIX = "VMP_MEDIA_SERVER_INFO:";
 
@@ -63,7 +63,7 @@ public class VideoManagerConstants {
 	/**
 	 * 流变化的通知
 	 */
-	public static final String WVP_MSG_STREAM_CHANGE_PREFIX = "WVP_MSG_STREAM_CHANGE_";
+	public static final String VIDEO_MSG_STREAM_CHANGE_PREFIX = "MZ_MSG_STREAM_CHANGE_";
 
 	/**
 	 * 接收推流设备的GPS变化通知
@@ -146,12 +146,17 @@ public class VideoManagerConstants {
 
 	//**************************    第三方  ****************************************
 
-	public static final String WVP_STREAM_GB_ID_PREFIX = "memberNo_";
-	public static final String WVP_STREAM_GPS_MSG_PREFIX = "WVP_STREAM_GPS_MSG_";
-	public static final String WVP_OTHER_SEND_RTP_INFO = "VMP_OTHER_SEND_RTP_INFO_";
-	public static final String WVP_OTHER_SEND_PS_INFO = "VMP_OTHER_SEND_PS_INFO_";
-	public static final String WVP_OTHER_RECEIVE_RTP_INFO = "VMP_OTHER_RECEIVE_RTP_INFO_";
-	public static final String WVP_OTHER_RECEIVE_PS_INFO = "VMP_OTHER_RECEIVE_PS_INFO_";
+	public static final String VIDEO_STREAM_GB_ID_PREFIX = "memberNo_";
+
+	public static final String VIDEO_STREAM_GPS_MSG_PREFIX = "MZ_STREAM_GPS_MSG_";
+
+	public static final String VIDEO_OTHER_SEND_RTP_INFO = "VMP_OTHER_SEND_RTP_INFO_";
+
+	public static final String VIDEO_OTHER_SEND_PS_INFO = "VMP_OTHER_SEND_PS_INFO_";
+
+	public static final String VIDEO_OTHER_RECEIVE_RTP_INFO = "VMP_OTHER_RECEIVE_RTP_INFO_";
+
+	public static final String VIDEO_OTHER_RECEIVE_PS_INFO = "VMP_OTHER_RECEIVE_PS_INFO_";
 
 	/**
 	 * Redis Const

@@ -83,7 +83,7 @@ public class UserSetting {
     private Boolean usePushingAsStatus = Boolean.FALSE;
 
     /**
-     * 使用来源请求ip作为streamIp,当且仅当你只有zlm节点它与wvp在一起的情况下开启
+     * 使用来源请求ip作为streamIp, 当且仅当仅有zlm单节点且与服务同机部署时开启
      */
     private Boolean useSourceIpAsStreamIp = Boolean.FALSE;
 
@@ -153,7 +153,7 @@ public class UserSetting {
     private String serverId = "000000";
 
     /**
-     * 云录像独立观看会话上限，按WVP实例计算，默认1024
+     * 云录像独立观看会话上限，按节点实例计算，默认1024
      */
     private Integer cloudRecordSessionMax = 1024;
 
@@ -211,7 +211,7 @@ public class UserSetting {
     private String jwkFile = null;
 
     /**
-     * wvp集群模式下如果注册向上级的wvp奔溃，则自动选择一个其他wvp继续注册到上级
+     * 集群模式下如果注册向上级的节点崩溃，则自动选择一个其他节点继续注册到上级
      */
     private boolean autoRegisterPlatform = false;
 

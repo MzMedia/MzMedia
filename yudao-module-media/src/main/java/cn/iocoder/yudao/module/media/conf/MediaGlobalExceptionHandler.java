@@ -2,7 +2,7 @@ package cn.iocoder.yudao.module.media.conf;
 
 import cn.iocoder.yudao.module.media.conf.exception.ControllerException;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +22,24 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class MediaGlobalExceptionHandler {
 
     /**
+     * 业务异常处理 (ruoyi-vue-pro 标准)
+     */
+    @ExceptionHandler(cn.iocoder.yudao.framework.common.exception.ServiceException.class)
+    public cn.iocoder.yudao.framework.common.pojo.CommonResult<?> serviceExceptionHandler(cn.iocoder.yudao.framework.common.exception.ServiceException e) {
+        log.info("[业务异常] 错误码: {}, 信息: {}", e.getCode(), e.getMessage());
+        return cn.iocoder.yudao.framework.common.pojo.CommonResult.error(e.getCode(), e.getMessage());
+    }
+
+    /**
      * 默认异常处理
      * @param e 异常
      * @return 统一返回结果
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public WVPResult<String> exceptionHandler(Exception e) {
+    public MzResult<String> exceptionHandler(Exception e) {
         log.error("[全局异常]： ", e);
-        return WVPResult.fail(ErrorCode.ERROR500.getCode(), e.getMessage());
+        return MzResult.fail(ErrorCode.ERROR500.getCode(), e.getMessage());
     }
 
     /**
@@ -40,8 +49,8 @@ public class MediaGlobalExceptionHandler {
      */
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public WVPResult<String> exceptionHandler(MaxUploadSizeExceededException e) {
-        return WVPResult.fail(ErrorCode.ERROR403.getCode(), "文件过大");
+    public MzResult<String> exceptionHandler(MaxUploadSizeExceededException e) {
+        return MzResult.fail(ErrorCode.ERROR403.getCode(), "文件过大");
     }
 
     /**
@@ -51,8 +60,8 @@ public class MediaGlobalExceptionHandler {
      */
     @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public WVPResult<String> exceptionHandler(NoResourceFoundException e) {
-        return WVPResult.fail(ErrorCode.ERROR404);
+    public MzResult<String> exceptionHandler(NoResourceFoundException e) {
+        return MzResult.fail(ErrorCode.ERROR404);
     }
 
     /**
@@ -62,8 +71,8 @@ public class MediaGlobalExceptionHandler {
      */
     @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public WVPResult<String> exceptionHandler(IllegalStateException e) {
-        return WVPResult.fail(ErrorCode.ERROR400);
+    public MzResult<String> exceptionHandler(IllegalStateException e) {
+        return MzResult.fail(ErrorCode.ERROR400);
     }
 
     /**
@@ -73,8 +82,8 @@ public class MediaGlobalExceptionHandler {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public WVPResult<String> exceptionHandler(HttpRequestMethodNotSupportedException e) {
-        return WVPResult.fail(ErrorCode.ERROR400);
+    public MzResult<String> exceptionHandler(HttpRequestMethodNotSupportedException e) {
+        return MzResult.fail(ErrorCode.ERROR400);
     }
     /**
      * 断言异常处理
@@ -83,8 +92,8 @@ public class MediaGlobalExceptionHandler {
      */
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.OK)
-    public WVPResult<String> exceptionHandler(IllegalArgumentException e) {
-        return WVPResult.fail(ErrorCode.ERROR100.getCode(), e.getMessage());
+    public MzResult<String> exceptionHandler(IllegalArgumentException e) {
+        return MzResult.fail(ErrorCode.ERROR100.getCode(), e.getMessage());
     }
 
 
@@ -95,8 +104,8 @@ public class MediaGlobalExceptionHandler {
      */
     @ExceptionHandler(ControllerException.class)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<WVPResult<String>> exceptionHandler(ControllerException e) {
-        return new ResponseEntity<>(WVPResult.fail(e.getCode(), e.getMsg()), HttpStatus.OK);
+    public ResponseEntity<MzResult<String>> exceptionHandler(ControllerException e) {
+        return new ResponseEntity<>(MzResult.fail(e.getCode(), e.getMsg()), HttpStatus.OK);
     }
 
     /**
@@ -106,7 +115,7 @@ public class MediaGlobalExceptionHandler {
      */
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<WVPResult<String>> exceptionHandler(BadCredentialsException e) {
-        return new ResponseEntity<>(WVPResult.fail(ErrorCode.ERROR100.getCode(), "认证失败"), HttpStatus.OK);
+    public ResponseEntity<MzResult<String>> exceptionHandler(BadCredentialsException e) {
+        return new ResponseEntity<>(MzResult.fail(ErrorCode.ERROR100.getCode(), "认证失败"), HttpStatus.OK);
     }
 }

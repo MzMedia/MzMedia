@@ -20,7 +20,7 @@ import cn.iocoder.yudao.module.media.media.service.IMediaServerService;
 import cn.iocoder.yudao.module.media.service.ISendRtpServerService;
 import cn.iocoder.yudao.module.media.service.redisMsg.IRedisRpcService;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -74,31 +74,31 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
     }
 
     @Override
-    public WVPResult<?> startSendRtp(String callId, SendRtpInfo sendRtpItem) {
-        log.info("[请求其他WVP] 开始推流，wvp：{}， {}/{}", sendRtpItem.getServerId(), sendRtpItem.getApp(), sendRtpItem.getStream());
+    public MzResult<?> startSendRtp(String callId, SendRtpInfo sendRtpItem) {
+        log.info("[请求其他节点] 开始推流，节点：{}， {}/{}", sendRtpItem.getServerId(), sendRtpItem.getApp(), sendRtpItem.getStream());
         RedisRpcRequest request = buildRequest("sendRtp/startSendRtp", callId);
         request.setToId(sendRtpItem.getServerId());
         RedisRpcResponse response = redisRpcConfig.request(request, 10, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
-    public WVPResult stopSendRtp(String callId) {
+    public MzResult stopSendRtp(String callId) {
         SendRtpInfo sendRtpItem = (SendRtpInfo)redisTemplate.opsForValue().get(callId);
         if (sendRtpItem == null) {
-            log.info("[请求其他WVP] 停止推流, 未找到redis中的发流信息， key：{}", callId);
-            return WVPResult.fail(ErrorCode.ERROR100.getCode(), "未找到发流信息");
+            log.info("[请求其他节点] 停止推流, 未找到redis中的发流信息， key：{}", callId);
+            return MzResult.fail(ErrorCode.ERROR100.getCode(), "未找到发流信息");
         }
-        log.info("[请求其他WVP] 停止推流，wvp：{}， {}/{}", sendRtpItem.getServerId(), sendRtpItem.getApp(), sendRtpItem.getStream());
+        log.info("[请求其他节点] 停止推流，节点：{}， {}/{}", sendRtpItem.getServerId(), sendRtpItem.getApp(), sendRtpItem.getStream());
         RedisRpcRequest request = buildRequest("sendRtp/stopSendRtp", callId);
         request.setToId(sendRtpItem.getServerId());
         RedisRpcResponse response = redisRpcConfig.request(request, 10, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
     public long waitePushStreamOnline(SendRtpInfo sendRtpItem, CommonCallback<Integer> callback) {
-        log.info("[请求所有WVP监听流上线] {}/{}", sendRtpItem.getApp(), sendRtpItem.getStream());
+        log.info("[请求所有节点监听流上线] {}/{}", sendRtpItem.getApp(), sendRtpItem.getStream());
         // 监听流上线。 流上线直接发送sendRtpItem消息给实际的信令处理者
         Hook hook = Hook.getInstance(HookType.on_media_arrival, sendRtpItem.getApp(), sendRtpItem.getStream(), null);
         RedisRpcRequest request = buildRequest("streamPush/waitePushStreamOnline", sendRtpItem);
@@ -123,10 +123,10 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
 
         redisRpcConfig.request(request, response -> {
             if (response.getBody() == null) {
-                log.info("[请求所有WVP监听流上线] 流上线,但是未找到发流信息：{}/{}", sendRtpItem.getApp(), sendRtpItem.getStream());
+                log.info("[请求所有节点监听流上线] 流上线,但是未找到发流信息：{}/{}", sendRtpItem.getApp(), sendRtpItem.getStream());
                 return;
             }
-            log.info("[请求所有WVP监听流上线] 流上线 {}/{}->{}", sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.toString());
+            log.info("[请求所有节点监听流上线] 流上线 {}/{}->{}", sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.toString());
 
             if (callback != null) {
                 callback.run(Integer.parseInt(response.getBody().toString()));
@@ -138,7 +138,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
 
     @Override
     public void stopWaitePushStreamOnline(SendRtpInfo sendRtpItem) {
-        log.info("[停止WVP监听流上线] {}/{}", sendRtpItem.getApp(), sendRtpItem.getStream());
+        log.info("[停止节点监听流上线] {}/{}", sendRtpItem.getApp(), sendRtpItem.getStream());
         Hook hook = Hook.getInstance(HookType.on_media_arrival, sendRtpItem.getApp(), sendRtpItem.getStream(), null);
         hookSubscribe.removeSubscribe(hook);
         RedisRpcRequest request = buildRequest("streamPush/stopWaitePushStreamOnline", sendRtpItem);
@@ -150,7 +150,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
     public void rtpSendStopped(String callId) {
         SendRtpInfo sendRtpItem = (SendRtpInfo)redisTemplate.opsForValue().get(callId);
         if (sendRtpItem == null) {
-            log.info("[停止WVP监听流上线] 未找到redis中的发流信息， key：{}", callId);
+            log.info("[停止节点监听流上线] 未找到redis中的发流信息， key：{}", callId);
             return;
         }
         RedisRpcRequest request = buildRequest("streamPush/rtpSendStopped", callId);
@@ -166,7 +166,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
     @Override
     public long onStreamOnlineEvent(String app, String stream, CommonCallback<StreamInfo> callback) {
 
-        log.info("[请求所有WVP监听流上线] {}/{}", app, stream);
+        log.info("[请求所有节点监听流上线] {}/{}", app, stream);
         // 监听流上线。 流上线直接发送sendRtpItem消息给实际的信令处理者
         Hook hook = Hook.getInstance(HookType.on_media_arrival, app, stream);
         StreamInfo streamInfoParam = new StreamInfo();
@@ -174,7 +174,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
         streamInfoParam.setStream(stream);
         RedisRpcRequest request = buildRequest("streamPush/onStreamOnlineEvent", streamInfoParam);
         hookSubscribe.addSubscribe(hook, (hookData) -> {
-            log.info("[请求所有WVP监听流上线] 监听流上线 {}/{}", app, stream);
+            log.info("[请求所有节点监听流上线] 监听流上线 {}/{}", app, stream);
             if (callback != null) {
                 callback.run(mediaServerService.getStreamInfoByAppAndStream(hookData.getMediaServer(),
                         app, stream, hookData.getMediaInfo(),
@@ -186,10 +186,10 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
 
         redisRpcConfig.request(request, response -> {
             if (response.getBody() == null) {
-                log.info("[请求所有WVP监听流上线] 流上线,但是未找到发流信息：{}/{}", app, stream);
+                log.info("[请求所有节点监听流上线] 流上线,但是未找到发流信息：{}/{}", app, stream);
                 return;
             }
-            log.info("[请求所有WVP监听流上线] 流上线 {}/{}", app, stream);
+            log.info("[请求所有节点监听流上线] 流上线 {}/{}", app, stream);
 
             if (callback != null) {
                 callback.run(JSON.parseObject(response.getBody().toString(), StreamInfo.class));
@@ -327,11 +327,11 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
     }
 
     @Override
-    public WVPResult<SyncStatus> devicesSync(String serverId, String deviceId) {
+    public MzResult<SyncStatus> devicesSync(String serverId, String deviceId) {
         RedisRpcRequest request = buildRequest("device/devicesSync", deviceId);
         request.setToId(serverId);
         RedisRpcResponse response = redisRpcConfig.request(request, 100, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
@@ -343,23 +343,23 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
     }
 
     @Override
-    public WVPResult<String> deviceBasicConfig(String serverId, Device device, BasicParam basicParam) {
+    public MzResult<String> deviceBasicConfig(String serverId, Device device, BasicParam basicParam) {
         RedisRpcRequest request = buildRequest("device/deviceBasicConfig", JSONObject.toJSONString(basicParam));
         request.setToId(serverId);
         RedisRpcResponse response = redisRpcConfig.request(request, 50, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
-    public WVPResult<String> deviceVideoParamConfig(String serverId, Device device, VideoParamOpt videoParamOpt) {
+    public MzResult<String> deviceVideoParamConfig(String serverId, Device device, VideoParamOpt videoParamOpt) {
         RedisRpcRequest request = buildRequest("device/deviceVideoParamConfig", JSONObject.toJSONString(videoParamOpt));
         request.setToId(serverId);
         RedisRpcResponse response = redisRpcConfig.request(request, 50, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
-    public WVPResult<Object> deviceConfigQuery(String serverId, Device device, String channelId, String configType) {
+    public MzResult<Object> deviceConfigQuery(String serverId, Device device, String channelId, String configType) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("deviceId", device.getDeviceId());
         jsonObject.put("channelId", channelId);
@@ -367,7 +367,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
         RedisRpcRequest request = buildRequest("device/deviceConfigQuery", jsonObject);
         request.setToId(serverId);
         RedisRpcResponse response = redisRpcConfig.request(request, 50, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
@@ -381,7 +381,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
     }
 
     @Override
-    public WVPResult<String> recordControl(String serverId, Device device, String channelId, String recordCmdStr) {
+    public MzResult<String> recordControl(String serverId, Device device, String channelId, String recordCmdStr) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("device", device.getDeviceId());
         jsonObject.put("channelId", channelId);
@@ -389,22 +389,22 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
         RedisRpcRequest request = buildRequest("device/record", jsonObject);
         request.setToId(serverId);
         RedisRpcResponse response = redisRpcConfig.request(request, 50, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
-    public WVPResult<String> guard(String serverId, Device device, String guardCmdStr) {
+    public MzResult<String> guard(String serverId, Device device, String guardCmdStr) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("device", device.getDeviceId());
         jsonObject.put("guardCmdStr", guardCmdStr);
         RedisRpcRequest request = buildRequest("device/guard", jsonObject);
         request.setToId(serverId);
         RedisRpcResponse response = redisRpcConfig.request(request, 50, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
-    public WVPResult<String> resetAlarm(String serverId, Device device, String channelId, String alarmMethod, String alarmType) {
+    public MzResult<String> resetAlarm(String serverId, Device device, String channelId, String alarmMethod, String alarmType) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("device", device.getDeviceId());
         jsonObject.put("channelId", channelId);
@@ -413,7 +413,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
         RedisRpcRequest request = buildRequest("device/resetAlarm", jsonObject);
         request.setToId(serverId);
         RedisRpcResponse response = redisRpcConfig.request(request, 50, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
@@ -427,7 +427,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
     }
 
     @Override
-    public WVPResult<String> homePosition(String serverId, Device device, String channelId, Boolean enabled, Integer resetTime, Integer presetIndex) {
+    public MzResult<String> homePosition(String serverId, Device device, String channelId, Boolean enabled, Integer resetTime, Integer presetIndex) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("device", device.getDeviceId());
         jsonObject.put("channelId", channelId);
@@ -437,7 +437,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
         RedisRpcRequest request = buildRequest("device/homePosition", jsonObject);
         request.setToId(serverId);
         RedisRpcResponse response = redisRpcConfig.request(request, 50, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
@@ -474,34 +474,34 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
     }
 
     @Override
-    public WVPResult<String> deviceStatus(String serverId, Device device) {
+    public MzResult<String> deviceStatus(String serverId, Device device) {
         RedisRpcRequest request = buildRequest("device/deviceStatus", device.getDeviceId());
         request.setToId(serverId);
         RedisRpcResponse response = redisRpcConfig.request(request, 50, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
-    public WVPResult<Object> deviceInfo(String serverId, Device device) {
+    public MzResult<Object> deviceInfo(String serverId, Device device) {
         RedisRpcRequest request = buildRequest("device/info", device.getDeviceId());
         request.setToId(serverId);
         RedisRpcResponse response = redisRpcConfig.request(request, 50, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
-    public WVPResult<List<Preset>> queryPreset(String serverId, Device device, String channelId) {
+    public MzResult<List<Preset>> queryPreset(String serverId, Device device, String channelId) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("device", device.getDeviceId());
         jsonObject.put("channelId", channelId);
         RedisRpcRequest request = buildRequest("device/queryPreset", jsonObject);
         request.setToId(serverId);
         RedisRpcResponse response = redisRpcConfig.request(request, 60000, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 
     @Override
-    public WVPResult<String> alarm(String serverId, Device device, String startPriority, String endPriority,
+    public MzResult<String> alarm(String serverId, Device device, String startPriority, String endPriority,
                                    String alarmMethod, String alarmType, String startTime, String endTime) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("device", device.getDeviceId());
@@ -515,6 +515,6 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
         RedisRpcRequest request = buildRequest("device/alarm", jsonObject);
         request.setToId(serverId);
         RedisRpcResponse response = redisRpcConfig.request(request, 50, TimeUnit.MILLISECONDS);
-        return JSON.parseObject(response.getBody().toString(), WVPResult.class);
+        return JSON.parseObject(response.getBody().toString(), MzResult.class);
     }
 }

@@ -120,7 +120,7 @@ public class ByeRequestProcessor extends SIPRequestProcessorParent implements In
 			log.info("[收到bye] 停止推流：{}, 媒体节点： {}", streamId, sendRtpItem.getMediaServerId());
 
 			if (sendRtpItem.getPlayType().equals(InviteStreamType.PUSH)) {
-				// 不是本平台的就发送redis消息让其他wvp停止发流
+				// 不是本平台的就发送redis消息让其他节点停止发流
 				Platform platform = platformService.queryPlatformByServerGBId(sendRtpItem.getTargetId());
 				if (platform != null) {
 					redisCatchStorage.sendPlatformStopPlayMsg(sendRtpItem, platform, channel);
@@ -178,7 +178,7 @@ public class ByeRequestProcessor extends SIPRequestProcessorParent implements In
 					}
 				}
 			} else {
-				// TODO 流再其他wvp上时应该通知这个wvp停止推流和发送BYE
+				// TODO 流在其他节点上时应该通知该节点停止推流和发送BYE
 
 			}
 		}

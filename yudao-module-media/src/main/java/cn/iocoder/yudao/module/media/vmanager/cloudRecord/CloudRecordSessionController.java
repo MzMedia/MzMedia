@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/** 通过既有WVP认证提供文件会话控制，所有媒体身份由服务端生成。 */
+/** 提供文件会话控制，所有媒体身份由服务端生成。 */
 @RestController
 @RequestMapping({"/admin-api/api/cloud/record/sessions", "/api/cloud/record/sessions"})
 @Tag(name = "云录像独立会话")

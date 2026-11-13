@@ -4,7 +4,7 @@ import cn.iocoder.yudao.module.media.conf.security.JwtUtils;
 import cn.iocoder.yudao.module.media.gb28181.bean.*;
 import cn.iocoder.yudao.module.media.gb28181.service.IDeviceService;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -27,7 +27,7 @@ public class DeviceConfig {
     @GetMapping("/set/basicParam")
     @Operation(summary = "设置基本配置", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "basicParam", description = "基础配置参数", required = true)
-    public DeferredResult<WVPResult<String>> homePositionApi(BasicParam basicParam) {
+    public DeferredResult<MzResult<String>> homePositionApi(BasicParam basicParam) {
         if (log.isDebugEnabled()) {
             log.debug("基本配置设置命令API调用");
         }
@@ -36,14 +36,14 @@ public class DeviceConfig {
         Device device = deviceService.getDeviceByDeviceId(basicParam.getDeviceId());
         Assert.notNull(device, "设备不存在");
 
-        DeferredResult<WVPResult<String>> deferredResult = new DeferredResult<>();
+        DeferredResult<MzResult<String>> deferredResult = new DeferredResult<>();
         deviceService.deviceBasicConfig(device, basicParam, (code, msg, data) -> {
-            deferredResult.setResult(new WVPResult<>(code, msg, data));
+            deferredResult.setResult(new MzResult<>(code, msg, data));
         });
 
         deferredResult.onTimeout(() -> {
             log.warn("[设备配置] 超时, {}", device.getDeviceId());
-            deferredResult.setResult(WVPResult.fail(ErrorCode.ERROR100.getCode(), "超时"));
+            deferredResult.setResult(MzResult.fail(ErrorCode.ERROR100.getCode(), "超时"));
         });
         return deferredResult;
     }
@@ -51,7 +51,7 @@ public class DeviceConfig {
     @GetMapping("/set/videoParamOpt")
     @Operation(summary = "设置视频参数", security = @SecurityRequirement(name = JwtUtils.HEADER))
     @Parameter(name = "videoParamOpt", description = "视频参数", required = true)
-    public DeferredResult<WVPResult<String>> setVideoParamOpt(VideoParamOpt videoParamOpt) {
+    public DeferredResult<MzResult<String>> setVideoParamOpt(VideoParamOpt videoParamOpt) {
         if (log.isDebugEnabled()) {
             log.debug("视频参数设置命令API调用");
         }
@@ -60,14 +60,14 @@ public class DeviceConfig {
         Device device = deviceService.getDeviceByDeviceId(videoParamOpt.getDeviceId());
         Assert.notNull(device, "设备不存在");
 
-        DeferredResult<WVPResult<String>> deferredResult = new DeferredResult<>();
+        DeferredResult<MzResult<String>> deferredResult = new DeferredResult<>();
         deviceService.deviceVideoParamConfig(device, videoParamOpt, (code, msg, data) -> {
-            deferredResult.setResult(new WVPResult<>(code, msg, data));
+            deferredResult.setResult(new MzResult<>(code, msg, data));
         });
 
         deferredResult.onTimeout(() -> {
             log.warn("[设备配置] 超时, {}", device.getDeviceId());
-            deferredResult.setResult(WVPResult.fail(ErrorCode.ERROR100.getCode(), "超时"));
+            deferredResult.setResult(MzResult.fail(ErrorCode.ERROR100.getCode(), "超时"));
         });
         return deferredResult;
     }
@@ -76,19 +76,19 @@ public class DeviceConfig {
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @Parameter(name = "channelId", description = "通道国标编号")
     @GetMapping("/query/basicParam")
-    public DeferredResult<WVPResult<BasicParam>> queryBasicParam(String deviceId,
+    public DeferredResult<MzResult<BasicParam>> queryBasicParam(String deviceId,
                                                                   @RequestParam(required = false) String channelId) {
         Device device = deviceService.getDeviceByDeviceId(deviceId);
         Assert.notNull(device, "设备不存在");
-        DeferredResult<WVPResult<BasicParam>> deferredResult = new DeferredResult<>();
+        DeferredResult<MzResult<BasicParam>> deferredResult = new DeferredResult<>();
         deviceService.deviceConfigQuery(device, channelId, BasicParam.class, (code, msg, data) -> {
             data.setDeviceId(deviceId);
             data.setChannelId(channelId);
-            deferredResult.setResult(new WVPResult<>(code, msg, data));
+            deferredResult.setResult(new MzResult<>(code, msg, data));
         });
         deferredResult.onTimeout(() -> {
             log.warn("[获取设备配置] 超时, {}", device.getDeviceId());
-            deferredResult.setResult(WVPResult.fail(ErrorCode.ERROR100.getCode(), "超时"));
+            deferredResult.setResult(MzResult.fail(ErrorCode.ERROR100.getCode(), "超时"));
         });
         return deferredResult;
     }
@@ -97,17 +97,17 @@ public class DeviceConfig {
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @Parameter(name = "channelId", description = "通道国标编号")
     @GetMapping("/query/videoParamOpt")
-    public DeferredResult<WVPResult<VideoParamOpt>> queryVideoParamOpt(String deviceId,
+    public DeferredResult<MzResult<VideoParamOpt>> queryVideoParamOpt(String deviceId,
                                                                         @RequestParam(required = false) String channelId) {
         Device device = deviceService.getDeviceByDeviceId(deviceId);
         Assert.notNull(device, "设备不存在");
-        DeferredResult<WVPResult<VideoParamOpt>> deferredResult = new DeferredResult<>();
+        DeferredResult<MzResult<VideoParamOpt>> deferredResult = new DeferredResult<>();
         deviceService.deviceConfigQuery(device, channelId, VideoParamOpt.class, (code, msg, data) -> {
-            deferredResult.setResult(new WVPResult<>(code, msg, data));
+            deferredResult.setResult(new MzResult<>(code, msg, data));
         });
         deferredResult.onTimeout(() -> {
             log.warn("[获取设备配置] 超时, {}", device.getDeviceId());
-            deferredResult.setResult(WVPResult.fail(ErrorCode.ERROR100.getCode(), "超时"));
+            deferredResult.setResult(MzResult.fail(ErrorCode.ERROR100.getCode(), "超时"));
         });
         return deferredResult;
     }
@@ -116,17 +116,17 @@ public class DeviceConfig {
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @Parameter(name = "channelId", description = "通道国标编号")
     @GetMapping("/query/svacEncodeConfig")
-    public DeferredResult<WVPResult<SVACEncodeConfig>> querySVACEncodeConfig(String deviceId,
+    public DeferredResult<MzResult<SVACEncodeConfig>> querySVACEncodeConfig(String deviceId,
                                                                               @RequestParam(required = false) String channelId) {
         Device device = deviceService.getDeviceByDeviceId(deviceId);
         Assert.notNull(device, "设备不存在");
-        DeferredResult<WVPResult<SVACEncodeConfig>> deferredResult = new DeferredResult<>();
+        DeferredResult<MzResult<SVACEncodeConfig>> deferredResult = new DeferredResult<>();
         deviceService.deviceConfigQuery(device, channelId, SVACEncodeConfig.class, (code, msg, data) -> {
-            deferredResult.setResult(new WVPResult<>(code, msg, data));
+            deferredResult.setResult(new MzResult<>(code, msg, data));
         });
         deferredResult.onTimeout(() -> {
             log.warn("[获取设备配置] 超时, {}", device.getDeviceId());
-            deferredResult.setResult(WVPResult.fail(ErrorCode.ERROR100.getCode(), "超时"));
+            deferredResult.setResult(MzResult.fail(ErrorCode.ERROR100.getCode(), "超时"));
         });
         return deferredResult;
     }
@@ -135,17 +135,17 @@ public class DeviceConfig {
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @Parameter(name = "channelId", description = "通道国标编号")
     @GetMapping("/query/svacDecodeConfig")
-    public DeferredResult<WVPResult<SVACDecodeConfig>> querySVACDecodeConfig(String deviceId,
+    public DeferredResult<MzResult<SVACDecodeConfig>> querySVACDecodeConfig(String deviceId,
                                                                               @RequestParam(required = false) String channelId) {
         Device device = deviceService.getDeviceByDeviceId(deviceId);
         Assert.notNull(device, "设备不存在");
-        DeferredResult<WVPResult<SVACDecodeConfig>> deferredResult = new DeferredResult<>();
+        DeferredResult<MzResult<SVACDecodeConfig>> deferredResult = new DeferredResult<>();
         deviceService.deviceConfigQuery(device, channelId, SVACDecodeConfig.class, (code, msg, data) -> {
-            deferredResult.setResult(new WVPResult<>(code, msg, data));
+            deferredResult.setResult(new MzResult<>(code, msg, data));
         });
         deferredResult.onTimeout(() -> {
             log.warn("[获取设备配置] 超时, {}", device.getDeviceId());
-            deferredResult.setResult(WVPResult.fail(ErrorCode.ERROR100.getCode(), "超时"));
+            deferredResult.setResult(MzResult.fail(ErrorCode.ERROR100.getCode(), "超时"));
         });
         return deferredResult;
     }

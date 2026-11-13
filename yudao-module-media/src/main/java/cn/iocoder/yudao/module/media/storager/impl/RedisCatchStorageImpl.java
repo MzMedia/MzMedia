@@ -71,27 +71,27 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
 
     @Override
-    public void updateWVPInfo(ServerInfo serverInfo, int time) {
+    public void updateServerInfo(ServerInfo serverInfo, int time) {
         serverInfo.setServerId(userSetting.getServerId());
-        String key = VideoManagerConstants.WVP_SERVER_PREFIX + userSetting.getServerId();
+        String key = VideoManagerConstants.VIDEO_SERVER_PREFIX + userSetting.getServerId();
         Duration duration = Duration.ofSeconds(time);
         redisTemplate.opsForValue().set(key, serverInfo, duration);
         // 设置平台的分数值
-        String setKey = VideoManagerConstants.WVP_SERVER_LIST;
+        String setKey = VideoManagerConstants.VIDEO_SERVER_LIST;
         // 首次设置就设置为0, 后续值越小说明越是最近启动的
         redisTemplate.opsForZSet().add(setKey, userSetting.getServerId(), System.currentTimeMillis());
     }
 
     @Override
-    public void removeOfflineWVPInfo(String serverId) {
-        String setKey = VideoManagerConstants.WVP_SERVER_LIST;
+    public void removeOfflineServerInfo(String serverId) {
+        String setKey = VideoManagerConstants.VIDEO_SERVER_LIST;
         // 首次设置就设置为0, 后续值越小说明越是最近启动的
         redisTemplate.opsForZSet().remove(setKey, serverId);
     }
 
     @Override
     public void sendStreamChangeMsg(String type, JSONObject jsonObject) {
-        String key = VideoManagerConstants.WVP_MSG_STREAM_CHANGE_PREFIX + type;
+        String key = VideoManagerConstants.VIDEO_MSG_STREAM_CHANGE_PREFIX + type;
         log.info("[redis 流变化事件] 发送 {}: {}", key, jsonObject.toString());
         redisTemplate.convertAndSend(key, jsonObject);
     }
@@ -100,7 +100,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
     public void addStream(MediaServer mediaServerItem, String type, String app, String streamId, MediaInfo mediaInfo) {
         // 查找是否使用了callID
         StreamAuthorityInfo streamAuthorityInfo = getStreamAuthorityInfo(app, streamId);
-        String key = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX  + userSetting.getServerId() + "_" + type.toUpperCase() + "_" + app + "_" + streamId + "_" + mediaServerItem.getId();
+        String key = VideoManagerConstants.VIDEO_SERVER_STREAM_PREFIX  + userSetting.getServerId() + "_" + type.toUpperCase() + "_" + app + "_" + streamId + "_" + mediaServerItem.getId();
         if (streamAuthorityInfo != null) {
             mediaInfo.setCallId(streamAuthorityInfo.getCallId());
         }
@@ -109,13 +109,13 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
     @Override
     public void removeStream(String mediaServerId, String type, String app, String streamId) {
-        String key = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_" + type.toUpperCase() + "_"  + app + "_" + streamId + "_" + mediaServerId;
+        String key = VideoManagerConstants.VIDEO_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_" + type.toUpperCase() + "_"  + app + "_" + streamId + "_" + mediaServerId;
         redisTemplate.delete(key);
     }
 
     @Override
     public void removeStream(String mediaServerId, String type) {
-        String key = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_" + type.toUpperCase() + "_*_*_" + mediaServerId;
+        String key = VideoManagerConstants.VIDEO_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_" + type.toUpperCase() + "_*_*_" + mediaServerId;
         List<Object> streams = RedisUtil.scan(redisTemplate, key);
         for (Object stream : streams) {
             redisTemplate.delete((String) stream);
@@ -125,7 +125,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
     @Override
     public List<MediaInfo> getStreams(String mediaServerId, String type) {
         List<MediaInfo> result = new ArrayList<>();
-        String key = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_" + type.toUpperCase() + "_*_*_" + mediaServerId;
+        String key = VideoManagerConstants.VIDEO_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_" + type.toUpperCase() + "_*_*_" + mediaServerId;
         List<Object> streams = RedisUtil.scan(redisTemplate, key);
         for (Object stream : streams) {
             String mediaInfoJson = (String)redisTemplate.opsForValue().get(stream);
@@ -201,7 +201,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
     @Override
     public void updateGpsMsgInfo(GPSMsgInfo gpsMsgInfo) {
-        String key = VideoManagerConstants.WVP_STREAM_GPS_MSG_PREFIX + userSetting.getServerId();
+        String key = VideoManagerConstants.VIDEO_STREAM_GPS_MSG_PREFIX + userSetting.getServerId();
         Duration duration = Duration.ofSeconds(60L);
         gpsMsgInfo.setStored(false);
         redisTemplate.opsForHash().put(key, gpsMsgInfo.getId(),gpsMsgInfo);
@@ -211,13 +211,13 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
     @Override
     public GPSMsgInfo getGpsMsgInfo(String channelId) {
-        String key = VideoManagerConstants.WVP_STREAM_GPS_MSG_PREFIX + userSetting.getServerId();
+        String key = VideoManagerConstants.VIDEO_STREAM_GPS_MSG_PREFIX + userSetting.getServerId();
         return (GPSMsgInfo) redisTemplate.opsForHash().get(key, channelId);
     }
 
     @Override
     public List<GPSMsgInfo> getAllGpsMsgInfo() {
-        String key = VideoManagerConstants.WVP_STREAM_GPS_MSG_PREFIX + userSetting.getServerId();
+        String key = VideoManagerConstants.VIDEO_STREAM_GPS_MSG_PREFIX + userSetting.getServerId();
         List<GPSMsgInfo> result = new ArrayList<>();
         List<Object> values = redisTemplate.opsForHash().values(key);
         for (Object value : values) {
@@ -262,7 +262,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
     @Override
     public MediaInfo getStreamInfo(String app, String streamId, String mediaServerId) {
-        String scanKey = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX  + userSetting.getServerId() + "_*_" + app + "_" + streamId + "_" + mediaServerId;
+        String scanKey = VideoManagerConstants.VIDEO_SERVER_STREAM_PREFIX  + userSetting.getServerId() + "_*_" + app + "_" + streamId + "_" + mediaServerId;
 
         MediaInfo result = null;
         List<Object> keys = RedisUtil.scan(redisTemplate, scanKey);
@@ -277,7 +277,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
     @Override
     public MediaInfo getProxyStream(String app, String streamId) {
-        String scanKey = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX  + userSetting.getServerId() + "_PULL_" + app + "_" + streamId + "_*";
+        String scanKey = VideoManagerConstants.VIDEO_SERVER_STREAM_PREFIX  + userSetting.getServerId() + "_PULL_" + app + "_" + streamId + "_*";
 
         MediaInfo result = null;
         List<Object> keys = RedisUtil.scan(redisTemplate, scanKey);
@@ -395,13 +395,13 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
     @Override
     public int getPushStreamCount(String id) {
-        String key = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_PUSH_*_*_" + id;
+        String key = VideoManagerConstants.VIDEO_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_PUSH_*_*_" + id;
         return RedisUtil.scan(redisTemplate, key).size();
     }
 
     @Override
     public int getProxyStreamCount(String id) {
-        String key = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_PULL_*_*_" + id;
+        String key = VideoManagerConstants.VIDEO_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_PULL_*_*_" + id;
         return RedisUtil.scan(redisTemplate, key).size();
     }
 
@@ -516,7 +516,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
     @Override
     public void sendStartSendRtp(SendRtpInfo sendRtpItem) {
         String key = VideoManagerConstants.START_SEND_PUSH_STREAM + sendRtpItem.getApp() + "_" + sendRtpItem.getStream();
-        log.info("[redis发送通知] 通知其他WVP推流 {}: {}/{}->{}", key, sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getTargetId());
+        log.info("[redis发送通知] 通知其他节点推流 {}: {}/{}->{}", key, sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getTargetId());
         redisTemplate.convertAndSend(key, JSON.toJSON(sendRtpItem));
     }
 
@@ -529,13 +529,13 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
     @Override
     public ServerInfo queryServerInfo(String serverId) {
-        String key = VideoManagerConstants.WVP_SERVER_PREFIX + serverId;
+        String key = VideoManagerConstants.VIDEO_SERVER_PREFIX + serverId;
         return (ServerInfo)redisTemplate.opsForValue().get(key);
     }
 
     @Override
     public List<ServerInfo> queryOnlineServerInfoList() {
-        String listKey = VideoManagerConstants.WVP_SERVER_LIST;
+        String listKey = VideoManagerConstants.VIDEO_SERVER_LIST;
         Set<Object> serverIds = redisTemplate.opsForZSet().range(listKey, 0, -1);
         if (serverIds == null || serverIds.isEmpty()) {
             return Collections.emptyList();
@@ -563,11 +563,11 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
     @Override
     public String chooseOneServer(String serverId) {
-        String key = VideoManagerConstants.WVP_SERVER_LIST;
+        String key = VideoManagerConstants.VIDEO_SERVER_LIST;
         if (serverId != null) {
             redisTemplate.opsForZSet().remove(key, serverId);
         }
-        // 获取得分最高的，也是最后更新时间到redis的wvp，这样可以避免读取到离线的wvp，同时时间最新也一定程度代表最健康的
+        // 获取得分最高的，也是最后更新时间到redis的节点，这样可以避免读取到离线的节点，同时时间最新也一定程度代表最健康的
         Set<Object> range = redisTemplate.opsForZSet().reverseRange(key, 0, 0);
         if (range == null || range.isEmpty()) {
             return null;

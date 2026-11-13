@@ -41,7 +41,7 @@ public class InviteInfo {
      * <p>为 null 表示该条目不受定时清理约束（例如正在进行的点播/回放/下载）。
      * 录像下载在流离开后仍需要保留一段时间，等待 on_record_mp4 写入下载地址，
      * 此时把本字段设置为「当前时间 + 保留窗口」，由 {@code InviteStreamServiceImpl.execute()}
-     * 负责到期回收，避免 WVP 重启导致延时任务丢失而永久泄漏。</p>
+     * 负责到期回收，避免服务节点重启导致延时任务丢失而永久泄漏。</p>
      */
     private Long cleanTime;
 

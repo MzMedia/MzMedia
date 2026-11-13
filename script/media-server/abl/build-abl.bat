@@ -10,7 +10,8 @@ cd /d "%SCRIPT_DIR%"
 
 set "IMAGE_NAME=%~1"
 if "%IMAGE_NAME%"=="" set "IMAGE_NAME=ablmediaserver:latest"
-set "DOWNLOAD_URL=https://github.com/zhichao281/ABLMediaServer/releases/download/2025-10-14/Linux-webrtc.zip"
+set "DOWNLOAD_URL=https://gh-proxy.com/https://github.com/zhichao281/ABLMediaServer/releases/download/2025-10-14/Linux-webrtc.zip"
+set "OFFICIAL_URL=https://github.com/zhichao281/ABLMediaServer/releases/download/2025-10-14/Linux-webrtc.zip"
 
 echo ==========================================================
 echo  正在准备构建 ABLMediaServer 镜像: %IMAGE_NAME%
@@ -18,8 +19,7 @@ echo ==========================================================
 
 if not exist "Linux-webrtc.zip" if not exist "ABLMediaServer" (
     echo [提示] 本地未检测到 Linux-webrtc.zip，尝试预下载以加速构建...
-    echo 下载地址: %DOWNLOAD_URL%
-    powershell -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', 'Linux-webrtc.zip'); Write-Host '[成功] 下载完成' } catch { Write-Host '[警告] 下载遇到异常，将交由 Dockerfile 自动构建下载: ' $_.Exception.Message }"
+    powershell -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object Net.WebClient).DownloadFile('%DOWNLOAD_URL%', 'Linux-webrtc.zip'); Write-Host '[成功] 通过镜像加速源下载完成' } catch { try { (New-Object Net.WebClient).DownloadFile('%OFFICIAL_URL%', 'Linux-webrtc.zip'); Write-Host '[成功] 通过官方源下载完成' } catch { Write-Host '[警告] 下载遇到异常，将交由 Dockerfile 自动构建下载: ' $_.Exception.Message } }"
 )
 
 echo.

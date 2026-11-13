@@ -4,7 +4,7 @@ import cn.iocoder.yudao.module.media.common.CommonCallback;
 import cn.iocoder.yudao.module.media.gb28181.bean.*;
 import cn.iocoder.yudao.module.media.service.bean.ErrorCallback;
 import cn.iocoder.yudao.module.media.vmanager.bean.ResourceBaseInfo;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import com.github.pagehelper.PageInfo;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.transaction.annotation.Transactional;
@@ -167,7 +167,7 @@ public interface IDeviceService {
 
     void subscribeMobilePosition(int id, int cycle, int interval);
 
-    WVPResult<SyncStatus> devicesSync(Device device);
+    MzResult<SyncStatus> devicesSync(Device device);
 
     void deviceBasicConfig(Device device, BasicParam basicParam, ErrorCallback<String> callback);
 

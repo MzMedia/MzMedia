@@ -18,7 +18,7 @@ import cn.iocoder.yudao.module.media.gb28181.transmit.cmd.impl.SIPCommander;
 import cn.iocoder.yudao.module.media.service.bean.InviteErrorCode;
 import cn.iocoder.yudao.module.media.vmanager.bean.ErrorCode;
 import cn.iocoder.yudao.module.media.vmanager.bean.StreamContent;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -77,14 +77,14 @@ public class PlaybackController {
 	@Parameter(name = "startTime", description = "开始时间", required = true)
 	@Parameter(name = "endTime", description = "结束时间", required = true)
 	@GetMapping("/start/{deviceId}/{channelId}")
-	public DeferredResult<WVPResult<StreamContent>> start(HttpServletRequest request, @PathVariable String deviceId, @PathVariable String channelId,
+	public DeferredResult<MzResult<StreamContent>> start(HttpServletRequest request, @PathVariable String deviceId, @PathVariable String channelId,
 														  String startTime, String endTime) {
 
 		log.info("[录像回放] deviceId: {}, channelId: {}, startTime: {}, endTime: {}", deviceId, channelId, startTime, endTime);
 
 		String uuid = UUID.randomUUID().toString();
 		String key = DeferredResultHolder.CALLBACK_CMD_PLAYBACK + deviceId + channelId;
-		DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
+		DeferredResult<MzResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
 		resultHolder.put(key, uuid, result);
 
 		RequestMessage requestMessage = new RequestMessage();
@@ -104,10 +104,10 @@ public class PlaybackController {
 		playService.playBack(device, channel, startTime, endTime,
 				(code, msg, data)->{
 
-					WVPResult<StreamContent> wvpResult = new WVPResult<>();
+					MzResult<StreamContent> mzResult = new MzResult<>();
 					if (code == InviteErrorCode.SUCCESS.getCode()) {
-						wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-						wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
+						mzResult.setCode(ErrorCode.SUCCESS.getCode());
+						mzResult.setMsg(ErrorCode.SUCCESS.getMsg());
 
 						if (data != null) {
 							StreamInfo streamInfo = (StreamInfo)data;
@@ -122,13 +122,13 @@ public class PlaybackController {
 								}
 								streamInfo.changeStreamIp(host);
 							}
-							wvpResult.setData(new StreamContent(streamInfo));
+							mzResult.setData(new StreamContent(streamInfo));
 						}
 					}else {
-						wvpResult.setCode(code);
-						wvpResult.setMsg(msg);
+						mzResult.setCode(code);
+						mzResult.setMsg(msg);
 					}
-					requestMessage.setData(wvpResult);
+					requestMessage.setData(mzResult);
 					resultHolder.invokeResult(requestMessage);
 				});
 

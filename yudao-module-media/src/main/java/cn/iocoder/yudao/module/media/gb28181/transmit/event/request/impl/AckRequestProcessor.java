@@ -19,7 +19,7 @@ import cn.iocoder.yudao.module.media.media.service.IMediaServerService;
 import cn.iocoder.yudao.module.media.service.ISendRtpServerService;
 import cn.iocoder.yudao.module.media.service.redisMsg.IRedisRpcService;
 import cn.iocoder.yudao.module.media.storager.IRedisCatchStorage;
-import cn.iocoder.yudao.module.media.vmanager.bean.WVPResult;
+import cn.iocoder.yudao.module.media.vmanager.bean.MzResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,8 +115,8 @@ public class AckRequestProcessor extends SIPRequestProcessorParent implements In
 		if (parentPlatform != null) {
 			DeviceChannel deviceChannel = deviceChannelService.getOneForSourceById(sendRtpItem.getChannelId());
 			if (!userSetting.getServerId().equals(sendRtpItem.getServerId())) {
-				WVPResult<?> wvpResult = redisRpcService.startSendRtp(callIdHeader.getCallId(), sendRtpItem);
-				if (wvpResult.getCode() == 0) {
+				MzResult<?> mzResult = redisRpcService.startSendRtp(callIdHeader.getCallId(), sendRtpItem);
+				if (mzResult.getCode() == 0) {
 					redisCatchStorage.sendPlatformStartPlayMsg(sendRtpItem, deviceChannel, parentPlatform);
 				}
 			} else {
@@ -128,7 +128,7 @@ public class AckRequestProcessor extends SIPRequestProcessorParent implements In
 							mediaServerService.startSendRtp(mediaServer, sendRtpItem);
 						}
 					}else {
-						// mediaInfo 在集群的其他wvp里
+						// mediaInfo 在集群的其他视频节点里
 
 					}
 

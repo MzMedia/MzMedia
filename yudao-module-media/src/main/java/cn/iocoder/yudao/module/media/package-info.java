@@ -1,4 +1,5 @@
 /**
- * 视频监控模块，深度融合 WVP-GB28181-Pro 视频监控能力。
+ * MzMedia 视频流媒体与监控中心 (mz-module-video)
+ * 深度遵循 ruoyi-vue-pro 规范设计，支持 GB28181/ONVIF/海康/大华/萤石/JT1078 等多协议流媒体调度
  */
 package cn.iocoder.yudao.module.media;

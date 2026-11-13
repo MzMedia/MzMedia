@@ -232,7 +232,7 @@ public class DeviceChannel extends CommonGBChannel {
 					|| deviceChannel.getCivilCode().length() > 8 ){
 				deviceChannel.setCivilCode(null);
 			}
-			// 此处对于不在wvp缓存中的行政区划,默认直接存储.保证即使出现wvp的行政区划缓存过老,也可以通过用户自主创建的方式正常使用系统
+			// 此处对于不在系统缓存中的行政区划,默认直接存储.保证即使出现行政区划缓存过老,也可以通过用户自主创建的方式正常使用系统
 		}
 		GbCode gbCode = GbCode.decode(deviceChannel.getDeviceId());
 		if (gbCode != null && "138".equals(gbCode.getTypeCode())) {

@@ -663,7 +663,7 @@ public class InviteStreamServiceImpl implements IInviteStreamService {
         if (Math.abs(streamCreateMs - System.currentTimeMillis()) > 24 * 3600 * 1000L) {
             return false;
         }
-        // 流实例创建时间比当前会话创建时间至少早2秒(容忍ZLM与WVP的时钟偏差)，说明该注销事件属于旧会话
+        // 流实例创建时间比当前会话创建时间至少早2秒(容忍ZLM与视频服务的时钟偏差)，说明该注销事件属于旧会话
         return inviteInfo.getCreateTime() - streamCreateMs > 2000L;
     }
 }
