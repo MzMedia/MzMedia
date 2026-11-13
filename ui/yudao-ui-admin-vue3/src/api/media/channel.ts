@@ -31,7 +31,7 @@ export interface MediaChannelVO {
   customName?: string
   subCount?: number
   streamId?: string
-  hasAudio?: boolean
+  hasAudio?: boolean | number
   dataType?: number // 0-GB28181, 1-拉流代理, 2-推流, 4-ONVIF, 5-海康, 6-大华, 7-萤石, 200-JT1078
 }
 
@@ -39,28 +39,28 @@ export interface MediaChannelVO {
 export interface StreamInfoVO {
   app: string
   stream: string
-  ip: string
-  port: number
+  ip?: string
+  port?: number
   flv: string
-  https_flv: string
+  https_flv?: string
   ws_flv: string
-  wss_flv: string
-  fmp4: string
-  https_fmp4: string
-  ws_fmp4: string
-  wss_fmp4: string
+  wss_flv?: string
+  fmp4?: string
+  https_fmp4?: string
+  ws_fmp4?: string
+  wss_fmp4?: string
   hls: string
-  https_hls: string
-  ws_hls: string
-  wss_hls: string
-  ts: string
-  https_ts: string
-  ws_ts: string
-  wss_ts: string
+  https_hls?: string
+  ws_hls?: string
+  wss_hls?: string
+  ts?: string
+  https_ts?: string
+  ws_ts?: string
+  wss_ts?: string
   rtc: string
-  rtcs: string
+  rtcs?: string
   rtsp: string
-  rtmps: string
+  rtmps?: string
   rtmp: string
   mediaServerId: string
   tracks?: any[]
@@ -68,22 +68,38 @@ export interface StreamInfoVO {
 
 // 分页查询通道列表
 export const getChannelPage = (params: any) => {
-  return request.get({ url: '/api/common/channel/list', params })
+  return request.get({
+    url: '/video/channel/page',
+    params: {
+      pageNo: params?.pageNo || params?.page || 1,
+      pageSize: params?.pageSize || params?.count || 20,
+      name: params?.search || params?.name,
+      channelId: params?.channelId,
+      deviceId: params?.deviceId,
+      status: params?.status
+    }
+  })
 }
 
 // 查询单个通道详情
 export const getChannelOne = (id: number) => {
-  return request.get({ url: '/api/common/channel/one', params: { id } })
+  return request.get({ url: '/video/channel/get', params: { id } })
 }
 
 // 开始点播直播流
 export const playChannel = (channelId: number) => {
-  return request.get({ url: '/api/common/channel/play', params: { channelId } })
+  return request.post({
+    url: '/video/play/start',
+    data: { channelId }
+  })
 }
 
 // 停止点播
 export const stopPlayChannel = (channelId: number) => {
-  return request.get({ url: '/api/common/channel/play/stop', params: { channelId } })
+  return request.post({
+    url: '/video/play/stop',
+    data: { channelId }
+  })
 }
 
 // 云台方向与变倍控制 (PTZ)
@@ -96,60 +112,69 @@ export const ptzControl = (
   verticalSpeed: number = 50,
   zoomSpeed: number = 50
 ) => {
-  return request.get({
-    url: `/api/front-end/ptz/${deviceId}/${channelId}`,
-    params: { cmdCode, horizonSpeed, verticalSpeed, zoomSpeed }
+  return request.post({
+    url: '/video/ptz/control',
+    params: { deviceId, channelId, cmdCode, horizonSpeed, verticalSpeed, zoomSpeed }
   })
 }
 
 // 光圈控制
 export const irisControl = (deviceId: string, channelId: string, cmdCode: number, speed: number = 50) => {
-  return request.get({
-    url: `/api/front-end/fi/iris/${deviceId}/${channelId}`,
-    params: { cmdCode, speed }
+  return request.post({
+    url: '/video/ptz/iris',
+    params: { deviceId, channelId, cmdCode, speed }
   })
 }
 
 // 聚焦控制
 export const focusControl = (deviceId: string, channelId: string, cmdCode: number, speed: number = 50) => {
-  return request.get({
-    url: `/api/front-end/fi/focus/${deviceId}/${channelId}`,
-    params: { cmdCode, speed }
+  return request.post({
+    url: '/video/ptz/focus',
+    params: { deviceId, channelId, cmdCode, speed }
   })
 }
 
 // 查询预置位列表
 export const queryPresets = (deviceId: string, channelId: string) => {
-  return request.get({ url: `/api/front-end/preset/query/${deviceId}/${channelId}` })
+  return request.get({
+    url: '/video/ptz/preset/query',
+    params: { deviceId, channelId }
+  })
 }
 
 // 调用预置位
 export const callPreset = (deviceId: string, channelId: string, presetId: number) => {
-  return request.get({
-    url: `/api/front-end/preset/call/${deviceId}/${channelId}`,
-    params: { presetId }
+  return request.post({
+    url: '/video/ptz/preset/call',
+    params: { deviceId, channelId, presetId }
   })
 }
 
 // 添加预置位
 export const addPreset = (deviceId: string, channelId: string, presetName: string, presetId: number) => {
-  return request.get({
-    url: `/api/front-end/preset/add/${deviceId}/${channelId}`,
-    params: { presetName, presetId }
+  return request.post({
+    url: '/video/ptz/preset/add',
+    params: { deviceId, channelId, presetName, presetId }
   })
 }
 
 // 电子地图通道点位列表
 export const getMapChannelList = () => {
-  return request.get({ url: '/api/common/channel/map/list' })
+  return request.get({ url: '/video/channel/map-list' })
 }
 
 // 开启语音对讲
 export const startAudioTalk = (channelId: number) => {
-  return request.get({ url: '/api/common/channel/talk/start', params: { channelId } })
+  return request.post({
+    url: '/video/play/start',
+    data: { channelId }
+  })
 }
 
 // 停止语音对讲
 export const stopAudioTalk = (channelId: number) => {
-  return request.get({ url: '/api/common/channel/talk/stop', params: { channelId } })
+  return request.post({
+    url: '/video/play/stop',
+    data: { channelId }
+  })
 }

@@ -15,28 +15,28 @@ export interface OnvifDeviceVO {
 }
 
 export const probeOnvifDevices = () => {
-  return request.get({ url: '/admin-api/media/onvif/probe' })
+  return request.get({ url: '/media/onvif/probe' })
 }
 
 export const getOnvifDeviceList = () => {
-  return request.get({ url: '/admin-api/media/onvif/list' })
+  return request.get({ url: '/media/onvif/list' })
 }
 
 export const saveOnvifDevice = (data: OnvifDeviceVO) => {
-  return request.post({ url: '/admin-api/media/onvif/save', data })
+  return request.post({ url: '/media/onvif/save', data })
 }
 
 export const deleteOnvifDevice = (id: number) => {
-  return request.delete({ url: `/admin-api/media/onvif/delete?id=${id}` })
+  return request.delete({ url: `/media/onvif/delete?id=${id}` })
 }
 
 export const syncOnvifDevice = (id: number) => {
-  return request.post({ url: `/admin-api/media/onvif/sync?id=${id}` })
+  return request.post({ url: `/media/onvif/sync?id=${id}` })
 }
 
 export const onvifPtzControl = (id: number, direction: string, speed: number) => {
   return request.post({
-    url: '/admin-api/media/onvif/ptz',
+    url: '/media/onvif/ptz',
     params: { id, direction, speed }
   })
 }
@@ -56,24 +56,24 @@ export interface HikDeviceVO {
 }
 
 export const getHikDeviceList = () => {
-  return request.get({ url: '/admin-api/media/hikvision/list' })
+  return request.get({ url: '/media/hikvision/list' })
 }
 
 export const saveHikDevice = (data: HikDeviceVO) => {
-  return request.post({ url: '/admin-api/media/hikvision/save', data })
+  return request.post({ url: '/media/hikvision/save', data })
 }
 
 export const deleteHikDevice = (id: number) => {
-  return request.delete({ url: `/admin-api/media/hikvision/delete?id=${id}` })
+  return request.delete({ url: `/media/hikvision/delete?id=${id}` })
 }
 
 export const syncHikDevice = (id: number) => {
-  return request.post({ url: `/admin-api/media/hikvision/sync?id=${id}` })
+  return request.post({ url: `/media/hikvision/sync?id=${id}` })
 }
 
 export const hikPtzControl = (id: number, channel: number, command: string, speed: number) => {
   return request.post({
-    url: '/admin-api/media/hikvision/ptz',
+    url: '/media/hikvision/ptz',
     params: { id, channel, command, speed }
   })
 }
@@ -93,24 +93,24 @@ export interface DahuaDeviceVO {
 }
 
 export const getDahuaDeviceList = () => {
-  return request.get({ url: '/admin-api/media/dahua/list' })
+  return request.get({ url: '/media/dahua/list' })
 }
 
 export const saveDahuaDevice = (data: DahuaDeviceVO) => {
-  return request.post({ url: '/admin-api/media/dahua/save', data })
+  return request.post({ url: '/media/dahua/save', data })
 }
 
 export const deleteDahuaDevice = (id: number) => {
-  return request.delete({ url: `/admin-api/media/dahua/delete?id=${id}` })
+  return request.delete({ url: `/media/dahua/delete?id=${id}` })
 }
 
 export const syncDahuaDevice = (id: number) => {
-  return request.post({ url: `/admin-api/media/dahua/sync?id=${id}` })
+  return request.post({ url: `/media/dahua/sync?id=${id}` })
 }
 
 export const dahuaPtzControl = (id: number, channel: number, code: string, arg1: number, arg2: number) => {
   return request.post({
-    url: '/admin-api/media/dahua/ptz',
+    url: '/media/dahua/ptz',
     params: { id, channel, code, arg1, arg2 }
   })
 }
@@ -130,24 +130,24 @@ export interface EzvizDeviceVO {
 }
 
 export const getEzvizDeviceList = () => {
-  return request.get({ url: '/admin-api/media/ezviz/list' })
+  return request.get({ url: '/media/ezviz/list' })
 }
 
 export const saveEzvizDevice = (data: EzvizDeviceVO) => {
-  return request.post({ url: '/admin-api/media/ezviz/save', data })
+  return request.post({ url: '/media/ezviz/save', data })
 }
 
 export const deleteEzvizDevice = (id: number) => {
-  return request.delete({ url: `/admin-api/media/ezviz/delete?id=${id}` })
+  return request.delete({ url: `/media/ezviz/delete?id=${id}` })
 }
 
 export const syncEzvizDevice = (id: number) => {
-  return request.post({ url: `/admin-api/media/ezviz/sync?id=${id}` })
+  return request.post({ url: `/media/ezviz/sync?id=${id}` })
 }
 
 export const ezvizPtzControl = (id: number, direction: number, speed: number) => {
   return request.post({
-    url: '/admin-api/media/ezviz/ptz',
+    url: '/media/ezviz/ptz',
     params: { id, direction, speed }
   })
 }
@@ -166,20 +166,20 @@ export interface JT1078DeviceVO {
 }
 
 export const getJT1078DeviceList = () => {
-  return request.get({ url: '/admin-api/media/jt1078/list' })
+  return request.get({ url: '/media/jt1078/list' })
 }
 
 export const saveJT1078Device = (data: JT1078DeviceVO) => {
-  return request.post({ url: '/admin-api/media/jt1078/save', data })
+  return request.post({ url: '/media/jt1078/save', data })
 }
 
 export const deleteJT1078Device = (id: number) => {
-  return request.delete({ url: `/admin-api/media/jt1078/delete?id=${id}` })
+  return request.delete({ url: `/media/jt1078/delete?id=${id}` })
 }
 
 export const getJT1078Status = (simNumber: string, channel: number) => {
   return request.get({
-    url: '/admin-api/media/jt1078/status',
+    url: '/media/jt1078/status',
     params: { simNumber, channel }
   })
 }
