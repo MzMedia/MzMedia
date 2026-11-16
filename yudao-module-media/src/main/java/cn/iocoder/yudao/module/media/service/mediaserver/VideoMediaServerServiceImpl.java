@@ -30,6 +30,13 @@ public class VideoMediaServerServiceImpl implements VideoMediaServerService {
     public void saveMediaServer(VideoMediaServerSaveReqVO reqVO) {
         VideoMediaServerDO exist = videoMediaServerMapper.selectById(reqVO.getId());
         VideoMediaServerDO mediaServerDO = VideoMediaServerConvert.INSTANCE.convert(reqVO);
+        if (!StringUtils.hasText(mediaServerDO.getHookIp())) {
+            if (StringUtils.hasText(reqVO.getIp()) && !"127.0.0.1".equals(reqVO.getIp()) && !"localhost".equalsIgnoreCase(reqVO.getIp())) {
+                mediaServerDO.setHookIp(reqVO.getIp());
+            } else {
+                mediaServerDO.setHookIp("host.docker.internal");
+            }
+        }
         if (exist == null) {
             mediaServerDO.setStatus(0); // 初始离线，等待心跳
             videoMediaServerMapper.insert(mediaServerDO);

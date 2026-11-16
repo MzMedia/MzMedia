@@ -39,7 +39,7 @@ public class VideoMediaServerController {
 
     @PostMapping("/save")
     @Operation(summary = "创建或更新流媒体节点")
-    @PreAuthorize("@ss.hasPermission('video:media-server:update')")
+    @PreAuthorize("@ss.hasAnyPermissions('video:media-server:update', 'media:server:config', 'media:server:update')")
     public CommonResult<Boolean> saveMediaServer(@Valid @RequestBody VideoMediaServerSaveReqVO saveReqVO) {
         videoMediaServerService.saveMediaServer(saveReqVO);
         return success(true);
@@ -48,7 +48,7 @@ public class VideoMediaServerController {
     @DeleteMapping("/delete")
     @Operation(summary = "删除流媒体节点")
     @Parameter(name = "id", description = "节点 ID", required = true)
-    @PreAuthorize("@ss.hasPermission('video:media-server:delete')")
+    @PreAuthorize("@ss.hasAnyPermissions('video:media-server:delete', 'media:server:delete')")
     public CommonResult<Boolean> deleteMediaServer(@RequestParam("id") String id) {
         videoMediaServerService.deleteMediaServer(id);
         return success(true);
@@ -57,7 +57,7 @@ public class VideoMediaServerController {
     @GetMapping("/get")
     @Operation(summary = "获得流媒体节点详情")
     @Parameter(name = "id", description = "节点 ID", required = true)
-    @PreAuthorize("@ss.hasPermission('video:media-server:query')")
+    @PreAuthorize("@ss.hasAnyPermissions('video:media-server:query', 'media:server:query')")
     public CommonResult<VideoMediaServerRespVO> getMediaServer(@RequestParam("id") String id) {
         VideoMediaServerDO server = videoMediaServerService.getMediaServer(id);
         return success(VideoMediaServerConvert.INSTANCE.convert(server));
@@ -65,7 +65,7 @@ public class VideoMediaServerController {
 
     @GetMapping("/page")
     @Operation(summary = "获得流媒体节点分页")
-    @PreAuthorize("@ss.hasPermission('video:media-server:query')")
+    @PreAuthorize("@ss.hasAnyPermissions('video:media-server:query', 'media:server:query')")
     public CommonResult<PageResult<VideoMediaServerRespVO>> getMediaServerPage(@Valid VideoMediaServerPageReqVO pageReqVO) {
         PageResult<VideoMediaServerDO> pageResult = videoMediaServerService.getMediaServerPage(pageReqVO);
         return success(VideoMediaServerConvert.INSTANCE.convertPage(pageResult));
@@ -73,7 +73,7 @@ public class VideoMediaServerController {
 
     @GetMapping("/list")
     @Operation(summary = "获得所有流媒体节点列表")
-    @PreAuthorize("@ss.hasPermission('video:media-server:query')")
+    @PreAuthorize("@ss.hasAnyPermissions('video:media-server:query', 'media:server:query')")
     public CommonResult<List<VideoMediaServerRespVO>> getMediaServerList() {
         List<VideoMediaServerDO> list = videoMediaServerService.getMediaServerList();
         return success(VideoMediaServerConvert.INSTANCE.convertList(list));
@@ -81,7 +81,7 @@ public class VideoMediaServerController {
 
     @GetMapping({"/online-list", "/list-online"})
     @Operation(summary = "获得所有在线流媒体节点列表")
-    @PreAuthorize("@ss.hasPermission('video:media-server:query')")
+    @PreAuthorize("@ss.hasAnyPermissions('video:media-server:query', 'media:server:query')")
     public CommonResult<List<VideoMediaServerRespVO>> getOnlineMediaServerList() {
         List<VideoMediaServerDO> list = videoMediaServerService.getOnlineList();
         return success(VideoMediaServerConvert.INSTANCE.convertList(list));
@@ -89,7 +89,7 @@ public class VideoMediaServerController {
 
     @GetMapping("/check")
     @Operation(summary = "测试流媒体节点连通性")
-    @PreAuthorize("@ss.hasPermission('video:media-server:query')")
+    @PreAuthorize("@ss.hasAnyPermissions('video:media-server:query', 'media:server:query')")
     public CommonResult<MediaServer> checkMediaServer(
             @RequestParam("ip") String ip,
             @RequestParam("port") int port,

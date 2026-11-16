@@ -90,15 +90,15 @@ public class MzVideoProperties {
         /**
          * 媒体服务器 HTTP API 端口
          */
-        private Integer httpPort = 80;
+        private Integer httpPort = 18080;
         /**
          * ZLM API Secret 秘钥
          */
-        private String secret = "035c73f7-bb6b-4889-a715-d9eb2d1925cc";
+        private String secret = "mzmedia_zlm_secret_2026_test_key";
         /**
          * ZLM 调用应用服务 Webhook 的回调可达 IP / 域名
          */
-        private String hookIp = "127.0.0.1";
+        private String hookIp = "host.docker.internal";
         /**
          * 无人观看时是否自动断流/释放端口
          */

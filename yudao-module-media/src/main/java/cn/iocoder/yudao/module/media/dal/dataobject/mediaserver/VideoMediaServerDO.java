@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.media.dal.dataobject.mediaserver;
 
 import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
+import cn.iocoder.yudao.framework.tenant.core.aop.TenantIgnore;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @TableName("mz_video_media_server")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@TenantIgnore
 public class VideoMediaServerDO extends BaseDO {
 
     /**

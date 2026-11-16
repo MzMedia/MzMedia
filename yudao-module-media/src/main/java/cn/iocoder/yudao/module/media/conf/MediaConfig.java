@@ -29,7 +29,7 @@ public class MediaConfig{
     @Value("${media.wan_ip:}")
     private String wanIp;
 
-    @Value("${media.hook-ip:127.0.0.1}")
+    @Value("${media.hook-ip:host.docker.internal}")
     private String hookIp;
 
     @Value("${sip.domain}")
@@ -41,7 +41,7 @@ public class MediaConfig{
     @Value("${media.stream-ip:${media.wan_ip:}}")
     private String streamIp;
 
-    @Value("${media.http-port:0}")
+    @Value("${media.http-port:18080}")
     private Integer httpPort;
 
     @Value("${media.auto-config:true}")

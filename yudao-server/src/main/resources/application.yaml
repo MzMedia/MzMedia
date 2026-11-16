@@ -317,6 +317,9 @@ yudao:
       - /admin-api/system/user/profile/**
       - /admin-api/system/auth/**
     ignore-tables:
+      - mz_video_media_server
+      - mz_media_server
+      - wvp_media_server
     ignore-caches:
       - user_role_ids
       - permission_menu_ids
@@ -347,10 +350,33 @@ yudao:
     storage:
       type: tdengine # 时序存储的类型：tdengine、iotdb，需要配置同名的 spring.datasource.dynamic.datasource 数据源
 
-# GB28181 国标 SIP 服务端配置
+# ==================== 统一视频监控模块配置 (mz.video) ====================
+mz:
+  video:
+    sip:
+      enabled: true
+      ip: 192.168.0.105
+      port: 5061
+      domain: 3402000000
+      id: 34020000002000000001
+      password: admin
+      alarm: true
+      ptz-speed: 50
+    media:
+      default-server-id: default
+      ip: ${MEDIA_IP:127.0.0.1}
+      http-port: ${MEDIA_HTTP_PORT:18080}
+      secret: ${MEDIA_SECRET:mzmedia_zlm_secret_2026_test_key}
+      hook-ip: ${MEDIA_HOOK_IP:host.docker.internal}
+      auto-close-idle-stream: true
+    record:
+      mount-path: /data/record/
+      retention-days: 30
+
+# GB28181 国标 SIP 服务端配置 (兼容项)
 sip:
-  ip: 0.0.0.0
-  port: 5060
+  ip: 192.168.0.105
+  port: 5061
   domain: 3402000000
   id: 34020000002000000001
   password: admin
@@ -360,9 +386,10 @@ sip:
 # ZLMediaKit 流媒体服务集群默认节点
 media:
   id: default
-  ip: 127.0.0.1
-  http-port: 80
-  secret: 035c73f7-bb6b-4889-a715-d9eb2d1925cc
+  ip: ${MEDIA_IP:127.0.0.1}
+  http-port: ${MEDIA_HTTP_PORT:18080}
+  secret: ${MEDIA_SECRET:mzmedia_zlm_secret_2026_test_key}
+  hook-ip: ${MEDIA_HOOK_IP:host.docker.internal}
   rtp:
     enable: true
     port-range: 30000,30500

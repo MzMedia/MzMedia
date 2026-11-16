@@ -25,6 +25,7 @@ script/docker-compose
 | `tdengine` | `tdengine/tdengine:3.3.4.8` | IoT 时序数据库，数据卷 `yudao-boot_tdengine-data` 与 `tdengine-log` |
 | `tdengine-init` | `tdengine/tdengine:3.3.4.8` | 一次性初始化服务，首次启动自动创建 `ruoyi_vue_pro` 数据库 |
 | `yudao-server` | `yudao-server:${IMAGE_TAG}` | 由 `yudao-server/Dockerfile` 构建，端口 48080，只在 Compose 网络内访问 |
+| `zlm` | `zlmediakit/zlmediakit:master` | 高性能流媒体服务器，对外开放 18080/8554/19350/RTP 端口，数据卷 `zlm-record`、`zlm-snap` |
 | `web` | `nginx:1.28-alpine` | 对宿主机开放 `${WEB_PORT}`（默认 8080） |
 
 容器之间通过服务名（`mysql`、`redis`、`tdengine`、`yudao-server`）访问。MySQL、Redis、TDengine、后端默认不映射到宿主机，不会与本机已有的 3306、6379、6041、48080 冲突；需要时取消 `docker-compose.yml` 中对应 `ports` 的注释。

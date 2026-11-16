@@ -17,8 +17,7 @@ public class VideoMediaServerSaveReqVO {
     @NotBlank(message = "节点 IP 不能为空")
     private String ip;
 
-    @Schema(description = "Hook 回调宿主 IP", requiredMode = Schema.RequiredMode.REQUIRED, example = "127.0.0.1")
-    @NotBlank(message = "Hook IP 不能为空")
+    @Schema(description = "Hook 回调宿主 IP", example = "127.0.0.1")
     private String hookIp;
 
     @Schema(description = "SDP 协商 IP", example = "127.0.0.1")
@@ -50,6 +49,6 @@ public class VideoMediaServerSaveReqVO {
     @Schema(description = "是否为默认流媒体服务 (0否 1是)", example = "1")
     private Integer defaultServer;
 
-    @Schema(description = "是否为自动负载节点 (0否 1是)", example = "1")
-    private Integer autoConfig;
+    @Schema(description = "是否为自动负载节点", example = "true")
+    private Boolean autoConfig;
 }

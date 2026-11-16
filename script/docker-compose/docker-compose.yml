@@ -119,6 +119,11 @@ services:
       # 需与前端打包时的 VITE_APP_CAPTCHA_ENABLE 一致
       YUDAO_CAPTCHA_ENABLE: ${YUDAO_CAPTCHA_ENABLE:-true}
       YUDAO_DEMO: "false"
+      # 流媒体服务配置：在同一 Compose 桥接网络内，直接通过容器服务名双向互通
+      MEDIA_IP: zlm
+      MEDIA_HTTP_PORT: "80"
+      MEDIA_HOOK_IP: yudao-server
+      MEDIA_SECRET: ${MEDIA_SECRET:-mzmedia_zlm_secret_2026_test_key}
     depends_on:
       mysql:
         condition: service_healthy
@@ -126,9 +131,35 @@ services:
         condition: service_healthy
       tdengine:
         condition: service_healthy
+      zlm:
+        condition: service_healthy
     # 默认只通过 web 的 Nginx 访问；需要直连后端排查时，取消注释
     # ports:
     #   - "127.0.0.1:48080:48080"
+
+  zlm:
+    image: zlmediakit/zlmediakit:master
+    container_name: yudao-zlm
+    restart: unless-stopped
+    ports:
+      - "${ZLM_HTTP_PORT:-18080}:80"
+      - "${ZLM_HTTPS_PORT:-18443}:443"
+      - "${ZLM_RTSP_PORT:-8554}:554"
+      - "${ZLM_RTMP_PORT:-19350}:1935"
+      - "${ZLM_RTC_PORT:-8005}:8000/udp"
+      - "${ZLM_RTP_PORT:-10005}:10000"
+      - "${ZLM_RTP_PORT:-10005}:10000/udp"
+      - "32000-32050:32000-32050/udp"
+    volumes:
+      - ./zlm/config.ini:/opt/media/conf/config.ini:ro
+      - zlm-record:/opt/media/bin/www/record
+      - zlm-snap:/opt/media/bin/www/snap
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f -s 'http://127.0.0.1:80/index/api/getServerConfig?secret=${MEDIA_SECRET:-mzmedia_zlm_secret_2026_test_key}' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
 
   web:
     image: nginx:1.28-alpine
@@ -152,3 +183,5 @@ volumes:
   redis-data:
   tdengine-data:
   tdengine-log:
+  zlm-record:
+  zlm-snap:

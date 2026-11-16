@@ -42,6 +42,42 @@ public class VideoMediaServerServiceImplTest extends BaseMockitoUnitTest {
     }
 
     @Test
+    @DisplayName("测试保存流媒体节点未传HookIp时自动兜底")
+    public void testSaveMediaServer_DefaultHookIp() {
+        VideoMediaServerSaveReqVO reqVO = new VideoMediaServerSaveReqVO();
+        reqVO.setId("zlm-node-02");
+        reqVO.setIp("106.75.236.70");
+        reqVO.setHttpPort(18080);
+        reqVO.setSecret("test-secret");
+        reqVO.setAutoConfig(true);
+
+        when(videoMediaServerMapper.selectById("zlm-node-02")).thenReturn(null);
+
+        mediaServerService.saveMediaServer(reqVO);
+
+        verify(videoMediaServerMapper, times(1)).insert(argThat(server -> 
+                "106.75.236.70".equals(server.getHookIp())));
+    }
+
+    @Test
+    @DisplayName("测试保存流媒体节点IP为127.0.0.1且未传HookIp时自动兜底为host.docker.internal")
+    public void testSaveMediaServer_LocalhostDefaultHookIp() {
+        VideoMediaServerSaveReqVO reqVO = new VideoMediaServerSaveReqVO();
+        reqVO.setId("zlm-node-local");
+        reqVO.setIp("127.0.0.1");
+        reqVO.setHttpPort(18080);
+        reqVO.setSecret("test-secret");
+        reqVO.setAutoConfig(true);
+
+        when(videoMediaServerMapper.selectById("zlm-node-local")).thenReturn(null);
+
+        mediaServerService.saveMediaServer(reqVO);
+
+        verify(videoMediaServerMapper, times(1)).insert(argThat(server -> 
+                "host.docker.internal".equals(server.getHookIp())));
+    }
+
+    @Test
     @DisplayName("测试更新已存在流媒体节点成功")
     public void testSaveMediaServer_Update_Success() {
         VideoMediaServerSaveReqVO reqVO = new VideoMediaServerSaveReqVO();

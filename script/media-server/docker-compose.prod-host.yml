@@ -1,0 +1,28 @@
+# ==============================================================================
+# Linux 生产环境高性能 Host 模式 Compose (ZLM 与宿主机共用网络栈，无 Docker 端口映射损耗)
+# ==============================================================================
+# 启动命令: docker compose -f docker-compose.prod-host.yml up -d
+# ==============================================================================
+
+name: mz-media-server-prod-host
+
+services:
+  zlm:
+    image: zlmediakit/zlmediakit:master
+    container_name: mz-zlm
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./zlm/config.ini:/opt/media/conf/config.ini:ro
+      - zlm-record:/opt/media/bin/www/record
+      - zlm-snap:/opt/media/bin/www/snap
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f -s 'http://127.0.0.1:80/index/api/getServerConfig?secret=${MEDIA_SECRET:-mzmedia_zlm_secret_2026_test_key}' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  zlm-record:
+  zlm-snap:
